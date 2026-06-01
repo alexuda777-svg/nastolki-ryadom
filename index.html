@@ -1390,25 +1390,39 @@
     }
 
     input.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      if (popup.style.display==='block') hidePopup(); else showPopup();
-    });
+    e.stopPropagation();
+    if (popup.style.display==='block') {
+      hidePopup();
+    } else {
+      showPopup();
+    }
+  });
 
-    document.addEventListener('click', (e)=>{
-      if (!popup.contains(e.target) && e.target!==input){
+  // клики внутри попапа не должны его закрывать
+  popup.addEventListener('click', (e)=>{
+    e.stopPropagation();
+  });
+
+  // клик вне попапа закрывает его
+  document.addEventListener('click', ()=>{
+    hidePopup();
+  });
+
+  // при открытии модалки сбрасываем выбор (по openModal)
+  const modalTable = document.getElementById('modal-table');
+  if (modalTable) {
+    modalTable.addEventListener('click', (e)=>{
+      // только клик по оверлею (снаружи формы) закрывает и сбрасывает
+      if (e.target === modalTable) {
+        selectedHour = null;
+        selectedMinute = null;
+        hoursWrap.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('selected'));
+        minutesWrap.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('selected'));
+        input.value = '';
         hidePopup();
       }
     });
-
-    document.getElementById('modal-table')?.addEventListener('transitionend',()=>{
-      if (popup.style.display==='block') hidePopup();
-      selectedHour = null;
-      selectedMinute = null;
-      hoursWrap.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('selected'));
-      minutesWrap.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('selected'));
-      input.value='';
-    });
-  })();
+  }
 
   // Отправка отзывов
   async function submitFeedback(e){

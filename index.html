@@ -372,9 +372,7 @@ footer{max-width:1200px;margin:0 auto;padding:1.5rem;text-align:center;font-size
 <div class="toasts" id="toasts"></div>
 
 <script>
-const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000'
-  : 'http://YOUR_SERVER_IP';
+const API = 'https://nastolki-ryadom-production.up.railway.app';
 
 let allTables = [], allHosts = [], allCafes = [];
 let searchQ = '', activeFilter = 'all';

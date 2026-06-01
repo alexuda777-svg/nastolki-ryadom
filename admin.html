@@ -113,8 +113,7 @@ a,button{transition:all var(--tr)}
   </div>
 </div>
 <div class="toasts" id="toasts"></div>
-<script>
-const API=window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1'?'http://localhost:3000':'http://YOUR_SERVER_IP:3000';
+<script>const API='https://nastolki-ryadom-production.up.railway.app';
 let AUTH='',statsData={},currentSection='dashboard';
 (function(){const r=document.documentElement;let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';r.setAttribute('data-theme',d);document.querySelectorAll('[data-theme-toggle]').forEach(t=>t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);}));})();
 async function login(){const pwd=document.getElementById('pwdInput').value;if(!pwd)return;AUTH=pwd;const res=await apiAuth('/api/admin/stats');if(res&&!res.error){document.getElementById('loginScreen').style.display='none';document.getElementById('app').classList.add('show');statsData=res;loadAll();}else{document.getElementById('loginError').style.display='block';AUTH='';}}

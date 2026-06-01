@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Настолки Рядом — Админ-панель</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@700,800&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{--bg:#f7f5f0;--surface:#faf9f6;--surface2:#fff;--offset:#eeebe4;--border:rgba(30,27,20,.12);--divider:#dcd8cf;--text:#1e1b14;--muted:#7a7670;--faint:#b5b0a8;--inv:#faf9f6;--primary:#c84b0f;--primary-h:#a53a09;--primary-bg:#f5ddd1;--success:#2c6e3f;--success-bg:rgba(44,110,63,.1);--error:#b91c1c;--error-bg:#fef2f2;--warning:#d97706;--warning-bg:#fffbeb;--shadow-sm:0 1px 3px rgba(30,27,20,.08);--shadow-md:0 4px 16px rgba(30,27,20,.10);--r-sm:.375rem;--r-md:.5rem;--r-lg:.75rem;--r-xl:1rem;--r-full:9999px;--font-d:'Cabinet Grotesk',sans-serif;--font-b:'Satoshi',sans-serif;--tr:180ms cubic-bezier(.16,1,.3,1);}
+[data-theme="dark"]{--bg:#16140f;--surface:#1c1a14;--surface2:#201e18;--offset:#242018;--border:rgba(255,255,255,.08);--divider:#302c22;--text:#d4d0c8;--muted:#7a7670;--faint:#524f48;--inv:#1e1b14;--primary:#e8784a;--primary-h:#f0916a;--primary-bg:#3d2216;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{min-height:100dvh;font-family:var(--font-b);font-size:.875rem;color:var(--text);background:var(--bg);display:flex}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+a,button{transition:all var(--tr)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:var(--r-sm)}
+.login-screen{min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.login-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-xl);padding:2.5rem;width:100%;max-width:380px;box-shadow:var(--shadow-md)}
+.login-card h1{font-family:var(--font-d);font-size:1.5rem;font-weight:800;margin-bottom:.5rem;text-align:center}
+.login-card p{font-size:.8125rem;color:var(--muted);margin-bottom:1.5rem;text-align:center}
+.inp{width:100%;padding:.625rem 1rem;border:1.5px solid var(--border);border-radius:var(--r-lg);background:var(--bg);color:var(--text);font:inherit;transition:border-color var(--tr)}
+.inp:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px var(--primary-bg)}
+.login-btn{width:100%;margin-top:1rem;padding:.75rem;background:var(--primary);color:var(--inv);border-radius:var(--r-lg);font-size:.875rem;font-weight:600}
+.login-btn:hover{background:var(--primary-h)}
+.app{display:none;width:100%;min-height:100vh}
+.app.show{display:flex}
+.sidebar{width:240px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sidebar-logo{padding:1.25rem;display:flex;align-items:center;gap:.5rem;font-family:var(--font-d);font-weight:800;font-size:1rem;border-bottom:1px solid var(--divider)}
+.sidebar-nav{padding:.75rem .5rem;flex:1;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:.625rem;padding:.5rem .75rem;border-radius:var(--r-md);color:var(--muted);font-size:.8125rem;font-weight:500;cursor:pointer;width:100%;text-align:left;margin-bottom:.125rem}
+.nav-item:hover{background:var(--offset);color:var(--text)}
+.nav-item.active{background:var(--primary-bg);color:var(--primary);font-weight:600}
+.nav-badge{margin-left:auto;background:var(--primary);color:var(--inv);font-size:.6875rem;font-weight:700;padding:.1rem .4rem;border-radius:var(--r-full);min-width:18px;text-align:center}
+.sidebar-footer{padding:.75rem;border-top:1px solid var(--divider);display:flex;align-items:center;gap:.5rem}
+.logout-btn{flex:1;padding:.5rem;border-radius:var(--r-md);color:var(--muted);font-size:.8125rem;text-align:left}
+.logout-btn:hover{background:var(--offset);color:var(--text)}
+.main{flex:1;overflow-y:auto;min-width:0}
+.topbar{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--border);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem}
+.topbar h2{font-family:var(--font-d);font-size:1.125rem;font-weight:700;flex:1}
+.content{padding:1.5rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.25rem;box-shadow:var(--shadow-sm)}
+.stat-num{font-family:var(--font-d);font-size:2rem;font-weight:800;color:var(--primary);line-height:1;margin-bottom:.25rem}
+.stat-label{font-size:.75rem;color:var(--muted);font-weight:500}
+.stat-sub{font-size:.6875rem;color:var(--faint);margin-top:.25rem}
+.stat-pending{color:var(--warning);font-weight:600}
+.filter-row{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.filter-chip{padding:.3rem .75rem;border-radius:var(--r-full);font-size:.75rem;font-weight:600;border:1.5px solid var(--border);color:var(--muted);background:var(--surface);cursor:pointer}
+.filter-chip:hover,.filter-chip.active{background:var(--primary);color:var(--inv);border-color:var(--primary)}
+.data-table{width:100%;border-collapse:collapse;background:var(--surface2);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid var(--border)}
+.data-table th{padding:.625rem 1rem;text-align:left;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--offset);border-bottom:1px solid var(--border)}
+.data-table td{padding:.75rem 1rem;font-size:.8125rem;border-bottom:1px solid var(--divider);vertical-align:top}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--offset)}
+.table-wrap{overflow-x:auto;border-radius:var(--r-xl)}
+.badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.6875rem;font-weight:600;padding:.2rem .6rem;border-radius:var(--r-full)}
+.badge-pending{background:var(--warning-bg);color:var(--warning)}
+.badge-approved{background:var(--success-bg);color:var(--success)}
+.badge-rejected{background:var(--error-bg);color:var(--error)}
+.actions{display:flex;gap:.375rem;flex-wrap:wrap}
+.act-btn{padding:.3rem .625rem;border-radius:var(--r-md);font-size:.75rem;font-weight:600;cursor:pointer;border:none;font-family:inherit}
+.act-approve{background:var(--success-bg);color:var(--success)}
+.act-approve:hover{background:var(--success);color:#fff}
+.act-reject{background:var(--error-bg);color:var(--error)}
+.act-reject:hover{background:var(--error);color:#fff}
+.act-delete{background:var(--offset);color:var(--muted)}
+.act-delete:hover{background:var(--error);color:#fff}
+.loading{text-align:center;padding:3rem;color:var(--muted)}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto .75rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;display:flex;flex-direction:column;gap:.5rem}
+.toast{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:.625rem 1rem;font-size:.8125rem;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:.5rem;animation:slideIn .25s ease;max-width:280px}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.theme-btn{padding:.375rem;border-radius:var(--r-md);color:var(--muted);display:flex;align-items:center}
+.theme-btn:hover{background:var(--offset);color:var(--text)}
+@media(max-width:768px){.sidebar{display:none}.stats-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <svg width="40" height="40" viewBox="0 0 28 28" fill="none" style="margin:0 auto 1rem"><rect width="28" height="28" rx="8" fill="#c84b0f"/><rect x="6" y="6" width="7" height="7" rx="2" fill="white"/><rect x="15" y="6" width="7" height="7" rx="2" fill="white" opacity=".7"/><rect x="6" y="15" width="7" height="7" rx="2" fill="white" opacity=".7"/><circle cx="18.5" cy="18.5" r="3.5" fill="white"/></svg>
+    <h1>Настолки Рядом</h1>
+    <p>Административная панель</p>
+    <label style="display:block;font-size:.8125rem;font-weight:600;margin-bottom:.375rem">Пароль</label>
+    <input type="password" class="inp" id="pwdInput" placeholder="Введите пароль">
+    <button class="login-btn" onclick="login()">Войти</button>
+    <p id="loginError" style="color:#b91c1c;font-size:.75rem;text-align:center;margin-top:.75rem;display:none">Неверный пароль</p>
+  </div>
+</div>
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="24" height="24" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="var(--primary)"/><rect x="6" y="6" width="7" height="7" rx="2" fill="white"/><rect x="15" y="6" width="7" height="7" rx="2" fill="white" opacity=".7"/><rect x="6" y="15" width="7" height="7" rx="2" fill="white" opacity=".7"/><circle cx="18.5" cy="18.5" r="3.5" fill="white"/></svg>
+      Настолки Рядом
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showSection('dashboard',this)">📊 Дашборд</button>
+      <button class="nav-item" onclick="showSection('hosts',this)">🎭 Ведущие <span class="nav-badge" id="nb_hosts">0</span></button>
+      <button class="nav-item" onclick="showSection('cafes',this)">☕ Кафе <span class="nav-badge" id="nb_cafes">0</span></button>
+      <button class="nav-item" onclick="showSection('tables',this)">🎲 Столы <span class="nav-badge" id="nb_tables">0</span></button>
+      <button class="nav-item" onclick="showSection('bookings',this)">📋 Записи <span class="nav-badge" id="nb_bookings">0</span></button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
+      <button class="theme-btn" data-theme-toggle><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar"><h2 id="pageTitle">Дашборд</h2><button class="act-btn act-approve" onclick="loadAll()">↻ Обновить</button></div>
+    <div class="content" id="mainContent"><div class="loading"><div class="spinner"></div><p>Загрузка...</p></div></div>
+  </div>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+const API='https://nastolki-ryadom-production.up.railway.app';
+let AUTH='',statsData={},currentSection='dashboard';
+(function(){const r=document.documentElement;let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';r.setAttribute('data-theme',d);document.querySelectorAll('[data-theme-toggle]').forEach(t=>t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);}));})();
+async function login(){const pwd=document.getElementById('pwdInput').value;if(!pwd)return;AUTH=pwd;const res=await apiAuth('/api/admin/stats');if(res&&!res.error){document.getElementById('loginScreen').style.display='none';document.getElementById('app').classList.add('show');statsData=res;loadAll();}else{document.getElementById('loginError').style.display='block';AUTH='';}}
+function logout(){AUTH='';document.getElementById('app').classList.remove('show');document.getElementById('loginScreen').style.display='flex';document.getElementById('pwdInput').value='';}
+async function apiAuth(path,method='GET',body=null){const opts={method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+AUTH}};if(body)opts.body=JSON.stringify(body);try{const r=await fetch(API+path,opts);return await r.json();}catch{return null;}}
+function toast(msg,type='success'){const c=document.getElementById('toasts');const t=document.createElement('div');t.className='toast';t.innerHTML=(type==='success'?'✅ ':'❌ ')+msg;c.appendChild(t);setTimeout(()=>t.remove(),3500);}
+function showSection(name,btn){document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');currentSection=name;const titles={dashboard:'Дашборд',hosts:'Ведущие',cafes:'Кафе-партнёры',tables:'Игровые столы',bookings:'Записи на столы'};document.getElementById('pageTitle').textContent=titles[name]||name;if(name==='dashboard')renderDashboard();else loadSection(name);}
+async function loadAll(){const s=await apiAuth('/api/admin/stats');if(s){statsData=s;document.getElementById('nb_hosts').textContent=s.hosts.pending||0;document.getElementById('nb_cafes').textContent=s.cafes.pending||0;document.getElementById('nb_tables').textContent=s.tables.pending||0;document.getElementById('nb_bookings').textContent=s.bookings.pending||0;}if(currentSection==='dashboard')renderDashboard();else loadSection(currentSection);}
+function renderDashboard(){const s=statsData;document.getElementById('mainContent').innerHTML='<div class="stats-grid"><div class="stat-card"><div class="stat-num">'+(s.hosts?.total||0)+'</div><div class="stat-label">Ведущих</div><div class="stat-sub"><span class="stat-pending">'+(s.hosts?.pending||0)+' ожидают</span> · '+(s.hosts?.approved||0)+' одобрено</div></div><div class="stat-card"><div class="stat-num">'+(s.cafes?.total||0)+'</div><div class="stat-label">Кафе</div><div class="stat-sub"><span class="stat-pending">'+(s.cafes?.pending||0)+' ожидают</span></div></div><div class="stat-card"><div class="stat-num">'+(s.tables?.total||0)+'</div><div class="stat-label">Столов</div><div class="stat-sub"><span class="stat-pending">'+(s.tables?.pending||0)+' ожидают</span></div></div><div class="stat-card"><div class="stat-num">'+(s.bookings?.total||0)+'</div><div class="stat-label">Записей</div><div class="stat-sub"><span class="stat-pending">'+(s.bookings?.pending||0)+' новых</span></div></div></div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-xl);padding:1.25rem;margin-bottom:1rem"><h3 style="font-family:var(--font-d);font-size:.875rem;font-weight:700;margin-bottom:.75rem">⚡ Быстрые действия</h3><div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="act-btn act-approve" onclick="showSection(\'hosts\',null)">🎭 Ведущие ('+(s.hosts?.pending||0)+' ждут)</button><button class="act-btn act-approve" onclick="showSection(\'cafes\',null)">☕ Кафе ('+(s.cafes?.pending||0)+' ждут)</button><button class="act-btn act-approve" onclick="showSection(\'tables\',null)">🎲 Столы ('+(s.tables?.pending||0)+' ждут)</button><button class="act-btn act-approve" onclick="showSection(\'bookings\',null)">📋 Записи ('+(s.bookings?.pending||0)+' новых)</button></div></div><div style="background:var(--primary-bg);border-radius:var(--r-xl);padding:1rem 1.25rem;font-size:.8125rem;color:var(--primary)">💡 <b>Модерация:</b> Заявки со статусом «Ожидает» не видны на сайте. Нажмите «Одобрить» — они появятся автоматически.</div>';}
+async function loadSection(type){document.getElementById('mainContent').innerHTML='<div class="loading"><div class="spinner"></div><p>Загружаем...</p></div>';const items=await apiAuth('/api/admin/'+type);if(!items){document.getElementById('mainContent').innerHTML='<div class="loading">Ошибка</div>';return;}renderSection(type,items);}
+window._itemsStore={};
+function renderSection(type,items){window._itemsStore[type]=items;const pending=items.filter(i=>i.status==='pending');const approved=items.filter(i=>i.status==='approved');const rejected=items.filter(i=>i.status==='rejected');document.getElementById('mainContent').innerHTML='<div class="filter-row"><button class="filter-chip active" onclick="doFilter(\'all\',this,\''+type+'\')">Все ('+items.length+')</button><button class="filter-chip" onclick="doFilter(\'pending\',this,\''+type+'\')">⏳ Ожидают ('+pending.length+')</button><button class="filter-chip" onclick="doFilter(\'approved\',this,\''+type+'\')">✅ Одобрены ('+approved.length+')</button><button class="filter-chip" onclick="doFilter(\'rejected\',this,\''+type+'\')">❌ Отклонены ('+rejected.length+')</button></div><div id="tableData">'+buildTable(type,items)+'</div>';}
+function doFilter(status,btn,type){document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const items=window._itemsStore[type]||[];const filtered=status==='all'?items:items.filter(i=>i.status===status);document.getElementById('tableData').innerHTML=buildTable(type,filtered);}
+function buildTable(type,items){if(!items.length)return'<div class="loading">Записей нет</div>';const cols={hosts:[['Имя','name'],['Telegram','telegram'],['Город','city'],['Игры','games'],['Дата','createdAt'],['Статус','status']],cafes:[['Название','name'],['Контакт','contact'],['Telegram','telegram'],['Адрес','address'],['Дата','createdAt'],['Статус','status']],tables:[['Игра','game'],['Telegram','hostTelegram'],['Дата','date'],['Место','venue'],['Цена','price'],['Статус','status']],bookings:[['Имя','name'],['Telegram','telegram'],['Стол','tableId'],['Коммент','comment'],['Дата','createdAt'],['Статус','status']]};const c=cols[type]||cols.hosts;return'<div class="table-wrap"><table class="data-table"><thead><tr>'+c.map(([l])=>'<th>'+l+'</th>').join('')+'<th>Действия</th></tr></thead><tbody>'+items.map(item=>'<tr>'+c.map(([,k])=>'<td>'+(k==='status'?'<span class="badge badge-'+item[k]+'">'+(item[k]==='pending'?'Ожидает':item[k]==='approved'?'Одобрено':'Отклонено')+'</span>':k==='createdAt'?fmtDate(item[k]):(item[k]||'—'))+'</td>').join('')+'<td><div class="actions">'+(item.status!=='approved'?'<button class="act-btn act-approve" onclick="updStatus(\''+type+'\',\''+item.id+'\',\'approved\')">✅</button>':'')+(item.status!=='rejected'?'<button class="act-btn act-reject" onclick="updStatus(\''+type+'\',\''+item.id+'\',\'rejected\')">❌</button>':'')+'<button class="act-btn act-delete" onclick="delItem(\''+type+'\',\''+item.id+'\')">🗑</button></div></td></tr>').join('')+'</tbody></table></div>';}
+function fmtDate(d){if(!d)return'—';try{return new Date(d).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}catch{return d;}}
+async function updStatus(type,id,status){const res=await apiAuth('/api/admin/'+type+'/'+id,'PUT',{status});if(res&&!res.error){toast('Статус: '+(status==='approved'?'Одобрено':'Отклонено'));loadAll();}else toast('Ошибка','error');}
+async function delItem(type,id){if(!confirm('Удалить?'))return;const res=await apiAuth('/api/admin/'+type+'/'+id,'DELETE');if(res&&res.success){toast('Удалено');loadAll();}else toast('Ошибка','error');}
+document.getElementById('pwdInput').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+</script>
+</body>
+</html>

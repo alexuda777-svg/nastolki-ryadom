@@ -767,12 +767,22 @@
           </div>
           <div class="form-group">
   <label class="form-label">Дата и время <span>*</span></label>
-  <input
-    class="inp"
-    type="datetime-local"
-    name="datetime"
-    required
-  >
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+    <input
+      class="inp"
+      style="flex:1"
+      type="date"
+      name="date_raw"
+      required
+    >
+    <input
+      class="inp"
+      style="flex:1"
+      type="time"
+      name="time_raw"
+      required
+    >
+  </div>
   <div class="form-hint">
     Выбери дату и время через встроенный календарь.
   </div>
@@ -1293,36 +1303,52 @@
 
   // Отправка игры / партии
   async function submitTable(e){
-    e.preventDefault();
-    const form=e.target;
-    const formData=new FormData(form);
-    const data=Object.fromEntries(formData);
-    try{
-      await fetch(API+'/api/tables',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(data)
-      });
-      form.style.display='none';
-      document.getElementById('tableSuccess').style.display='flex';
-      setTimeout(()=>{
-        closeModal('modal-table');
-        form.reset();
-        form.style.display='';
-        document.getElementById('tableSuccess').style.display='none';
-        loadData();
-      },2500);
-    }catch(err){
-      form.style.display='none';
-      document.getElementById('tableSuccess').style.display='flex';
-      setTimeout(()=>{
-        closeModal('modal-table');
-        form.reset();
-        form.style.display='';
-        document.getElementById('tableSuccess').style.display='none';
-      },2500);
-    }
+  e.preventDefault();
+  const form=e.target;
+  const formData=new FormData(form);
+  const data=Object.fromEntries(formData);
+
+  // разбор date_raw и time_raw в поля для API
+  if (data.date_raw) {
+    // date_raw в формате YYYY-MM-DD
+    const [y, m, d] = data.date_raw.split('-');
+    // формат можешь поправить под свой API
+    data.date = `${d}.${m}.${y}`; // 12.06.2024
   }
+  if (data.time_raw) {
+    // time_raw в формате HH:MM
+    data.time = data.time_raw;
+  }
+
+  delete data.date_raw;
+  delete data.time_raw;
+
+  try{
+    await fetch(API+'/api/tables',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+    form.style.display='none';
+    document.getElementById('tableSuccess').style.display='flex';
+    setTimeout(()=>{
+      closeModal('modal-table');
+      form.reset();
+      form.style.display='';
+      document.getElementById('tableSuccess').style.display='none';
+      loadData();
+    },2500);
+  }catch(err){
+    form.style.display='none';
+    document.getElementById('tableSuccess').style.display='flex';
+    setTimeout(()=>{
+      closeModal('modal-table');
+      form.reset();
+      form.style.display='';
+      document.getElementById('tableSuccess').style.display='none';
+    },2500);
+  }
+}
 
   // Отправка ведущего
   async function submitHost(e){

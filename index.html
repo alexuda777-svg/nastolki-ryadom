@@ -766,12 +766,17 @@
             <input class="inp" name="venue" placeholder="Кафе, клуб или адрес" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Дата и время <span>*</span></label>
-            <div style="display:flex;gap:.75rem;flex-wrap:wrap">
-              <input class="inp" style="flex:1" name="date" placeholder="Например: 12 июня" required>
-              <input class="inp" style="flex:1" name="time" placeholder="Например: 19:00" required>
-            </div>
-          </div>
+  <label class="form-label">Дата и время <span>*</span></label>
+  <input
+    class="inp"
+    type="datetime-local"
+    name="datetime"
+    required
+  >
+  <div class="form-hint">
+    Выбери дату и время через встроенный календарь.
+  </div>
+</div>
           <div class="form-group">
             <label class="form-label">Количество мест</label>
             <input class="inp" name="seats" placeholder="Например: 4">

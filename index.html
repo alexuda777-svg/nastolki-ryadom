@@ -485,6 +485,28 @@
   .legal-content strong{color:var(--text);font-weight:700}
   .legal-content a{color:var(--primary);text-decoration:underline}
 
+  /* Таймпикер */
+  .time-pill{
+    padding:.35rem .55rem;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    cursor:pointer;
+    transition:all var(--tr);
+    min-width:2.5rem;
+    text-align:center;
+  }
+  .time-pill:hover{
+    background:var(--offset);
+    border-color:var(--primary);
+    color:var(--primary);
+  }
+  .time-pill.selected{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:var(--inv);
+  }
+
   /* Адаптив */
   @media(max-width:1024px){
     .nav-inner{padding:.875rem 1.5rem}
@@ -740,7 +762,7 @@
     </div>
   </div>
 
-  <!-- МОДАЛ: ДОБАВИТЬ ИГРУ (универсальный: тип=настолка/шахматы) -->
+  <!-- МОДАЛ: ДОБАВИТЬ ИГРУ -->
   <div class="modal-overlay" id="modal-table" onclick="if(event.target===this)closeModal('modal-table')">
     <div class="modal">
       <div class="modal-header">
@@ -766,28 +788,56 @@
             <input class="inp" name="venue" placeholder="Кафе, клуб или адрес" required>
           </div>
           <div class="form-group">
-  <label class="form-label">Дата и время <span>*</span></label>
-  <div style="display:flex;gap:.75rem;flex-wrap:wrap">
-    <input
-      class="inp"
-      style="flex:1"
-      type="date"
-      name="date_raw"
-      required
-    >
-    <input
-  class="inp"
-  style="flex:1"
-  type="time"
-  name="time_raw"
-  step="60"
-  required
->
-  </div>
-  <div class="form-hint">
-    Выбери дату и время через встроенный календарь.
-  </div>
-</div>
+            <label class="form-label">Дата и время <span>*</span></label>
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+              <input
+                class="inp"
+                style="flex:1"
+                type="date"
+                name="date_raw"
+                required
+              >
+              <div style="position:relative;flex:1">
+                <input
+                  class="inp"
+                  style="width:100%;cursor:pointer"
+                  type="text"
+                  name="time_raw"
+                  id="timePickerInput"
+                  placeholder="Выбери время"
+                  readonly
+                  required
+                >
+                <div id="timePickerPopup" style="
+                  position:absolute;
+                  z-index:2000;
+                  top:110%;
+                  left:0;
+                  right:0;
+                  background:var(--surface2);
+                  border:1px solid var(--border);
+                  border-radius:var(--r-xl);
+                  box-shadow:var(--sh-lg);
+                  padding:0.75rem;
+                  display:none;
+                ">
+                  <div style="display:flex;gap:0.75rem;max-height:220px;overflow:auto;font-size:0.875rem">
+                    <div style="flex:1">
+                      <div style="font-weight:700;margin-bottom:0.25rem">Часы</div>
+                      <div id="timePickerHours" style="display:flex;flex-wrap:wrap;gap:0.25rem"></div>
+                    </div>
+                    <div style="flex:1">
+                      <div style="font-weight:700;margin-bottom:0.25rem">Минуты</div>
+                      <div id="timePickerMinutes" style="display:flex;flex-wrap:wrap;gap:0.25rem"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-hint">
+              Выбери дату в календаре и время кликом по часам и минутам.
+            </div>
+          </div>
           <div class="form-group">
             <label class="form-label">Количество мест</label>
             <input class="inp" name="seats" placeholder="Например: 4">
@@ -1281,6 +1331,85 @@
     });
   });
 
+  // КАСТОМНЫЙ ВЫБОР ВРЕМЕНИ
+  (function initTimePicker(){
+    const input = document.getElementById('timePickerInput');
+    const popup = document.getElementById('timePickerPopup');
+    const hoursWrap = document.getElementById('timePickerHours');
+    const minutesWrap = document.getElementById('timePickerMinutes');
+    if (!input || !popup || !hoursWrap || !minutesWrap) return;
+
+    let selectedHour = null;
+    let selectedMinute = null;
+
+    for (let h=0; h<24; h++){
+      const hh = String(h).padStart(2,'0');
+      const btn = document.createElement('button');
+      btn.type='button';
+      btn.textContent=hh;
+      btn.className='time-pill';
+      btn.addEventListener('click',()=>{
+        selectedHour = hh;
+        updateSelected(hoursWrap, btn);
+        trySetTime();
+      });
+      hoursWrap.appendChild(btn);
+    }
+
+    for (let m=0; m<60; m+=5){
+      const mm = String(m).padStart(2,'0');
+      const btn = document.createElement('button');
+      btn.type='button';
+      btn.textContent=mm;
+      btn.className='time-pill';
+      btn.addEventListener('click',()=>{
+        selectedMinute = mm;
+        updateSelected(minutesWrap, btn);
+        trySetTime();
+      });
+      minutesWrap.appendChild(btn);
+    }
+
+    function updateSelected(container, activeBtn){
+      container.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('selected'));
+      activeBtn.classList.add('selected');
+    }
+
+    function trySetTime(){
+      if (selectedHour!==null && selectedMinute!==null){
+        input.value = `${selectedHour}:${selectedMinute}`;
+        hidePopup();
+      }
+    }
+
+    function showPopup(){
+      popup.style.display='block';
+    }
+    function hidePopup(){
+      popup.style.display='none';
+    }
+
+    input.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      if (popup.style.display==='block') hidePopup(); else showPopup();
+    });
+
+    document.addEventListener('click', (e)=>{
+      if (!popup.contains(e.target) && e.target!==input){
+        hidePopup();
+      }
+    });
+
+    document.getElementById('modal-table')?.addEventListener('transitionend',()=>{
+      if (popup.style.display==='block') hidePopup();
+      selectedHour = null;
+      selectedMinute = null;
+      hoursWrap.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('selected'));
+      minutesWrap.querySelectorAll('.time-pill').forEach(b=>b.classList.remove('selected'));
+      input.value='';
+    });
+  })();
+
   // Отправка отзывов
   async function submitFeedback(e){
     e.preventDefault();
@@ -1304,52 +1433,52 @@
 
   // Отправка игры / партии
   async function submitTable(e){
-  e.preventDefault();
-  const form=e.target;
-  const formData=new FormData(form);
-  const data=Object.fromEntries(formData);
+    e.preventDefault();
+    const form=e.target;
+    const formData=new FormData(form);
+    const data=Object.fromEntries(formData);
 
-  // разбор date_raw и time_raw в поля для API
-  if (data.date_raw) {
-    // date_raw в формате YYYY-MM-DD
-    const [y, m, d] = data.date_raw.split('-');
-    // формат можешь поправить под свой API
-    data.date = `${d}.${m}.${y}`; // 12.06.2024
-  }
-  if (data.time_raw) {
-    // time_raw в формате HH:MM
-    data.time = data.time_raw;
-  }
+    if (data.date_raw) {
+      const [y, m, d] = data.date_raw.split('-');
+      data.date = `${d}.${m}.${y}`;
+    }
+    if (data.time_raw) {
+      const raw = data.time_raw.trim();
+      const [h, m] = raw.split(':');
+      const hh = String(parseInt(h||'0',10)).padStart(2,'0');
+      const mm = String(parseInt(m||'0',10)).padStart(2,'0');
+      data.time = `${hh}:${mm}`;
+    }
 
-  delete data.date_raw;
-  delete data.time_raw;
+    delete data.date_raw;
+    delete data.time_raw;
 
-  try{
-    await fetch(API+'/api/tables',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(data)
-    });
-    form.style.display='none';
-    document.getElementById('tableSuccess').style.display='flex';
-    setTimeout(()=>{
-      closeModal('modal-table');
-      form.reset();
-      form.style.display='';
-      document.getElementById('tableSuccess').style.display='none';
-      loadData();
-    },2500);
-  }catch(err){
-    form.style.display='none';
-    document.getElementById('tableSuccess').style.display='flex';
-    setTimeout(()=>{
-      closeModal('modal-table');
-      form.reset();
-      form.style.display='';
-      document.getElementById('tableSuccess').style.display='none';
-    },2500);
+    try{
+      await fetch(API+'/api/tables',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(data)
+      });
+      form.style.display='none';
+      document.getElementById('tableSuccess').style.display='flex';
+      setTimeout(()=>{
+        closeModal('modal-table');
+        form.reset();
+        form.style.display='';
+        document.getElementById('tableSuccess').style.display='none';
+        loadData();
+      },2500);
+    }catch(err){
+      form.style.display='none';
+      document.getElementById('tableSuccess').style.display='flex';
+      setTimeout(()=>{
+        closeModal('modal-table');
+        form.reset();
+        form.style.display='';
+        document.getElementById('tableSuccess').style.display='none';
+      },2500);
+    }
   }
-}
 
   // Отправка ведущего
   async function submitHost(e){

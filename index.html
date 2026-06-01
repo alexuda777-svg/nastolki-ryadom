@@ -8,2076 +8,344 @@
 <link rel="preconnect" href="https://api.fontshare.com">
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&f[]=cabinet-grotesk@700,800,900&display=swap" rel="stylesheet">
 <style>
-:root,[data-theme="light"]{
-  --bg:#f7f5f0;
-  --surface:#faf9f6;
-  --surface2:#fff;
-  --offset:#eeebe4;
-  --border:rgba(30,27,20,.12);
-  --divider:#dcd8cf;
-  --text:#1e1b14;
-  --muted:#7a7670;
-  --faint:#b5b0a8;
-  --inv:#faf9f6;
-  --primary:#c84b0f;
-  --ph:#a53a09;
-  --pbg:#f5ddd1;
-  --success:#2c6e3f;
-  --sbg:rgba(44,110,63,.1);
-  --warning:#d97706;
-  --wbg:#fffbeb;
-  --info:#0369a1;
-  --ibg:#e0f2fe;
-  --chess:#1e40af;
-  --chess-bg:#dbeafe;
-  --sh-sm:0 1px 3px rgba(30,27,20,.08);
-  --sh-md:0 4px 16px rgba(30,27,20,.10);
-  --sh-lg:0 12px 40px rgba(30,27,20,.14);
-  --r-sm:.375rem;
-  --r-md:.5rem;
-  --r-lg:.75rem;
-  --r-xl:1rem;
-  --r-2xl:1.5rem;
-  --r-full:9999px;
-  --fd:'Cabinet Grotesk',sans-serif;
-  --fb:'Satoshi',sans-serif;
-  --tr:180ms cubic-bezier(.16,1,.3,1);
-}
-
-[data-theme="dark"]{
-  --bg:#16140f;
-  --surface:#1c1a14;
-  --surface2:#201e18;
-  --offset:#242018;
-  --border:rgba(255,255,255,.08);
-  --divider:#302c22;
-  --text:#d4d0c8;
-  --muted:#7a7670;
-  --faint:#524f48;
-  --inv:#1e1b14;
-  --primary:#e8784a;
-  --ph:#f0916a;
-  --pbg:#3d2216;
-  --info:#0ea5e9;
-  --ibg:#0c4a6e;
-  --chess:#3b82f6;
-  --chess-bg:#1e3a8a;
-  --sh-sm:0 1px 3px rgba(0,0,0,.25);
-  --sh-md:0 4px 16px rgba(0,0,0,.35);
-  --sh-lg:0 12px 40px rgba(0,0,0,.5);
-}
-
+:root,[data-theme="light"]{--bg:#f7f5f0;--surface:#faf9f6;--surface2:#fff;--offset:#eeebe4;--border:rgba(30,27,20,.12);--divider:#dcd8cf;--text:#1e1b14;--muted:#7a7670;--faint:#b5b0a8;--inv:#faf9f6;--primary:#c84b0f;--ph:#a53a09;--pbg:#f5ddd1;--success:#2c6e3f;--sbg:rgba(44,110,63,.1);--warning:#d97706;--wbg:#fffbeb;--info:#0369a1;--ibg:#e0f2fe;--chess:#1e40af;--chess-bg:#dbeafe;--sh-sm:0 2px 8px rgba(30,27,20,.08);--sh-md:0 8px 24px rgba(30,27,20,.12);--sh-lg:0 16px 48px rgba(30,27,20,.16);--sh-xl:0 24px 64px rgba(30,27,20,.20);--r-sm:.5rem;--r-md:.75rem;--r-lg:1rem;--r-xl:1.5rem;--r-2xl:2rem;--r-full:9999px;--fd:'Cabinet Grotesk',sans-serif;--fb:'Satoshi',sans-serif;--tr:240ms cubic-bezier(.16,1,.3,1)}
+[data-theme="dark"]{--bg:#16140f;--surface:#1c1a14;--surface2:#201e18;--offset:#242018;--border:rgba(255,255,255,.08);--divider:#302c22;--text:#d4d0c8;--muted:#7a7670;--faint:#524f48;--inv:#1e1b14;--primary:#e8784a;--ph:#f0916a;--pbg:#3d2216;--info:#0ea5e9;--ibg:#0c4a6e;--chess:#3b82f6;--chess-bg:#1e3a8a}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-body{min-height:100dvh;font-family:var(--fb);font-size:1rem;color:var(--text);background:var(--bg);line-height:1.6}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;overflow-x:hidden}
+body{min-height:100dvh;font-family:var(--fb);font-size:1rem;color:var(--text);background:var(--bg);line-height:1.6;overflow-x:hidden}
 button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
 img{display:block;max-width:100%;height:auto}
 a{color:inherit;text-decoration:none;transition:color var(--tr)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:var(--r-sm)}
 p,li{text-wrap:pretty;max-width:72ch}
 h1,h2,h3{text-wrap:balance}
-
-.beta-banner{
-  background:linear-gradient(135deg,var(--info),#0284c7);
-  color:white;
-  padding:1rem 1.5rem;
-  text-align:center;
-  position:relative;
-}
-.beta-banner-inner{max-width:1200px;margin:0 auto}
-.beta-tag{
-  display:inline-flex;
-  align-items:center;
-  gap:.375rem;
-  background:rgba(255,255,255,.2);
-  padding:.25rem .625rem;
-  border-radius:var(--r-full);
-  font-size:.75rem;
-  font-weight:700;
-  margin-bottom:.375rem;
-  text-transform:uppercase;
-  letter-spacing:.5px;
-}
-.beta-banner h3{
-  font-family:var(--fd);
-  font-size:1rem;
-  font-weight:800;
-  margin-bottom:.25rem;
-}
-.beta-banner p{
-  font-size:.8125rem;
-  opacity:.95;
-  line-height:1.5;
-}
-.beta-banner .btn{
-  background:white;
-  color:var(--info);
-  margin-top:.625rem;
-  font-size:.8125rem;
-}
-.beta-banner .btn:hover{background:rgba(255,255,255,.9)}
-
-.nav{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:var(--surface);
-  border-bottom:1px solid var(--border);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-}
-.nav-inner{
-  max-width:1200px;
-  margin:0 auto;
-  padding:.75rem 1.5rem;
-  display:flex;
-  align-items:center;
-  gap:1rem;
-}
-.logo{
-  display:flex;
-  align-items:center;
-  gap:.5rem;
-  font-family:var(--fd);
-  font-weight:800;
-  font-size:1rem;
-}
-.nav-links{
-  display:flex;
-  gap:.125rem;
-  flex:1;
-  justify-content:center;
-}
-.nav-link{
-  padding:.4rem .75rem;
-  border-radius:var(--r-md);
-  font-size:.875rem;
-  color:var(--muted);
-  font-weight:500;
-  transition:all var(--tr);
-  white-space:nowrap;
-}
-.nav-link:hover{background:var(--offset);color:var(--text)}
-.nav-link.active{background:var(--pbg);color:var(--primary)}
-.nav-right{display:flex;align-items:center;gap:.5rem}
-
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:.375rem;
-  padding:.5rem 1rem;
-  border-radius:var(--r-lg);
-  font-size:.875rem;
-  font-weight:600;
-  cursor:pointer;
-  border:none;
-  font-family:inherit;
-  transition:all var(--tr);
-  white-space:nowrap;
-}
-.btn-primary{background:var(--primary);color:var(--inv)}
-.btn-primary:hover{background:var(--ph)}
-.btn-chess{background:var(--chess);color:white}
-.btn-chess:hover{background:#1e3a8a}
-.btn-ghost{
-  background:transparent;
-  color:var(--muted);
-  border:1.5px solid var(--border);
-}
-.btn-ghost:hover{
-  background:var(--offset);
-  color:var(--text);
-  border-color:var(--text);
-}
-.btn-sm{padding:.375rem .75rem;font-size:.8125rem}
-
-.theme-btn{
-  padding:.4rem;
-  border-radius:var(--r-md);
-  color:var(--muted);
-  display:flex;
-  align-items:center;
-}
-.theme-btn:hover{background:var(--offset);color:var(--text)}
-
-.hero{
-  max-width:1200px;
-  margin:0 auto;
-  padding:4rem 1.5rem 3rem;
-}
-.hero-tag{
-  display:inline-flex;
-  align-items:center;
-  gap:.375rem;
-  background:var(--pbg);
-  color:var(--primary);
-  padding:.25rem .75rem;
-  border-radius:var(--r-full);
-  font-size:.8125rem;
-  font-weight:600;
-  margin-bottom:1.25rem;
-}
-.hero h1{
-  font-family:var(--fd);
-  font-size:clamp(2rem,.5rem + 5vw,4rem);
-  font-weight:900;
-  line-height:1.1;
-  margin-bottom:1rem;
-}
-.hero h1 span{color:var(--primary)}
-.hero p{
-  font-size:clamp(1rem,1vw + .6rem,1.125rem);
-  color:var(--muted);
-  max-width:52ch;
-  margin-bottom:2rem;
-  line-height:1.7;
-}
-.hero-btns{
-  display:flex;
-  gap:.75rem;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.hero-stats{
-  display:flex;
-  gap:2rem;
-  margin-top:2.5rem;
-  flex-wrap:wrap;
-}
-.stat{display:flex;flex-direction:column}
-.stat-n{
-  font-family:var(--fd);
-  font-size:1.75rem;
-  font-weight:800;
-  color:var(--primary);
-}
-.stat-l{font-size:.8125rem;color:var(--muted)}
-
-.region-notice{
-  background:var(--wbg);
-  border:1.5px solid var(--warning);
-  color:var(--text);
-  padding:.75rem 1rem;
-  border-radius:var(--r-lg);
-  margin-top:1.5rem;
-  font-size:.875rem;
-  max-width:fit-content;
-  display:inline-flex;
-  align-items:center;
-  gap:.5rem;
-}
+.beta-banner{background:linear-gradient(135deg,#0ea5e9 0%,#0284c7 50%,#0369a1 100%);color:white;padding:1.5rem;text-align:center;position:relative;overflow:hidden}
+.beta-banner::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.1) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.1);opacity:.5}}
+.beta-banner-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.beta-tag{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.25);backdrop-filter:blur(10px);padding:.375rem .875rem;border-radius:var(--r-full);font-size:.8125rem;font-weight:700;margin-bottom:.625rem;text-transform:uppercase;letter-spacing:.5px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.beta-banner h3{font-family:var(--fd);font-size:1.125rem;font-weight:900;margin-bottom:.5rem;text-shadow:0 2px 8px rgba(0,0,0,.1)}
+.beta-banner p{font-size:.9375rem;opacity:.95;line-height:1.6;max-width:600px;margin:0 auto}
+.beta-banner .btn{background:white;color:#0369a1;margin-top:.875rem;font-size:.875rem;box-shadow:0 4px 16px rgba(0,0,0,.2);transform:translateY(0)}
+.beta-banner .btn:hover{background:rgba(255,255,255,.95);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:var(--sh-sm)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:2rem}
+.logo{display:flex;align-items:center;gap:.625rem;font-family:var(--fd);font-weight:900;font-size:1.125rem;white-space:nowrap}
+.nav-links{display:flex;gap:.375rem;justify-content:center}
+.nav-link{padding:.5rem 1rem;border-radius:var(--r-lg);font-size:.875rem;color:var(--muted);font-weight:600;transition:all var(--tr);white-space:nowrap}
+.nav-link:hover{background:var(--offset);color:var(--text);transform:translateY(-1px)}
+.nav-link.active{background:var(--pbg);color:var(--primary);box-shadow:var(--sh-sm)}
+.nav-right{display:flex;align-items:center;gap:.625rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.625rem 1.25rem;border-radius:var(--r-lg);font-size:.875rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:all var(--tr);white-space:nowrap;position:relative;overflow:hidden}
+.btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);transition:left .5s}
+.btn:hover::before{left:100%}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--ph));color:var(--inv);box-shadow:0 4px 16px rgba(200,75,15,.3)}
+.btn-primary:hover{box-shadow:0 8px 24px rgba(200,75,15,.4);transform:translateY(-2px)}
+.btn-chess{background:linear-gradient(135deg,var(--chess),#1e3a8a);color:white;box-shadow:0 4px 16px rgba(30,64,175,.3)}
+.btn-chess:hover{box-shadow:0 8px 24px rgba(30,64,175,.4);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--muted);border:2px solid var(--border)}
+.btn-ghost:hover{background:var(--offset);color:var(--text);border-color:var(--text);transform:translateY(-2px)}
+.btn-sm{padding:.5rem 1rem;font-size:.8125rem}
+.theme-btn{padding:.5rem;border-radius:var(--r-lg);color:var(--muted);display:flex;align-items:center;transition:all var(--tr)}
+.theme-btn:hover{background:var(--offset);color:var(--text);transform:rotate(20deg) scale(1.1)}
+.hero{max-width:1200px;margin:0 auto;padding:5rem 1.5rem 4rem;text-align:center}
+.hero-tag{display:inline-flex;align-items:center;gap:.5rem;background:var(--pbg);color:var(--primary);padding:.375rem 1rem;border-radius:var(--r-full);font-size:.875rem;font-weight:700;margin-bottom:1.5rem;box-shadow:var(--sh-sm)}
+.hero h1{font-family:var(--fd);font-size:clamp(2.5rem,1rem + 6vw,5rem);font-weight:900;line-height:1.1;margin-bottom:1.25rem;background:linear-gradient(135deg,var(--text) 0%,var(--primary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:clamp(1rem,1vw + .75rem,1.25rem);color:var(--muted);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;align-items:center;margin-bottom:3rem}
+.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:2rem;max-width:800px;margin:0 auto}
+.stat{display:flex;flex-direction:column;align-items:center;padding:1.5rem;background:var(--surface2);border-radius:var(--r-xl);box-shadow:var(--sh-sm);transition:all var(--tr)}
+.stat:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+.stat-n{font-family:var(--fd);font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,var(--primary),var(--ph));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.25rem}
+.stat-l{font-size:.875rem;color:var(--muted);font-weight:600;text-align:center}
+.region-notice{background:var(--wbg);border:2px solid var(--warning);color:var(--text);padding:1rem 1.5rem;border-radius:var(--r-xl);margin-top:2rem;font-size:.9375rem;display:inline-flex;align-items:center;gap:.75rem;box-shadow:var(--sh-sm)}
 .region-notice b{color:var(--warning)}
-
-.search-section{
-  background:var(--surface);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  padding:1rem 0;
-}
-.search-inner{
-  max-width:1200px;
-  margin:0 auto;
-  padding:0 1.5rem;
-  display:flex;
-  gap:.75rem;
-  align-items:center;
-  flex-wrap:wrap;
-}
-.search-box{
-  flex:1;
-  min-width:200px;
-  position:relative;
-}
-.search-box input{
-  width:100%;
-  padding:.625rem 1rem .625rem 2.5rem;
-  border:1.5px solid var(--border);
-  border-radius:var(--r-lg);
-  background:var(--surface2);
-  color:var(--text);
-  font:inherit;
-  font-size:.875rem;
-  transition:border-color var(--tr);
-}
-.search-box input:focus{
-  border-color:var(--primary);
-  outline:none;
-  box-shadow:0 0 0 3px var(--pbg);
-}
-.search-icon{
-  position:absolute;
-  left:.75rem;
-  top:50%;
-  transform:translateY(-50%);
-  color:var(--faint);
-  pointer-events:none;
-}
-.filter-tabs{
-  display:flex;
-  gap:.375rem;
-  flex-wrap:wrap;
-}
-.tab{
-  padding:.4rem .875rem;
-  border-radius:var(--r-full);
-  font-size:.8125rem;
-  font-weight:600;
-  border:1.5px solid var(--border);
-  color:var(--muted);
-  background:var(--surface);
-  cursor:pointer;
-  transition:all var(--tr);
-  white-space:nowrap;
-}
-.tab:hover{background:var(--offset);color:var(--text)}
-.tab.active{
-  background:var(--primary);
-  color:var(--inv);
-  border-color:var(--primary);
-}
-
-.catalog{
-  max-width:1200px;
-  margin:0 auto;
-  padding:2rem 1.5rem;
-}
-.section-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:1.5rem;
-  gap:1rem;
-  flex-wrap:wrap;
-}
-.section-head h2{
-  font-family:var(--fd);
-  font-size:1.25rem;
-  font-weight:800;
-  display:flex;
-  align-items:center;
-  gap:.5rem;
-}
-.count-badge{
-  background:var(--offset);
-  color:var(--muted);
-  font-size:.75rem;
-  font-weight:700;
-  padding:.2rem .6rem;
-  border-radius:var(--r-full);
-}
-
-.cards-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));
-  gap:1rem;
-}
-
-.card{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:var(--r-2xl);
-  overflow:hidden;
-  box-shadow:var(--sh-sm);
-  transition:all var(--tr);
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;
-}
-.card:hover{
-  box-shadow:var(--sh-md);
-  transform:translateY(-2px);
-}
-.card-badge-row{
-  display:flex;
-  gap:.375rem;
-  flex-wrap:wrap;
-  padding:.75rem .75rem 0;
-}
-.badge{
-  display:inline-flex;
-  align-items:center;
-  font-size:.6875rem;
-  font-weight:600;
-  padding:.2rem .5rem;
-  border-radius:var(--r-full);
-  white-space:nowrap;
-}
-.badge-game{background:var(--pbg);color:var(--primary)}
-.badge-chess{background:var(--chess-bg);color:var(--chess)}
-.badge-seats{background:var(--sbg);color:var(--success)}
+.search-section{background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.5rem 0;box-shadow:inset 0 1px 3px rgba(0,0,0,.05)}
+.search-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;justify-content:center}
+.search-box{flex:1;min-width:250px;max-width:500px;position:relative}
+.search-box input{width:100%;padding:.875rem 1.25rem .875rem 3rem;border:2px solid var(--border);border-radius:var(--r-xl);background:var(--surface2);color:var(--text);font:inherit;font-size:.9375rem;transition:all var(--tr);box-shadow:var(--sh-sm)}
+.search-box input:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 4px var(--pbg),var(--sh-md);transform:translateY(-2px)}
+.search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--faint);pointer-events:none}
+.filter-tabs{display:flex;gap:.5rem;flex-wrap:wrap}
+.tab{padding:.625rem 1.25rem;border-radius:var(--r-full);font-size:.875rem;font-weight:700;border:2px solid var(--border);color:var(--muted);background:var(--surface2);cursor:pointer;transition:all var(--tr);white-space:nowrap;box-shadow:var(--sh-sm)}
+.tab:hover{background:var(--offset);color:var(--text);transform:translateY(-2px);box-shadow:var(--sh-md)}
+.tab.active{background:linear-gradient(135deg,var(--primary),var(--ph));color:var(--inv);border-color:var(--primary);box-shadow:0 4px 16px rgba(200,75,15,.3)}
+.catalog{max-width:1200px;margin:0 auto;padding:3rem 1.5rem}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;gap:1rem;flex-wrap:wrap}
+.section-head h2{font-family:var(--fd);font-size:clamp(1.5rem,2vw,2rem);font-weight:900;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.count-badge{background:linear-gradient(135deg,var(--offset),var(--divider));color:var(--text);font-size:.875rem;font-weight:800;padding:.375rem .875rem;border-radius:var(--r-full);box-shadow:var(--sh-sm)}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:1.5rem}
+.card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);overflow:hidden;box-shadow:var(--sh-md);transition:all var(--tr);cursor:pointer;display:flex;flex-direction:column;position:relative}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,transparent 0%,rgba(200,75,15,.03) 100%);opacity:0;transition:opacity var(--tr)}
+.card:hover{box-shadow:var(--sh-xl);transform:translateY(-8px) scale(1.02);border-color:var(--primary)}
+.card:hover::before{opacity:1}
+.card-badge-row{display:flex;gap:.5rem;flex-wrap:wrap;padding:1rem 1rem .5rem}
+.badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.75rem;font-weight:700;padding:.375rem .75rem;border-radius:var(--r-full);white-space:nowrap;box-shadow:var(--sh-sm)}
+.badge-game{background:linear-gradient(135deg,var(--pbg),#f5ddd1);color:var(--primary)}
+.badge-chess{background:linear-gradient(135deg,var(--chess-bg),#dbeafe);color:var(--chess)}
+.badge-seats{background:linear-gradient(135deg,var(--sbg),rgba(44,110,63,.15));color:var(--success)}
 .badge-full{background:var(--offset);color:var(--muted)}
-.badge-free{background:var(--wbg);color:var(--warning)}
-
-.card-body{
-  padding:.875rem;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
-.card-title{
-  font-family:var(--fd);
-  font-size:1rem;
-  font-weight:700;
-  margin-bottom:.25rem;
-  line-height:1.3;
-}
-.card-meta{
-  font-size:.8125rem;
-  color:var(--muted);
-  display:flex;
-  flex-direction:column;
-  gap:.25rem;
-  flex:1;
-}
-.card-meta-row{
-  display:flex;
-  align-items:center;
-  gap:.375rem;
-}
-.card-footer{
-  padding:.625rem .875rem;
-  border-top:1px solid var(--divider);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:.5rem;
-}
-.card-price{
-  font-family:var(--fd);
-  font-weight:800;
-  font-size:1rem;
-  color:var(--primary);
-}
+.badge-free{background:linear-gradient(135deg,var(--wbg),#fffbeb);color:var(--warning)}
+.card-body{padding:1rem 1.25rem 1.25rem;flex:1;display:flex;flex-direction:column}
+.card-title{font-family:var(--fd);font-size:1.125rem;font-weight:800;margin-bottom:.625rem;line-height:1.3;color:var(--text)}
+.card-meta{font-size:.875rem;color:var(--muted);display:flex;flex-direction:column;gap:.5rem;flex:1}
+.card-meta-row{display:flex;align-items:center;gap:.5rem}
+.card-footer{padding:1rem 1.25rem;border-top:1px solid var(--divider);display:flex;align-items:center;justify-content:space-between;gap:.75rem;background:linear-gradient(180deg,transparent,var(--offset))}
+.card-price{font-family:var(--fd);font-weight:900;font-size:1.125rem;color:var(--primary)}
 .card-price-free{color:var(--success)}
-
-.book-btn{
-  padding:.4rem .875rem;
-  background:var(--primary);
-  color:var(--inv);
-  border-radius:var(--r-lg);
-  font-size:.8125rem;
-  font-weight:600;
-  border:none;
-  cursor:pointer;
-  transition:all var(--tr);
-  white-space:nowrap;
-}
-.book-btn:hover{background:var(--ph)}
-.book-btn:disabled{
-  background:var(--offset);
-  color:var(--muted);
-  cursor:not-allowed;
-}
-
-.host-card{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:var(--r-2xl);
-  padding:1.25rem;
-  box-shadow:var(--sh-sm);
-  transition:all var(--tr);
-}
-.host-card:hover{
-  box-shadow:var(--sh-md);
-  transform:translateY(-2px);
-}
-.host-name{
-  font-family:var(--fd);
-  font-size:1.125rem;
-  font-weight:700;
-  margin-bottom:.5rem;
-}
-.host-meta{
-  font-size:.8125rem;
-  color:var(--muted);
-  margin-bottom:.75rem;
-  line-height:1.6;
-}
-.host-games{
-  display:flex;
-  flex-wrap:wrap;
-  gap:.25rem;
-  margin-bottom:.875rem;
-}
-.game-chip{
-  background:var(--offset);
-  color:var(--text);
-  font-size:.6875rem;
-  font-weight:500;
-  padding:.2rem .5rem;
-  border-radius:var(--r-full);
-}
-.host-contact{
-  display:inline-flex;
-  align-items:center;
-  gap:.375rem;
-  color:var(--primary);
-  font-size:.8125rem;
-  font-weight:600;
-  background:var(--pbg);
-  padding:.4rem .75rem;
-  border-radius:var(--r-lg);
-}
-
-.cafe-card{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:var(--r-2xl);
-  padding:1.25rem;
-  box-shadow:var(--sh-sm);
-  transition:all var(--tr);
-}
-.cafe-card:hover{
-  box-shadow:var(--sh-md);
-  transform:translateY(-2px);
-}
-.cafe-name{
-  font-family:var(--fd);
-  font-size:1rem;
-  font-weight:700;
-  margin-bottom:.375rem;
-}
-.cafe-meta{
-  font-size:.8125rem;
-  color:var(--muted);
-  line-height:1.7;
-  margin-bottom:.75rem;
-}
-.cafe-tg{
-  display:inline-flex;
-  align-items:center;
-  gap:.375rem;
-  color:var(--primary);
-  font-size:.8125rem;
-  font-weight:600;
-}
-
-.empty{
-  text-align:center;
-  padding:3rem 1rem;
-  color:var(--muted);
-}
-.empty-icon{font-size:2.5rem;margin-bottom:.75rem}
-.empty h3{
-  font-family:var(--fd);
-  font-size:1rem;
-  font-weight:700;
-  margin-bottom:.5rem;
-  color:var(--text);
-}
-.empty p{
-  font-size:.875rem;
-  max-width:30ch;
-  margin:0 auto .75rem;
-}
-
-.loading-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));
-  gap:1rem;
-}
-.skel{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:var(--r-2xl);
-  padding:1.25rem;
-  height:180px;
-  overflow:hidden;
-  position:relative;
-}
-.skel::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg,transparent 25%,var(--offset) 50%,transparent 75%);
-  background-size:200% 100%;
-  animation:shimmer 1.5s ease-in-out infinite;
-}
-@keyframes shimmer{
-  0%{background-position:-200% 0}
-  100%{background-position:200% 0}
-}
-
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.5);
-  z-index:1000;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  padding:1rem;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .3s;
-}
-.modal-overlay.show{
-  opacity:1;
-  pointer-events:all;
-}
-.modal{
-  background:var(--surface2);
-  border-radius:var(--r-2xl) var(--r-2xl) var(--r-xl) var(--r-xl);
-  width:100%;
-  max-width:500px;
-  max-height:90vh;
-  overflow-y:auto;
-  transform:translateY(2rem);
-  transition:transform .3s cubic-bezier(.16,1,.3,1);
-  box-shadow:var(--sh-lg);
-}
-.modal-overlay.show .modal{transform:translateY(0)}
-.modal-header{
-  padding:1.25rem 1.25rem .75rem;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--divider);
-}
-.modal-header h3{
-  font-family:var(--fd);
-  font-size:1rem;
-  font-weight:700;
-}
-.modal-close{
-  width:32px;
-  height:32px;
-  border-radius:var(--r-md);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.25rem;
-  color:var(--muted);
-}
-.modal-close:hover{background:var(--offset);color:var(--text)}
-.modal-body{padding:1.25rem}
-.modal-legal{max-width:800px}
-.modal-legal .modal-body{
-  padding:1.5rem;
-  max-height:70vh;
-  overflow-y:auto;
-}
-.legal-content h4{
-  font-family:var(--fd);
-  font-size:.9375rem;
-  font-weight:700;
-  margin:1.25rem 0 .5rem;
-  color:var(--text);
-}
-.legal-content p,.legal-content li{
-  font-size:.8125rem;
-  line-height:1.7;
-  color:var(--muted);
-  margin-bottom:.75rem;
-}
-.legal-content ul,.legal-content ol{
-  margin-left:1.25rem;
-  margin-bottom:.75rem;
-}
-.legal-content li{margin-bottom:.375rem}
-.legal-content strong{color:var(--text);font-weight:600}
-.legal-content a{
-  color:var(--primary);
-  text-decoration:underline;
-}
-
-.form-group{margin-bottom:1rem}
-.form-label{
-  display:block;
-  font-size:.8125rem;
-  font-weight:600;
-  margin-bottom:.375rem;
-}
+.book-btn{padding:.625rem 1.25rem;background:linear-gradient(135deg,var(--primary),var(--ph));color:var(--inv);border-radius:var(--r-lg);font-size:.875rem;font-weight:700;border:none;cursor:pointer;transition:all var(--tr);white-space:nowrap;box-shadow:0 4px 12px rgba(200,75,15,.3)}
+.book-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,75,15,.4)}
+.book-btn:disabled{background:var(--offset);color:var(--muted);cursor:not-allowed;box-shadow:none}
+.skel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);height:200px;position:relative;overflow:hidden}
+.skel::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 25%,var(--offset) 50%,transparent 75%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.loading-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:1.5rem}
+.empty{text-align:center;padding:4rem 2rem;color:var(--muted)}
+.empty-icon{font-size:3rem;margin-bottom:1rem;opacity:.5}
+.empty h3{font-family:var(--fd);font-size:1.25rem;font-weight:800;margin-bottom:.75rem;color:var(--text)}
+.empty p{margin-bottom:1.5rem;max-width:30ch;margin-left:auto;margin-right:auto}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px)}
+.modal-overlay.show{opacity:1;pointer-events:all}
+.modal{background:var(--surface2);border-radius:var(--r-2xl);width:100%;max-width:500px;max-height:90vh;overflow-y:auto;transform:scale(.95);transition:transform .3s cubic-bezier(.16,1,.3,1);box-shadow:var(--sh-xl)}
+.modal-overlay.show .modal{transform:scale(1)}
+.modal-header{padding:1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.modal-header h3{font-family:var(--fd);font-size:1.125rem;font-weight:800}
+.modal-close{width:36px;height:36px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--muted);cursor:pointer;transition:all .3s}
+.modal-close:hover{background:var(--offset);color:var(--text);transform:rotate(90deg)}
+.modal-body{padding:1.5rem}
+.form-group{margin-bottom:1.25rem}
+.form-label{display:block;font-size:.875rem;font-weight:700;margin-bottom:.5rem;color:var(--text)}
 .form-label span{color:var(--primary)}
-.inp{
-  width:100%;
-  padding:.625rem 1rem;
-  border:1.5px solid var(--border);
-  border-radius:var(--r-lg);
-  background:var(--bg);
-  color:var(--text);
-  font:inherit;
-  font-size:.875rem;
-  transition:border-color var(--tr);
-}
-.inp:focus{
-  border-color:var(--primary);
-  outline:none;
-  box-shadow:0 0 0 3px var(--pbg);
-}
-.form-hint{
-  font-size:.75rem;
-  color:var(--muted);
-  margin-top:.25rem;
-  line-height:1.5;
-}
-.form-checkbox{
-  display:flex;
-  align-items:flex-start;
-  gap:.5rem;
-  margin-bottom:1rem;
-  font-size:.8125rem;
-}
-.form-checkbox input{
-  margin-top:.125rem;
-  accent-color:var(--primary);
-}
-.form-checkbox label{line-height:1.5}
-.form-checkbox a{
-  color:var(--primary);
-  text-decoration:underline;
-}
-.form-submit{
-  width:100%;
-  padding:.75rem;
-  background:var(--primary);
-  color:var(--inv);
-  border-radius:var(--r-lg);
-  font-size:.875rem;
-  font-weight:600;
-  border:none;
-  cursor:pointer;
-  transition:all var(--tr);
-  margin-top:.5rem;
-}
-.form-submit:hover{background:var(--ph)}
-.form-submit:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
-.form-success{
-  background:var(--sbg);
-  color:var(--success);
-  border-radius:var(--r-xl);
-  padding:1rem;
-  text-align:center;
-  font-size:.875rem;
-  font-weight:600;
-}
-
-.toasts{
-  position:fixed;
-  bottom:1.5rem;
-  right:1.5rem;
-  z-index:2000;
-  display:flex;
-  flex-direction:column;
-  gap:.5rem;
-}
-.toast{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:var(--r-lg);
-  padding:.625rem 1rem;
-  font-size:.8125rem;
-  box-shadow:var(--sh-md);
-  display:flex;
-  align-items:center;
-  gap:.5rem;
-  animation:slideIn .25s ease;
-  max-width:280px;
-}
-@keyframes slideIn{
-  from{transform:translateX(100%);opacity:0}
-  to{transform:translateX(0);opacity:1}
-}
-
-.cta-section{
-  background:var(--surface);
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  margin:2rem 0;
-}
-.cta-inner{
-  max-width:1200px;
-  margin:0 auto;
-  padding:2.5rem 1.5rem;
-}
-.cta-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:1rem;
-}
-.cta-card{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:var(--r-2xl);
-  padding:1.5rem;
-  box-shadow:var(--sh-sm);
-  text-align:center;
-}
-.cta-icon{font-size:2rem;margin-bottom:.75rem}
-.cta-card h3{
-  font-family:var(--fd);
-  font-size:1rem;
-  font-weight:700;
-  margin-bottom:.375rem;
-}
-.cta-card p{
-  font-size:.8125rem;
-  color:var(--muted);
-  margin-bottom:1rem;
-  line-height:1.6;
-}
-.cta-btn{
-  padding:.5rem 1.125rem;
-  background:var(--primary);
-  color:var(--inv);
-  border-radius:var(--r-lg);
-  font-size:.875rem;
-  font-weight:600;
-  border:none;
-  cursor:pointer;
-  transition:all var(--tr);
-  font-family:inherit;
-}
-.cta-btn:hover{background:var(--ph)}
-
-.feedback-section{
-  max-width:720px;
-  margin:3rem auto;
-  padding:0 1.5rem;
-}
-.feedback-card{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:var(--r-2xl);
-  padding:2rem;
-  box-shadow:var(--sh-sm);
-  text-align:center;
-}
-.feedback-card h3{
-  font-family:var(--fd);
-  font-size:1.25rem;
-  font-weight:800;
-  margin-bottom:.5rem;
-}
-.feedback-card p{
-  font-size:.875rem;
-  color:var(--muted);
-  margin-bottom:1.5rem;
-  line-height:1.6;
-}
-
-footer{
-  max-width:1200px;
-  margin:0 auto;
-  padding:1.5rem;
-  text-align:center;
-  font-size:.8125rem;
-  color:var(--faint);
-  border-top:1px solid var(--border);
-}
-.footer-links{
-  display:flex;
-  justify-content:center;
-  gap:1rem;
-  margin-bottom:.75rem;
-  flex-wrap:wrap;
-}
-.footer-link{
-  color:var(--muted);
-  font-size:.8125rem;
-  text-decoration:none;
-  transition:color var(--tr);
-}
-.footer-link:hover{
-  color:var(--primary);
-  text-decoration:underline;
-}
-.vk-link{
-  display:inline-flex;
-  align-items:center;
-  gap:.375rem;
-  background:var(--primary);
-  color:var(--inv);
-  padding:.375rem .75rem;
-  border-radius:var(--r-lg);
-  font-size:.8125rem;
-  font-weight:600;
-  margin-top:.5rem;
-}
-.vk-link:hover{
-  background:var(--ph);
-  text-decoration:none;
-}
-
-@media(max-width:768px){
-  .nav-links{display:none}
-  .hero{padding:2rem 1rem 1.5rem}
-  .catalog{padding:1.5rem 1rem}
-  .hero-stats{gap:1.25rem}
-  .stat-n{font-size:1.35rem}
-  .cta-inner{padding:1.5rem 1rem}
-  .beta-banner{padding:.875rem 1rem}
-  .beta-banner h3{font-size:.875rem}
-  .beta-banner p{font-size:.75rem}
-  .feedback-section{padding:0 1rem}
-  .feedback-card{padding:1.5rem}
-  .footer-links{flex-direction:column;gap:.5rem}
-  .section-head{flex-direction:column;align-items:flex-start}
-}
+.inp{width:100%;padding:.75rem 1rem;border:2px solid var(--border);border-radius:var(--r-lg);background:var(--bg);color:var(--text);font:inherit;font-size:.9375rem;transition:all .3s}
+.inp:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 4px var(--pbg);transform:translateY(-2px)}
+textarea.inp{resize:vertical;min-height:80px}
+select.inp{cursor:pointer}
+.form-hint{font-size:.8125rem;color:var(--muted);margin-top:.5rem;line-height:1.5}
+.form-checkbox{display:flex;align-items:flex-start;gap:.625rem;margin:1rem 0;font-size:.875rem;line-height:1.6}
+.form-checkbox input{margin-top:.25rem;accent-color:var(--primary);width:18px;height:18px;cursor:pointer}
+.form-checkbox a{color:var(--primary);text-decoration:underline;font-weight:600}
+.form-submit{width:100%;padding:.875rem;background:linear-gradient(135deg,var(--primary),var(--ph));color:white;border-radius:var(--r-lg);font-size:.9375rem;font-weight:800;border:none;cursor:pointer;transition:all .3s;margin-top:.75rem;box-shadow:0 4px 16px rgba(200,75,15,.3)}
+.form-submit:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(200,75,15,.4)}
+.form-submit:disabled{opacity:.5;cursor:not-allowed}
+.form-success{background:var(--sbg);color:var(--success);border-radius:var(--r-xl);padding:1.25rem;text-align:center;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.modal-legal{max-width:800px}
+.modal-legal .modal-body{max-height:70vh;overflow-y:auto}
+.legal-content h4{font-family:var(--fd);font-size:1rem;font-weight:800;margin:1.5rem 0 .75rem;color:var(--text)}
+.legal-content p,.legal-content li{font-size:.875rem;line-height:1.7;color:var(--muted);margin-bottom:.875rem}
+.legal-content ul,.legal-content ol{margin-left:1.5rem;margin-bottom:1rem}
+.legal-content strong{color:var(--text);font-weight:700}
+.legal-content a{color:var(--primary);text-decoration:underline}
+@media(max-width:1024px){.nav-inner{padding:.875rem 1.5rem}.hero{padding:3rem 1.5rem 2.5rem}.catalog{padding:2.5rem 1.5rem}}
+@media(max-width:768px){.nav-links{display:none}.nav-inner{gap:1rem;padding:.75rem 1rem}.logo{font-size:1rem}.hero{padding:2.5rem 1rem 2rem}.hero-stats{grid-template-columns:repeat(2,1fr);gap:1rem}.stat{padding:1rem}.stat-n{font-size:2rem}.catalog{padding:2rem 1rem}.search-inner{padding:0 1rem}.cards-grid{gap:1rem}.beta-banner{padding:1rem}.beta-banner h3{font-size:1rem}.beta-banner p{font-size:.875rem}.section-head{flex-direction:column;align-items:flex-start}}
+@media(max-width:480px){.hero-btns{flex-direction:column;width:100%}.hero-btns .btn{width:100%;justify-content:center}.hero-stats{grid-template-columns:1fr;gap:.75rem}.filter-tabs{width:100%}.tab{flex:1;text-align:center;padding:.5rem .75rem;font-size:.8125rem}.search-box{min-width:100%}}
 </style>
 </head>
 <body>
-
 <div class="beta-banner">
-  <div class="beta-banner-inner">
-    <div class="beta-tag">🚀 Бета-тест · Москва</div>
-    <h3>Тестовый период — помоги нам стать лучше!</h3>
-    <p>Первые пользователи получат бонусы при запуске. Пока работает только в Москве — другие города скоро!</p>
-    <button class="btn" onclick="openModal('feedback')">💬 Оставить отзыв</button>
-  </div>
+<div class="beta-banner-inner">
+<div class="beta-tag">🚀 Бета-тест · Москва</div>
+<h3>Тестовый период — помоги нам стать лучше!</h3>
+<p>Первые пользователи получат бонусы при запуске. Пока работает только в Москве — другие города скоро!</p>
+<button class="btn" onclick="openModal('feedback')">💬 Оставить отзыв</button>
 </div>
-
+</div>
 <nav class="nav">
-  <div class="nav-inner">
-    <a href="#" class="logo">
-      <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-label="Настолки Рядом">
-        <rect width="28" height="28" rx="8" fill="var(--primary)"/>
-        <rect x="6" y="6" width="7" height="7" rx="2" fill="white"/>
-        <rect x="15" y="6" width="7" height="7" rx="2" fill="white" opacity=".7"/>
-        <rect x="6" y="15" width="7" height="7" rx="2" fill="white" opacity=".7"/>
-        <circle cx="18.5" cy="18.5" r="3.5" fill="white"/>
-      </svg>
-      Настолки Рядом
-    </a>
-    <div class="nav-links">
-      <a href="#board-games" class="nav-link active">Настолки</a>
-      <a href="#chess-games" class="nav-link">Шахматы · Нарды</a>
-      <a href="#hosts" class="nav-link">Ведущие</a>
-      <a href="#cafes" class="nav-link">Кафе</a>
-    </div>
-    <div class="nav-right">
-      <button class="btn btn-primary btn-sm" onclick="openModal('table')">+ Стол</button>
-      <button class="theme-btn" data-theme-toggle aria-label="Тема">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5"/>
-          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-        </svg>
-      </button>
-    </div>
-  </div>
+<div class="nav-inner">
+<a href="#" class="logo">
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="var(--primary)"/><rect x="6" y="6" width="7" height="7" rx="2" fill="white"/><rect x="15" y="6" width="7" height="7" rx="2" fill="white" opacity=".7"/><rect x="6" y="15" width="7" height="7" rx="2" fill="white" opacity=".7"/><circle cx="18.5" cy="18.5" r="3.5" fill="white"/></svg>
+Настолки Рядом
+</a>
+<div class="nav-links">
+<a href="#board-games" class="nav-link active">Настолки</a>
+<a href="#chess-games" class="nav-link">Шахматы · Нарды</a>
+</div>
+<div class="nav-right">
+<button class="btn btn-primary btn-sm" onclick="openModal('table')">+ Игра</button>
+<button class="theme-btn" data-theme-toggle><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+</div>
+</div>
 </nav>
-
 <section class="hero">
-  <div class="hero-tag">🎲 Настольные игры · Шахматы · Нарды в Москве</div>
-  <h1>Найди стол,<br><span>сядь и сыграй</span></h1>
-  <p>Каталог игровых столов, шахматных партий, нард, ведущих и кафе в Москве. Запишись за минуту через Telegram.</p>
-  <div class="region-notice">
-    <span>📍</span>
-    <div><b>Только Москва</b> · Другие города появятся позже</div>
-  </div>
-  <div class="hero-btns">
-    <button class="btn btn-primary" onclick="document.getElementById('board-games').scrollIntoView({behavior:'smooth'})">
-      🎲 Найти настолку
-    </button>
-    <button class="btn btn-chess" onclick="document.getElementById('chess-games').scrollIntoView({behavior:'smooth'})">
-      ♟️ Шахматы · Нарды
-    </button>
-    <button class="btn btn-ghost" onclick="openModal('host')">Я ведущий</button>
-  </div>
-  <div class="hero-stats">
-    <div class="stat">
-      <span class="stat-n" id="stat-tables">—</span>
-      <span class="stat-l">Настольных игр</span>
-    </div>
-    <div class="stat">
-      <span class="stat-n" id="stat-chess">—</span>
-      <span class="stat-l">Шахматы · Нарды</span>
-    </div>
-    <div class="stat">
-      <span class="stat-n" id="stat-hosts">—</span>
-      <span class="stat-l">Ведущих</span>
-    </div>
-    <div class="stat">
-      <span class="stat-n" id="stat-cafes">—</span>
-      <span class="stat-l">Кафе</span>
-    </div>
-  </div>
+<div class="hero-tag">🎲 Настольные игры · Шахматы · Нарды в Москве</div>
+<h1>Найди игру<br>рядом с собой</h1>
+<p>Каталог настольных игр, шахмат, нард, шашек, ведущих и кафе в Москве. Запишись за минуту через Telegram.</p>
+<div class="hero-btns">
+<button class="btn btn-primary" onclick="document.getElementById('board-games').scrollIntoView({behavior:'smooth'})">🎲 Настольные игры</button>
+<button class="btn btn-chess" onclick="document.getElementById('chess-games').scrollIntoView({behavior:'smooth'})">♟️ Шахматы · Нарды</button>
+</div>
+<div class="region-notice"><span style="font-size:1.5rem">📍</span><div><b>Только Москва</b> · Другие города появятся позже</div></div>
+<div class="hero-stats">
+<div class="stat"><div class="stat-n" id="stat-tables">—</div><div class="stat-l">Настолок</div></div>
+<div class="stat"><div class="stat-n" id="stat-chess">—</div><div class="stat-l">Шахматы · Нарды</div></div>
+<div class="stat"><div class="stat-n" id="stat-hosts">—</div><div class="stat-l">Ведущих</div></div>
+<div class="stat"><div class="stat-n" id="stat-cafes">—</div><div class="stat-l">Кафе</div></div>
+</div>
 </section>
-
 <div class="search-section">
-  <div class="search-inner">
-    <div class="search-box">
-      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/>
-        <path d="m21 21-4.35-4.35"/>
-      </svg>
-      <input type="search" id="searchInput" placeholder="Поиск по игре, месту в Москве..." oninput="applySearch()">
-    </div>
-    <div class="filter-tabs">
-      <button class="tab active" onclick="filterTab('all',this)">Все</button>
-      <button class="tab" onclick="filterTab('free',this)">Бесплатно</button>
-      <button class="tab" onclick="filterTab('seats',this)">Есть места</button>
-    </div>
-  </div>
+<div class="search-inner">
+<div class="search-box">
+<svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+<input type="search" id="searchInput" placeholder="Найти игру в Москве..." oninput="applySearch()">
 </div>
-
+<div class="filter-tabs">
+<button class="tab active" onclick="filterTab('all',this)">Все</button>
+<button class="tab" onclick="filterTab('free',this)">Бесплатно</button>
+<button class="tab" onclick="filterTab('seats',this)">Есть места</button>
+</div>
+</div>
+</div>
 <section class="catalog" id="board-games">
-  <div class="section-head">
-    <h2>
-      <span>🎲 Настольные игры</span>
-      <span class="count-badge" id="tables-count">0</span>
-    </h2>
-    <button class="btn btn-primary btn-sm" onclick="openModal('table')">+ Добавить стол</button>
-  </div>
-  <div id="tables-grid">
-    <div class="loading-grid">
-      <div class="skel"></div>
-      <div class="skel"></div>
-      <div class="skel"></div>
-      <div class="skel"></div>
-    </div>
-  </div>
+<div class="section-head">
+<h2><span>🎲 Настольные игры</span> <span class="count-badge" id="tables-count">0</span></h2>
+<button class="btn btn-primary btn-sm" onclick="openModal('table')">+ Добавить игру</button>
+</div>
+<div id="tables-grid" class="loading-grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
 </section>
-
 <section class="catalog" id="chess-games">
-  <div class="section-head">
-    <h2>
-      <span>♟️ Шахматы · Нарды · Шашки</span>
-      <span class="count-badge" id="chess-count">0</span>
-    </h2>
-    <button class="btn btn-chess btn-sm" onclick="openModal('chess')">+ Добавить партию</button>
-  </div>
-  <div id="chess-grid">
-    <div class="loading-grid">
-      <div class="skel"></div>
-      <div class="skel"></div>
-      <div class="skel"></div>
-      <div class="skel"></div>
-    </div>
-  </div>
-</section>
-
-<div class="cta-section">
-  <div class="cta-inner">
-    <div class="cta-grid">
-      <div class="cta-card">
-        <div class="cta-icon">🎭</div>
-        <h3>Стань ведущим</h3>
-        <p>Проводишь игры в Москве? Попади в каталог и находи новых игроков.</p>
-        <button class="cta-btn" onclick="openModal('host')">Зарегистрироваться</button>
-      </div>
-      <div class="cta-card">
-        <div class="cta-icon">☕</div>
-        <h3>Кафе с настолками?</h3>
-        <p>Есть зал для настолок в Москве? Добавьтесь в каталог бесплатно.</p>
-        <button class="cta-btn" onclick="openModal('cafe')">Добавить кафе</button>
-      </div>
-    </div>
-  </div>
+<div class="section-head">
+<h2><span>♟️ Шахматы · Нарды · Шашки</span> <span class="count-badge" id="chess-count">0</span></h2>
+<button class="btn btn-chess btn-sm" onclick="openModal('chess')">+ Добавить партию</button>
 </div>
-
-<section class="catalog" id="hosts">
-  <div class="section-head">
-    <h2>
-      <span>🎭 Ведущие</span>
-      <span class="count-badge" id="hosts-count">0</span>
-    </h2>
-  </div>
-  <div id="hosts-grid" class="cards-grid">
-    <div class="loading-grid">
-      <div class="skel" style="height:220px"></div>
-      <div class="skel" style="height:220px"></div>
-      <div class="skel" style="height:220px"></div>
-    </div>
-  </div>
+<div id="chess-grid" class="loading-grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
 </section>
-
-<section class="catalog" id="cafes">
-  <div class="section-head">
-    <h2>
-      <span>☕ Кафе с настолками</span>
-      <span class="count-badge" id="cafes-count">0</span>
-    </h2>
-  </div>
-  <div id="cafes-grid" class="cards-grid">
-    <div class="loading-grid">
-      <div class="skel" style="height:160px"></div>
-      <div class="skel" style="height:160px"></div>
-      <div class="skel" style="height:160px"></div>
-    </div>
-  </div>
-</section>
-
-<div class="feedback-section">
-  <div class="feedback-card">
-    <h3>🎯 Помоги проекту развиваться!</h3>
-    <p>После игры поделись впечатлениями. Твоё мнение поможет понять, нужен ли сервис и стоит ли запускать в других городах. Первые активные пользователи получат бонусы!</p>
-    <button class="btn btn-primary" onclick="openModal('feedback')">💬 Оставить отзыв</button>
-  </div>
+<footer style="max-width:1200px;margin:3rem auto 0;padding:2rem 1.5rem;text-align:center;border-top:1px solid var(--border);color:var(--muted);font-size:.875rem">
+<div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap">
+<a href="javascript:void(0)" onclick="openModal('privacy')" style="color:var(--muted);transition:color .3s;cursor:pointer">Политика конфиденциальности</a>
+<a href="javascript:void(0)" onclick="openModal('terms')" style="color:var(--muted);transition:color .3s;cursor:pointer">Пользовательское соглашение</a>
+<a href="https://vk.com/club236541309" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--primary),var(--ph));color:white;padding:.5rem 1rem;border-radius:var(--r-lg);font-weight:700;box-shadow:var(--sh-sm)">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.15 14.63h-1.6c-.67 0-.87-.53-2.07-1.73-1.04-1-1.5-1.13-1.77-1.13-.36 0-.46.1-.46.58v1.58c0 .43-.14.69-1.26.69-1.86 0-3.92-1.13-5.37-3.23-2.18-3.17-2.78-5.55-2.78-6.03 0-.27.1-.52.58-.52h1.6c.43 0 .6.2.76.67.88 2.54 2.36 4.76 2.97 4.76.23 0 .33-.1.33-.67v-2.62c-.07-1.43-.84-1.55-.84-2.06 0-.21.17-.43.44-.43h2.52c.36 0 .5.2.5.63v3.53c0 .36.16.5.27.5.23 0 .42-.14.84-.56 1.29-1.45 2.22-3.69 2.22-3.69.12-.26.32-.52.75-.52h1.6c.48 0 .58.25.48.63-.16.95-2.04 3.76-2.04 3.76-.2.32-.27.47 0 .83.2.27.85.83 1.29 1.34.8.92 1.42 1.69 1.59 2.22.16.54-.09.81-.62.81z"/></svg>
+VK группа
+</a>
 </div>
-
-<footer>
-  <div class="footer-links">
-    <a href="javascript:void(0)" class="footer-link" onclick="openModal('privacy')">Политика конфиденциальности</a>
-    <a href="javascript:void(0)" class="footer-link" onclick="openModal('terms')">Пользовательское соглашение</a>
-    <a href="https://vk.com/nastolki_ryadom" target="_blank" rel="noopener" class="vk-link">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.15 14.63h-1.6c-.67 0-.87-.53-2.07-1.73-1.04-1-1.5-1.13-1.77-1.13-.36 0-.46.1-.46.58v1.58c0 .43-.14.69-1.26.69-1.86 0-3.92-1.13-5.37-3.23-2.18-3.17-2.78-5.55-2.78-6.03 0-.27.1-.52.58-.52h1.6c.43 0 .6.2.76.67.88 2.54 2.36 4.76 2.97 4.76.23 0 .33-.1.33-.67v-2.62c-.07-1.43-.84-1.55-.84-2.06 0-.21.17-.43.44-.43h2.52c.36 0 .5.2.5.63v3.53c0 .36.16.5.27.5.23 0 .42-.14.84-.56 1.29-1.45 2.22-3.69 2.22-3.69.12-.26.32-.52.75-.52h1.6c.48 0 .58.25.48.63-.16.95-2.04 3.76-2.04 3.76-.2.32-.27.47 0 .83.2.27.85.83 1.29 1.34.8.92 1.42 1.69 1.59 2.22.16.54-.09.81-.62.81z"/>
-      </svg>
-      VK группа
-    </a>
-  </div>
-  <p>© 2024 Настолки Рядом · Бета-версия · Москва</p>
-  <p style="margin-top:.5rem;font-size:.75rem">Сайт не несёт ответственности за действия пользователей</p>
+<p>© 2024 Настолки Рядом · Бета-версия · Москва</p>
+<p style="margin-top:.5rem;font-size:.75rem;color:var(--faint)">Сайт не несёт ответственности за действия пользователей</p>
 </footer>
-
-<!-- МОДАЛЬНЫЕ ОКНА -->
-
-<!-- Запись на настольную игру -->
-<div class="modal-overlay" id="modal-booking" onclick="closeModalByOverlay(event,'modal-booking')">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>📋 Записаться на игру</h3>
-      <button class="modal-close" onclick="closeModal('modal-booking')">×</button>
-    </div>
-    <div class="modal-body">
-      <div id="booking-info" style="background:var(--offset);border-radius:var(--r-lg);padding:.75rem;margin-bottom:1rem;font-size:.875rem"></div>
-      <form id="bookingForm" onsubmit="submitBooking(event)">
-        <div class="form-group">
-          <label class="form-label">Имя <span>*</span></label>
-          <input class="inp" name="name" placeholder="Как тебя зовут?" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Telegram <span>*</span></label>
-          <input class="inp" name="telegram" placeholder="@username" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Комментарий</label>
-          <input class="inp" name="comment" placeholder="Опыт, вопросы...">
-        </div>
-        <input type="hidden" name="tableId" id="bookingTableId">
-        <div class="form-checkbox">
-          <input type="checkbox" id="agree-booking" required>
-          <label for="agree-booking">Я согласен с <a href="javascript:void(0)" onclick="openModal('terms')">пользовательским соглашением</a> и <a href="javascript:void(0)" onclick="openModal('privacy')">политикой конфиденциальности</a></label>
-        </div>
-        <button type="submit" class="form-submit">Отправить заявку ✉️</button>
-        <div class="form-hint">Контакты ведущего получишь после одобрения заявки. После игры будет здорово оставить отзыв!</div>
-      </form>
-      <div id="bookingSuccess" style="display:none" class="form-success">
-        🎉 Заявка отправлена! Контакты получишь после одобрения модератором.
-      </div>
-    </div>
-  </div>
+<div class="modal-overlay" id="modal-feedback" onclick="if(event.target===this)closeModal('modal-feedback')">
+<div class="modal">
+<div class="modal-header">
+<h3>💬 Обратная связь</h3>
+<button class="modal-close" onclick="closeModal('modal-feedback')">×</button>
 </div>
-
-<!-- Создание стола настольной игры -->
-<div class="modal-overlay" id="modal-table" onclick="closeModalByOverlay(event,'modal-table')">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>🎲 Добавить стол</h3>
-      <button class="modal-close" onclick="closeModal('modal-table')">×</button>
-    </div>
-    <div class="modal-body">
-      <form id="tableForm" onsubmit="submitTable(event)">
-        <div class="form-group">
-          <label class="form-label">Игра <span>*</span></label>
-          <input class="inp" name="game" placeholder="Название игры" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Твой Telegram <span>*</span></label>
-          <input class="inp" name="hostTelegram" placeholder="@username" required>
-        </div>
-        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-          <div>
-            <label class="form-label">Дата <span>*</span></label>
-            <input class="inp" name="date" type="date" required>
-          </div>
-          <div>
-            <label class="form-label">Время</label>
-            <input class="inp" name="time" type="time">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Место (Москва) <span>*</span></label>
-          <input class="inp" name="venue" placeholder="Кафе, адрес в Москве..." required>
-        </div>
-        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-          <div>
-            <label class="form-label">Мест всего</label>
-            <input class="inp" name="seats" type="number" min="1" max="20" placeholder="4">
-          </div>
-          <div>
-            <label class="form-label">Цена</label>
-            <input class="inp" name="price" placeholder="Бесплатно / 300₽">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Описание</label>
-          <textarea class="inp" name="description" rows="2" placeholder="Для новичков? Сложность?"></textarea>
-        </div>
-        <input type="hidden" name="type" value="boardgame">
-        <div class="form-checkbox">
-          <input type="checkbox" id="agree-table" required>
-          <label for="agree-table">Я согласен с <a href="javascript:void(0)" onclick="openModal('terms')">пользовательским соглашением</a> и <a href="javascript:void(0)" onclick="openModal('privacy')">политикой конфиденциальности</a></label>
-        </div>
-        <div class="form-hint">Контакты игроков получишь после одобрения их заявок модератором</div>
-        <button type="submit" class="form-submit">Добавить стол →</button>
-      </form>
-      <div id="tableSuccess" style="display:none" class="form-success">
-        🎲 Стол отправлен на проверку! Опубликуем в течение 24 часов.
-      </div>
-    </div>
-  </div>
+<div class="modal-body">
+<form id="feedbackForm" onsubmit="submitFeedback(event)">
+<div class="form-group">
+<label class="form-label">Твоё имя</label>
+<input class="inp" name="name" placeholder="Как к тебе обращаться?">
 </div>
-
-<!-- Создание шахматной/нардовой партии -->
-<div class="modal-overlay" id="modal-chess" onclick="closeModalByOverlay(event,'modal-chess')">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>♟️ Добавить партию</h3>
-      <button class="modal-close" onclick="closeModal('modal-chess')">×</button>
-    </div>
-    <div class="modal-body">
-      <form id="chessForm" onsubmit="submitChess(event)">
-        <div class="form-group">
-          <label class="form-label">Тип игры <span>*</span></label>
-          <select class="inp" name="game" required>
-            <option value="">Выбери игру</option>
-            <option value="Шахматы">♟️ Шахматы</option>
-            <option value="Нарды">🎲 Нарды</option>
-            <option value="Шашки">⚪ Шашки</option>
-            <option value="Го">⚫ Го</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Твой Telegram <span>*</span></label>
-          <input class="inp" name="hostTelegram" placeholder="@username" required>
-        </div>
-        <div class="form-group" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-          <div>
-            <label class="form-label">Дата <span>*</span></label>
-            <input class="inp" name="date" type="date" required>
-          </div>
-          <div>
-            <label class="form-label">Время</label>
-            <input class="inp" name="time" type="time">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Место (Москва) <span>*</span></label>
-          <input class="inp" name="venue" placeholder="Кафе, парк, клуб..." required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Уровень игры</label>
-          <select class="inp" name="level">
-            <option value="">Любой уровень</option>
-            <option value="Новичок">Новичок</option>
-            <option value="Любитель">Любитель</option>
-            <option value="Опытный">Опытный</option>
-            <option value="Профессионал">Профессионал</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Цена</label>
-          <input class="inp" name="price" placeholder="Бесплатно / 200₽">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Дополнительно</label>
-          <textarea class="inp" name="description" rows="2" placeholder="Контроль времени, особые правила..."></textarea>
-        </div>
-        <input type="hidden" name="type" value="chess">
-        <input type="hidden" name="seats" value="2">
-        <div class="form-checkbox">
-          <input type="checkbox" id="agree-chess" required>
-          <label for="agree-chess">Я согласен с <a href="javascript:void(0)" onclick="openModal('terms')">пользовательским соглашением</a> и <a href="javascript:void(0)" onclick="openModal('privacy')">политикой конфиденциальности</a></label>
-        </div>
-        <div class="form-hint">Контакт соперника получишь после одобрения его заявки модератором</div>
-        <button type="submit" class="form-submit">Добавить партию →</button>
-      </form>
-      <div id="chessSuccess" style="display:none" class="form-success">
-        ♟️ Партия отправлена на проверку! Опубликуем в течение 24 часов.
-      </div>
-    </div>
-  </div>
+<div class="form-group">
+<label class="form-label">Telegram</label>
+<input class="inp" name="telegram" placeholder="@username (опционально)">
 </div>
-
-<!-- Регистрация ведущего -->
-<div class="modal-overlay" id="modal-host" onclick="closeModalByOverlay(event,'modal-host')">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>🎭 Стать ведущим</h3>
-      <button class="modal-close" onclick="closeModal('modal-host')">×</button>
-    </div>
-    <div class="modal-body">
-      <form id="hostForm" onsubmit="submitHost(event)">
-        <div class="form-group">
-          <label class="form-label">Имя / Ник <span>*</span></label>
-          <input class="inp" name="name" placeholder="Как тебя знают игроки?" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Telegram <span>*</span></label>
-          <input class="inp" name="telegram" placeholder="@username" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Город <span>*</span></label>
-          <input class="inp" name="city" value="Москва" readonly>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Любимые игры</label>
-          <input class="inp" name="games" placeholder="Колонизаторы, Мафия, Диxit...">
-        </div>
-        <div class="form-group">
-          <label class="form-label">О себе</label>
-          <textarea class="inp" name="about" rows="2" placeholder="Опыт, стиль игры..."></textarea>
-        </div>
-        <div class="form-checkbox">
-          <input type="checkbox" id="agree-host" required>
-          <label for="agree-host">Я согласен с <a href="javascript:void(0)" onclick="openModal('terms')">пользовательским соглашением</a> и <a href="javascript:void(0)" onclick="openModal('privacy')">политикой конфиденциальности</a></label>
-        </div>
-        <div class="form-hint">Заявку рассмотрим в течение 24 часов.</div>
-        <button type="submit" class="form-submit">Стать ведущим →</button>
-      </form>
-      <div id="hostSuccess" style="display:none" class="form-success">
-        🎭 Заявка отправлена! Напишем в Telegram.
-      </div>
-    </div>
-  </div>
+<div class="form-group">
+<label class="form-label">Нужен ли такой сервис? <span>*</span></label>
+<select class="inp" name="needed" required>
+<option value="">Выбери ответ</option>
+<option value="yes">✅ Да, очень нужен!</option>
+<option value="maybe">🤔 Да, но нужны доработки</option>
+<option value="no">❌ Нет, не вижу смысла</option>
+</select>
 </div>
-
-<!-- Добавление кафе -->
-<div class="modal-overlay" id="modal-cafe" onclick="closeModalByOverlay(event,'modal-cafe')">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>☕ Добавить кафе</h3>
-      <button class="modal-close" onclick="closeModal('modal-cafe')">×</button>
-    </div>
-    <div class="modal-body">
-      <form id="cafeForm" onsubmit="submitCafe(event)">
-        <div class="form-group">
-          <label class="form-label">Название <span>*</span></label>
-          <input class="inp" name="name" placeholder="Название кафе" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Telegram <span>*</span></label>
-          <input class="inp" name="telegram" placeholder="@username или канал" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Адрес (Москва) <span>*</span></label>
-          <input class="inp" name="address" placeholder="Улица, дом, метро..." required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Контакт для связи</label>
-          <input class="inp" name="contact" placeholder="Телефон или email">
-        </div>
-        <div class="form-group">
-          <label class="form-label">О кафе</label>
-          <textarea class="inp" name="description" rows="2" placeholder="Часы работы, условия..."></textarea>
-        </div>
-        <div class="form-checkbox">
-          <input type="checkbox" id="agree-cafe" required>
-          <label for="agree-cafe">Я согласен с <a href="javascript:void(0)" onclick="openModal('terms')">пользовательским соглашением</a> и <a href="javascript:void(0)" onclick="openModal('privacy')">политикой конфиденциальности</a></label>
-        </div>
-        <div class="form-hint">Опубликуем бесплатно в течение 24 часов.</div>
-        <button type="submit" class="form-submit">Добавить кафе →</button>
-      </form>
-      <div id="cafeSuccess" style="display:none" class="form-success">
-        ☕ Кафе отправлено на проверку!
-      </div>
-    </div>
-  </div>
+<div class="form-group">
+<label class="form-label">Стоит ли развивать в другие города? <span>*</span></label>
+<select class="inp" name="continue" required>
+<option value="">Выбери ответ</option>
+<option value="yes">✅ Да, продолжайте!</option>
+<option value="maybe">🤔 Может быть</option>
+<option value="no">❌ Нет, не стоит</option>
+</select>
 </div>
-
-<!-- Обратная связь -->
-<div class="modal-overlay" id="modal-feedback" onclick="closeModalByOverlay(event,'modal-feedback')">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>💬 Обратная связь</h3>
-      <button class="modal-close" onclick="closeModal('modal-feedback')">×</button>
-    </div>
-    <div class="modal-body">
-      <form id="feedbackForm" onsubmit="submitFeedback(event)">
-        <div class="form-group">
-          <label class="form-label">Твоё имя</label>
-          <input class="inp" name="name" placeholder="Как к тебе обращаться?">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Telegram (опционально)</label>
-          <input class="inp" name="telegram" placeholder="@username для связи">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Нужен ли такой сервис? <span>*</span></label>
-          <select class="inp" name="needed" required>
-            <option value="">Выбери ответ</option>
-            <option value="yes">✅ Да, очень нужен!</option>
-            <option value="maybe">🤔 Да, но нужны доработки</option>
-            <option value="no">❌ Нет, не вижу смысла</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Стоит ли развивать в другие города? <span>*</span></label>
-          <select class="inp" name="continue" required>
-            <option value="">Выбери ответ</option>
-            <option value="yes">✅ Да, продолжайте!</option>
-            <option value="maybe">🤔 Может быть, посмотрим</option>
-            <option value="no">❌ Нет, не стоит</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Что понравилось / не понравилось? <span>*</span></label>
-          <textarea class="inp" name="comment" rows="3" placeholder="Честно расскажи что думаешь..." required></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Какие функции добавить?</label>
-          <textarea class="inp" name="features" rows="2" placeholder="Твои идеи для улучшения"></textarea>
-        </div>
-        <div style="background:var(--ibg);border-radius:var(--r-lg);padding:.875rem;margin-bottom:1rem;font-size:.8125rem;color:var(--info);line-height:1.5">
-          <b>🎁 Первые 100 активных пользователей</b> получат бонусы и скидки при запуске полной версии!
-        </div>
-        <button type="submit" class="form-submit">Отправить отзыв 💬</button>
-      </form>
-      <div id="feedbackSuccess" style="display:none" class="form-success">
-        🎉 Спасибо за отзыв! Ты в списке первых пользователей для бонусов!
-      </div>
-    </div>
-  </div>
+<div class="form-group">
+<label class="form-label">Что понравилось / не понравилось? <span>*</span></label>
+<textarea class="inp" name="comment" rows="3" placeholder="Честно расскажи что думаешь..." required></textarea>
 </div>
-
-<!-- Политика конфиденциальности -->
-<div class="modal-overlay" id="modal-privacy" onclick="closeModalByOverlay(event,'modal-privacy')">
-  <div class="modal modal-legal">
-    <div class="modal-header">
-      <h3>🔒 Политика конфиденциальности</h3>
-      <button class="modal-close" onclick="closeModal('modal-privacy')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="legal-content">
-        <p><strong>Дата вступления в силу:</strong> 01.06.2024</p>
-        
-        <h4>1. Общие положения</h4>
-        <p>Настоящая Политика конфиденциальности описывает, как сайт «Настолки Рядом» (далее — «Сервис») собирает, использует и защищает персональную информацию пользователей.</p>
-        
-        <h4>2. Какую информацию мы собираем</h4>
-        <p>При использовании Сервиса мы можем собирать следующую информацию:</p>
-        <ul>
-          <li>Имя и никнейм</li>
-          <li>Контактные данные (Telegram, email, телефон)</li>
-          <li>Информацию о предпочтениях в играх</li>
-          <li>Город проживания</li>
-          <li>Техническую информацию (IP-адрес, тип браузера, время посещения)</li>
-        </ul>
-        
-        <h4>3. Как мы используем информацию</h4>
-        <p>Собранная информация используется исключительно для:</p>
-        <ul>
-          <li>Связи между игроками, ведущими и владельцами кафе</li>
-          <li>Модерации контента и предотвращения злоупотреблений</li>
-          <li>Улучшения качества Сервиса</li>
-          <li>Информирования о новых функциях (с вашего согласия)</li>
-        </ul>
-        
-        <h4>4. Передача данных третьим лицам</h4>
-        <p><strong>Мы НЕ продаём, НЕ передаём и НЕ распространяем ваши персональные данные третьим лицам</strong>, за исключением случаев:</p>
-        <ul>
-          <li>Передачи контактов между участниками игр (только после одобрения модератором)</li>
-          <li>Требования законодательства РФ</li>
-        </ul>
-        
-        <h4>5. Хранение данных</h4>
-        <p>Ваши данные хранятся на защищённых серверах. Мы принимаем разумные меры для защиты информации от несанкционированного доступа, изменения или уничтожения.</p>
-        
-        <h4>6. Ваши права</h4>
-        <p>Вы имеете право:</p>
-        <ul>
-          <li>Запросить удаление своих данных</li>
-          <li>Получить копию своих данных</li>
-          <li>Отозвать согласие на обработку данных</li>
-        </ul>
-        <p>Для этого свяжитесь с нами через VK группу или Telegram.</p>
-        
-        <h4>7. Cookies и аналитика</h4>
-        <p>Мы используем cookies для улучшения работы сайта. Вы можете отключить cookies в настройках браузера.</p>
-        
-        <h4>8. Изменения в политике</h4>
-        <p>Мы можем обновлять эту политику. Актуальная версия всегда доступна на сайте. Продолжая пользоваться Сервисом, вы соглашаетесь с изменениями.</p>
-        
-        <h4>9. Контакты</h4>
-        <p>По вопросам конфиденциальности: <a href="https://vk.com/nastolki_ryadom" target="_blank">VK группа</a></p>
-      </div>
-    </div>
-  </div>
+<div class="form-group">
+<label class="form-label">Какие функции добавить?</label>
+<textarea class="inp" name="features" rows="2" placeholder="Твои идеи для улучшения"></textarea>
 </div>
-
-<!-- Пользовательское соглашение -->
-<div class="modal-overlay" id="modal-terms" onclick="closeModalByOverlay(event,'modal-terms')">
-  <div class="modal modal-legal">
-    <div class="modal-header">
-      <h3>📄 Пользовательское соглашение</h3>
-      <button class="modal-close" onclick="closeModal('modal-terms')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="legal-content">
-        <p><strong>Дата вступления в силу:</strong> 01.06.2024</p>
-        
-        <h4>1. Общие положения</h4>
-        <p>Используя сайт «Настолки Рядом» (далее — «Сервис»), вы соглашаетесь с условиями настоящего Пользовательского соглашения.</p>
-        
-        <h4>2. Описание Сервиса</h4>
-        <p>Сервис является <strong>информационной площадкой</strong> для поиска игровых столов, ведущих и кафе с настольными играми. Сервис:</p>
-        <ul>
-          <li>НЕ организует игровые мероприятия</li>
-          <li>НЕ является посредником в расчётах</li>
-          <li>НЕ проверяет личности пользователей</li>
-          <li>НЕ гарантирует качество услуг ведущих и кафе</li>
-        </ul>
-        
-        <h4>3. Ответственность Сервиса</h4>
-        <p><strong>Сервис НЕ НЕСЁТ ОТВЕТСТВЕННОСТИ за:</strong></p>
-        <ul>
-          <li>Действия и бездействие пользователей</li>
-          <li>Качество проведения игр</li>
-          <li>Финансовые споры между пользователями</li>
-          <li>Безопасность на игровых мероприятиях</li>
-          <li>Достоверность информации, размещённой пользователями</li>
-          <li>Утрату или повреждение имущества на мероприятиях</li>
-          <li>Конфликты между участниками</li>
-        </ul>
-        
-        <h4>4. Обязанности пользователей</h4>
-        <p>Пользователь обязуется:</p>
-        <ul>
-          <li>Предоставлять достоверную информацию</li>
-          <li>НЕ размещать запрещённый контент (оскорбления, спам, мошенничество)</li>
-          <li>Соблюдать законодательство РФ</li>
-          <li>Самостоятельно проверять информацию о мероприятиях</li>
-          <li>Нести ответственность за свои действия на игровых встречах</li>
-        </ul>
-        
-        <h4>5. Модерация контента</h4>
-        <p>Все заявки проходят модерацию. Сервис оставляет за собой право:</p>
-        <ul>
-          <li>Отклонить любую заявку без объяснения причин</li>
-          <li>Удалить размещённую информацию</li>
-          <li>Заблокировать пользователя при нарушении правил</li>
-        </ul>
-        
-        <h4>6. Конфиденциальность</h4>
-        <p>Контактные данные пользователей:</p>
-        <ul>
-          <li>Собираются ТОЛЬКО для связи между участниками</li>
-          <li>Передаются ТОЛЬКО после одобрения модератором</li>
-          <li>НЕ распространяются третьим лицам</li>
-          <li>Используются в соответствии с Политикой конфиденциальности</li>
-        </ul>
-        
-        <h4>7. Бета-тестирование</h4>
-        <p>Сервис находится в стадии бета-тестирования. Это означает:</p>
-        <ul>
-          <li>Возможны технические сбои и ошибки</li>
-          <li>Функционал может измениться без предупреждения</li>
-          <li>Сервис может быть приостановлен или закрыт</li>
-          <li>Обратная связь пользователей критически важна</li>
-        </ul>
-        
-        <h4>8. Ограничение зоны работы</h4>
-        <p>В настоящий момент Сервис работает <strong>только в Москве</strong>. Расширение на другие города зависит от результатов тестирования.</p>
-        
-        <h4>9. Отказ от гарантий</h4>
-        <p>Сервис предоставляется «как есть». Мы не гарантируем:</p>
-        <ul>
-          <li>Бесперебойную работу сайта</li>
-          <li>Отсутствие ошибок</li>
-          <li>Совместимость со всеми устройствами</li>
-          <li>Достижение каких-либо результатов от использования</li>
-        </ul>
-        
-        <h4>10. Изменение условий</h4>
-        <p>Мы можем изменять условия Соглашения. Актуальная версия всегда доступна на сайте. Продолжая пользоваться Сервисом после изменений, вы соглашаетесь с новыми условиями.</p>
-        
-        <h4>11. Разрешение споров</h4>
-        <p>Все споры решаются путём переговоров. В случае невозможности договориться — в соответствии с законодательством РФ.</p>
-        
-        <h4>12. Контакты</h4>
-        <p>По вопросам работы Сервиса: <a href="https://vk.com/nastolki_ryadom" target="_blank">VK группа</a></p>
-        
-        <p style="margin-top:1.5rem"><strong>Используя Сервис, вы подтверждаете, что прочитали, поняли и согласны с условиями настоящего Соглашения.</strong></p>
-      </div>
-    </div>
-  </div>
+<div style="background:var(--ibg);border-radius:var(--r-lg);padding:.875rem;margin-bottom:1rem;font-size:.8125rem;color:var(--info);line-height:1.5"><b>🎁 Первые 100 активных пользователей</b> получат бонусы при запуске полной версии!</div>
+<button type="submit" class="form-submit">Отправить отзыв 💬</button>
+</form>
+<div id="feedbackSuccess" style="display:none" class="form-success">🎉 Спасибо за отзыв! Ты в списке первых пользователей для бонусов!</div>
 </div>
-
-<div class="toasts" id="toasts"></div>
-
+</div>
+</div>
+<div class="modal-overlay modal-legal" id="modal-privacy" onclick="if(event.target===this)closeModal('modal-privacy')">
+<div class="modal">
+<div class="modal-header">
+<h3>🔒 Политика конфиденциальности</h3>
+<button class="modal-close" onclick="closeModal('modal-privacy')">×</button>
+</div>
+<div class="modal-body">
+<div class="legal-content">
+<p><strong>Дата вступления в силу:</strong> 01.06.2024</p>
+<h4>1. Общие положения</h4>
+<p>Настоящая Политика конфиденциальности описывает, как сайт «Настолки Рядом» (далее — «Сервис») собирает, использует и защищает персональную информацию пользователей.</p>
+<h4>2. Какую информацию мы собираем</h4>
+<p>При использовании Сервиса мы можем собирать следующую информацию:</p>
+<ul><li>Имя и никнейм</li><li>Контактные данные (Telegram, email, телефон)</li><li>Информацию о предпочтениях в играх</li><li>Город проживания</li><li>Техническую информацию (IP-адрес, тип браузера, время посещения)</li></ul>
+<h4>3. Как мы используем информацию</h4>
+<p>Собранная информация используется исключительно для:</p>
+<ul><li>Связи между игроками, ведущими и владельцами кафе</li><li>Модерации контента и предотвращения злоупотреблений</li><li>Улучшения качества Сервиса</li><li>Информирования о новых функциях (с вашего согласия)</li></ul>
+<h4>4. Передача данных третьим лицам</h4>
+<p><strong>Мы НЕ продаём, НЕ передаём и НЕ распространяем ваши персональные данные третьим лицам</strong>, за исключением случаев:</p>
+<ul><li>Передачи контактов между участниками игр (только после одобрения модератором)</li><li>Требования законодательства РФ</li></ul>
+<h4>5. Модерация контента</h4>
+<p><strong>Все заявки проходят РУЧНУЮ модерацию</strong> администратором сайта для предотвращения:</p>
+<ul><li>Мата и нецензурной лексики</li><li>Оскорблений и угроз</li><li>Спама и мошенничества</li><li>Запрещённого контента</li><li>Недостоверной информации</li></ul>
+<p>Модератор имеет право отклонить любую заявку без объяснения причин.</p>
+<h4>6. Контакты</h4>
+<p>По вопросам конфиденциальности: <a href="https://vk.com/club236541309" target="_blank">VK группа</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-overlay modal-legal" id="modal-terms" onclick="if(event.target===this)closeModal('modal-terms')">
+<div class="modal">
+<div class="modal-header">
+<h3>📄 Пользовательское соглашение</h3>
+<button class="modal-close" onclick="closeModal('modal-terms')">×</button>
+</div>
+<div class="modal-body">
+<div class="legal-content">
+<p><strong>Дата вступления в силу:</strong> 01.06.2024</p>
+<h4>1. Общие положения</h4>
+<p>Используя сайт «Настолки Рядом» (далее — «Сервис»), вы соглашаетесь с условиями настоящего Пользовательского соглашения.</p>
+<h4>2. Описание Сервиса</h4>
+<p>Сервис является <strong>информационной площадкой</strong> для поиска игровых столов, ведущих и кафе с настольными играми. Сервис:</p>
+<ul><li>НЕ организует игровые мероприятия</li><li>НЕ является посредником в расчётах</li><li>НЕ проверяет личности пользователей</li><li>НЕ гарантирует качество услуг ведущих и кафе</li></ul>
+<h4>3. Ответственность Сервиса</h4>
+<p><strong>Сервис НЕ НЕСЁТ ОТВЕТСТВЕННОСТИ за:</strong></p>
+<ul><li>Действия и бездействие пользователей</li><li>Качество проведения игр</li><li>Финансовые споры между пользователями</li><li>Безопасность на игровых мероприятиях</li><li>Достоверность информации, размещённой пользователями</li><li>Утрату или повреждение имущества на мероприятиях</li><li>Конфликты между участниками</li></ul>
+<h4>4. Модерация контента</h4>
+<p><strong>Все заявки проходят РУЧНУЮ модерацию</strong> администратором. Сервис оставляет за собой право:</p>
+<ul><li>Отклонить любую заявку без объяснения причин</li><li>Удалить размещённую информацию</li><li>Заблокировать пользователя при нарушении правил</li><li>Проверить заявки на наличие мата, оскорблений и запрещённого контента</li></ul>
+<h4>5. Обязанности пользователей</h4>
+<p>Пользователь обязуется:</p>
+<ul><li>Предоставлять достоверную информацию</li><li>НЕ размещать запрещённый контент (оскорбления, спам, мошенничество)</li><li>Соблюдать законодательство РФ</li><li>Самостоятельно проверять информацию о мероприятиях</li><li>Нести ответственность за свои действия на игровых встречах</li></ul>
+<h4>6. Контакты</h4>
+<p>По вопросам работы Сервиса: <a href="https://vk.com/club236541309" target="_blank">VK группа</a></p>
+<p style="margin-top:1.5rem"><strong>Используя Сервис, вы подтверждаете, что прочитали, поняли и согласны с условиями настоящего Соглашения.</strong></p>
+</div>
+</div>
+</div>
+</div>
 <script>
-const API = 'https://nastolki-ryadom-production.up.railway.app';
-
-let allTables = [];
-let allChess = [];
-let allHosts = [];
-let allCafes = [];
-let searchQ = '';
-let activeFilter = 'all';
-
-// Инициализация темы
-(function(){
-  const root = document.documentElement;
-  let theme = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
-  root.setAttribute('data-theme', theme);
-  
-  document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      theme = theme === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', theme);
-      btn.innerHTML = theme === 'dark' ?
-        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>' :
-        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-    });
-  });
-})();
-
-// Загрузка данных
-async function loadData() {
-  try {
-    const [tables, hosts, cafes] = await Promise.allSettled([
-      fetch(API + '/api/tables').then(r => r.json()),
-      fetch(API + '/api/hosts').then(r => r.json()),
-      fetch(API + '/api/cafes').then(r => r.json())
-    ]);
-    
-    const allData = tables.status === 'fulfilled' && Array.isArray(tables.value) ? tables.value : [];
-    
-    // Разделяем на настольные игры и шахматы/нарды
-    allTables = allData.filter(t => !t.type || t.type === 'boardgame');
-    allChess = allData.filter(t => t.type === 'chess');
-    
-    allHosts = hosts.status === 'fulfilled' && Array.isArray(hosts.value) ? hosts.value : [];
-    allCafes = cafes.status === 'fulfilled' && Array.isArray(cafes.value) ? cafes.value : [];
-    
-    // Обновляем статистику
-    document.getElementById('stat-tables').textContent = allTables.length;
-    document.getElementById('stat-chess').textContent = allChess.length;
-    document.getElementById('stat-hosts').textContent = allHosts.length;
-    document.getElementById('stat-cafes').textContent = allCafes.length;
-    
-    // Рендерим секции
-    renderTables();
-    renderChess();
-    renderHosts();
-    renderCafes();
-  } catch (error) {
-    console.error('Ошибка загрузки данных:', error);
-  }
-}
-
-// Поиск и фильтры
-function applySearch() {
-  searchQ = document.getElementById('searchInput').value.toLowerCase();
-  renderTables();
-  renderChess();
-}
-
-function filterTab(filter, btn) {
-  activeFilter = filter;
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTables();
-  renderChess();
-}
-
-function filterItems(items) {
-  return items.filter(item => {
-    // Поиск
-    if (searchQ) {
-      const searchText = [
-        item.game || '',
-        item.venue || '',
-        item.description || '',
-        item.hostTelegram || '',
-        item.level || ''
-      ].join(' ').toLowerCase();
-      
-      if (!searchText.includes(searchQ)) return false;
-    }
-    
-    // Фильтр "Бесплатно"
-    if (activeFilter === 'free') {
-      const price = item.price || '';
-      if (price && price !== 'Бесплатно' && price !== '0') return false;
-    }
-    
-    // Фильтр "Есть места"
-    if (activeFilter === 'seats') {
-      const taken = item.seats_taken || 0;
-      const total = parseInt(item.seats) || 99;
-      if (taken >= total) return false;
-    }
-    
-    return true;
-  });
-}
-
-// Рендер настольных игр
-function renderTables() {
-  const filtered = filterItems(allTables);
-  document.getElementById('tables-count').textContent = filtered.length;
-  
-  if (!filtered.length) {
-    document.getElementById('tables-grid').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">🎲</div>
-        <h3>Столов не найдено</h3>
-        <p>Попробуй другой фильтр или добавь свой стол!</p>
-        <button class="btn btn-primary" onclick="openModal('table')">+ Добавить стол</button>
-      </div>
-    `;
-    return;
-  }
-  
-  document.getElementById('tables-grid').innerHTML = `
-    <div class="cards-grid">
-      ${filtered.map(t => createTableCard(t)).join('')}
-    </div>
-  `;
-}
-
-// Рендер шахмат/нард
-function renderChess() {
-  const filtered = filterItems(allChess);
-  document.getElementById('chess-count').textContent = filtered.length;
-  
-  if (!filtered.length) {
-    document.getElementById('chess-grid').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">♟️</div>
-        <h3>Партий пока нет</h3>
-        <p>Будь первым! Добавь партию в шахматы или нарды.</p>
-        <button class="btn btn-chess" onclick="openModal('chess')">+ Добавить партию</button>
-      </div>
-    `;
-    return;
-  }
-  
-  document.getElementById('chess-grid').innerHTML = `
-    <div class="cards-grid">
-      ${filtered.map(t => createChessCard(t)).join('')}
-    </div>
-  `;
-}
-
-// Создание карточки настольной игры
-function createTableCard(t) {
-  const taken = t.seats_taken || 0;
-  const total = parseInt(t.seats) || 0;
-  const free = total ? total - taken : null;
-  const isFull = total && taken >= total;
-  const price = !t.price || t.price === '0' || t.price.toLowerCase() === 'бесплатно' ? 'Бесплатно' : t.price;
-  
-  return `
-    <div class="card" onclick="openBooking('${t.id}')">
-      <div class="card-badge-row">
-        <span class="badge badge-game">🎮 ${esc(t.game || 'Игра')}</span>
-        ${free !== null ? (isFull ? '<span class="badge badge-full">Мест нет</span>' : `<span class="badge badge-seats">${free} мест</span>`) : ''}
-        ${price === 'Бесплатно' ? '<span class="badge badge-free">Бесплатно</span>' : ''}
-      </div>
-      <div class="card-body">
-        <div class="card-title">${esc(t.game || 'Игровой стол')}</div>
-        <div class="card-meta">
-          ${t.date ? `<div class="card-meta-row">📅 ${esc(t.date)}${t.time ? ' в ' + esc(t.time) : ''}</div>` : ''}
-          ${t.venue ? `<div class="card-meta-row">📍 ${esc(t.venue)}</div>` : ''}
-          <div class="card-meta-row">👤 Ведущий (контакт после одобрения)</div>
-          ${t.description ? `<div class="card-meta-row" style="color:var(--faint)">${esc(t.description.substring(0, 60))}${t.description.length > 60 ? '...' : ''}</div>` : ''}
-        </div>
-      </div>
-      <div class="card-footer">
-        <span class="card-price ${price === 'Бесплатно' ? 'card-price-free' : ''}">${esc(price)}</span>
-        <button class="book-btn" ${isFull ? 'disabled' : ''} onclick="event.stopPropagation();openBooking('${t.id}')">
-          ${isFull ? 'Нет мест' : 'Записаться'}
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-// Создание карточки шахмат/нард
-function createChessCard(t) {
-  const price = !t.price || t.price === '0' || t.price.toLowerCase() === 'бесплатно' ? 'Бесплатно' : t.price;
-  const gameIcon = t.game === 'Шахматы' ? '♟️' : t.game === 'Нарды' ? '🎲' : t.game === 'Шашки' ? '⚪' : '⚫';
-  
-  return `
-    <div class="card" onclick="openBooking('${t.id}')">
-      <div class="card-badge-row">
-        <span class="badge badge-chess">${gameIcon} ${esc(t.game || 'Партия')}</span>
-        ${t.level ? `<span class="badge badge-game">${esc(t.level)}</span>` : ''}
-        ${price === 'Бесплатно' ? '<span class="badge badge-free">Бесплатно</span>' : ''}
-      </div>
-      <div class="card-body">
-        <div class="card-title">${gameIcon} ${esc(t.game || 'Партия')}</div>
-        <div class="card-meta">
-          ${t.date ? `<div class="card-meta-row">📅 ${esc(t.date)}${t.time ? ' в ' + esc(t.time) : ''}</div>` : ''}
-          ${t.venue ? `<div class="card-meta-row">📍 ${esc(t.venue)}</div>` : ''}
-          <div class="card-meta-row">👤 Соперник (контакт после одобрения)</div>
-          ${t.description ? `<div class="card-meta-row" style="color:var(--faint)">${esc(t.description.substring(0, 60))}${t.description.length > 60 ? '...' : ''}</div>` : ''}
-        </div>
-      </div>
-      <div class="card-footer">
-        <span class="card-price ${price === 'Бесплатно' ? 'card-price-free' : ''}">${esc(price)}</span>
-        <button class="book-btn" onclick="event.stopPropagation();openBooking('${t.id}')">Играть</button>
-      </div>
-    </div>
-  `;
-}
-
-// Рендер ведущих
-function renderHosts() {
-  document.getElementById('hosts-count').textContent = allHosts.length;
-  
-  if (!allHosts.length) {
-    document.getElementById('hosts-grid').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">🎭</div>
-        <h3>Ведущих пока нет</h3>
-        <p>Стань первым ведущим!</p>
-        <button class="btn btn-primary" onclick="openModal('host')">Зарегистрироваться</button>
-      </div>
-    `;
-    return;
-  }
-  
-  document.getElementById('hosts-grid').innerHTML = allHosts.map(h => {
-    const games = h.games ? h.games.split(',').map(g => g.trim()).filter(Boolean) : [];
-    return `
-      <div class="host-card">
-        <div class="host-name">🎭 ${esc(h.name || '—')}</div>
-        <div class="host-meta">
-          ${h.city ? '📍 ' + esc(h.city) + '<br>' : ''}
-          ${h.about ? esc(h.about.substring(0, 120)) + (h.about.length > 120 ? '...' : '') : ''}
-        </div>
-        ${games.length ? `
-          <div class="host-games">
-            ${games.slice(0, 5).map(g => `<span class="game-chip">${esc(g)}</span>`).join('')}
-          </div>
-        ` : ''}
-        <div class="host-contact">✉️ Контакты — через заявку на стол</div>
-      </div>
-    `;
-  }).join('');
-}
-
-// Рендер кафе
-function renderCafes() {
-  document.getElementById('cafes-count').textContent = allCafes.length;
-  
-  if (!allCafes.length) {
-    document.getElementById('cafes-grid').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">☕</div>
-        <h3>Кафе пока нет</h3>
-        <p>Добавь своё кафе!</p>
-        <button class="btn btn-primary" onclick="openModal('cafe')">Добавить кафе</button>
-      </div>
-    `;
-    return;
-  }
-  
-  document.getElementById('cafes-grid').innerHTML = allCafes.map(c => `
-    <div class="cafe-card">
-      <div class="cafe-name">☕ ${esc(c.name || '—')}</div>
-      <div class="cafe-meta">
-        ${c.address ? '📍 ' + esc(c.address) + '<br>' : ''}
-        ${c.description ? esc(c.description.substring(0, 100)) + (c.description.length > 100 ? '...' : '') : ''}
-      </div>
-      ${c.telegram ? `
-        <a class="cafe-tg" href="https://t.me/${esc(c.telegram.replace('@', ''))}" target="_blank" rel="noopener">
-          ✉️ ${esc(c.telegram)}
-        </a>
-      ` : ''}
-    </div>
-  `).join('');
-}
-
-// Escape HTML
-function esc(s) {
-  return String(s || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/'/g, '&#39;')
-    .replace(/"/g, '&quot;');
-}
-
-// Модальные окна
-function openModal(type) {
-  document.getElementById('modal-' + type).classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('show');
-  document.body.style.overflow = '';
-}
-
-function closeModalByOverlay(e, id) {
-  if (e.target === document.getElementById(id)) {
-    closeModal(id);
-  }
-}
-
-// Открыть форму записи
-function openBooking(tableId) {
-  const allItems = [...allTables, ...allChess];
-  const item = allItems.find(x => x.id === tableId);
-  if (!item) return;
-  
-  const gameIcon = item.type === 'chess' 
-    ? (item.game === 'Шахматы' ? '♟️' : item.game === 'Нарды' ? '🎲' : item.game === 'Шашки' ? '⚪' : '⚫')
-    : '🎮';
-  
-  const info = document.getElementById('booking-info');
-  info.innerHTML = `
-    <b>${gameIcon} ${esc(item.game || 'Игра')}</b>
-    ${item.date ? ' · 📅 ' + esc(item.date) + (item.time ? ' в ' + esc(item.time) : '') : ''}
-    ${item.venue ? '<br>📍 ' + esc(item.venue) : ''}
-    ${item.price ? '<br>💰 ' + esc(item.price) : ''}
-    ${item.level ? '<br>🎯 ' + esc(item.level) : ''}
-  `;
-  
-  document.getElementById('bookingTableId').value = tableId;
-  document.getElementById('bookingSuccess').style.display = 'none';
-  document.getElementById('bookingForm').style.display = '';
-  document.getElementById('bookingForm').reset();
-  openModal('booking');
-}
-
-// Отправка форм
-async function submitBooking(e) {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData);
-  const btn = e.target.querySelector('[type=submit]');
-  
-  btn.disabled = true;
-  btn.textContent = 'Отправляем...';
-  
-  try {
-    const res = await fetch(API + '/api/bookings', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
-    const json = await res.json();
-    
-    if (json.success) {
-      e.target.style.display = 'none';
-      document.getElementById('bookingSuccess').style.display = '';
-      toast('Заявка отправлена! Контакты получишь после одобрения 🎉');
-      setTimeout(() => closeModal('modal-booking'), 3000);
-    } else {
-      toast(json.error || 'Ошибка', 'error');
-      btn.disabled = false;
-      btn.textContent = 'Отправить заявку ✉️';
-    }
-  } catch {
-    toast('Ошибка сети', 'error');
-    btn.disabled = false;
-    btn.textContent = 'Отправить заявку ✉️';
-  }
-}
-
-async function submitTable(e) {
-  e.preventDefault();
-  return submitForm(e, 'table', 'Стол отправлен на проверку! 🎲', 'Добавить стол →');
-}
-
-async function submitChess(e) {
-  e.preventDefault();
-  return submitForm(e, 'chess', 'Партия отправлена на проверку! ♟️', 'Добавить партию →');
-}
-
-async function submitHost(e) {
-  e.preventDefault();
-  return submitForm(e, 'host', 'Заявка ведущего отправлена! 🎭', 'Стать ведущим →', '/api/hosts');
-}
-
-async function submitCafe(e) {
-  e.preventDefault();
-  return submitForm(e, 'cafe', 'Кафе отправлено на проверку! ☕', 'Добавить кафе →', '/api/cafes');
-}
-
-async function submitFeedback(e) {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData);
-  const btn = e.target.querySelector('[type=submit]');
-  
-  btn.disabled = true;
-  btn.textContent = 'Отправляем...';
-  
-  try {
-    await fetch(API + '/api/feedback', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
-    
-    e.target.style.display = 'none';
-    document.getElementById('feedbackSuccess').style.display = '';
-    toast('Спасибо за отзыв! 🎉');
-    setTimeout(() => closeModal('modal-feedback'), 3000);
-  } catch {
-    e.target.style.display = 'none';
-    document.getElementById('feedbackSuccess').style.display = '';
-    toast('Спасибо за отзыв! 🎉');
-    setTimeout(() => closeModal('modal-feedback'), 3000);
-  }
-}
-
-// Универсальная функция отправки
-async function submitForm(e, type, successMsg, btnText, endpoint = '/api/tables') {
-  const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData);
-  const btn = e.target.querySelector('[type=submit]');
-  
-  btn.disabled = true;
-  btn.textContent = 'Отправляем...';
-  
-  try {
-    const res = await fetch(API + endpoint, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
-    const json = await res.json();
-    
-    if (json.success) {
-      e.target.style.display = 'none';
-      document.getElementById(type + 'Success').style.display = '';
-      toast(successMsg);
-    } else {
-      toast(json.error || 'Ошибка', 'error');
-      btn.disabled = false;
-      btn.textContent = btnText;
-    }
-  } catch {
-    toast('Ошибка сети', 'error');
-    btn.disabled = false;
-    btn.textContent = btnText;
-  }
-}
-
-// Уведомления
-function toast(msg, type = 'success') {
-  const container = document.getElementById('toasts');
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.innerHTML = (type === 'success' ? '✅ ' : '❌ ') + msg;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3500);
-}
-
-// Закрытие модалок по ESC
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay.show').forEach(m => {
-      m.classList.remove('show');
-      document.body.style.overflow = '';
-    });
-  }
-});
-
-// Загрузка при старте
+const API='https://nastolki-ryadom-production.up.railway.app';
+let allTables=[],allChess=[],allHosts=[],allCafes=[],searchQ='',activeFilter='all';
+(function(){const r=document.documentElement;let t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';r.setAttribute('data-theme',t);document.querySelectorAll('[data-theme-toggle]').forEach(b=>b.addEventListener('click',()=>{t=t==='dark'?'light':'dark';r.setAttribute('data-theme',t);b.innerHTML=t==='dark'?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'}))})();
+async function loadData(){try{const[t,h,c]=await Promise.allSettled([fetch(API+'/api/tables').then(r=>r.json()),fetch(API+'/api/hosts').then(r=>r.json()),fetch(API+'/api/cafes').then(r=>r.json())]);const d=t.status==='fulfilled'&&Array.isArray(t.value)?t.value:[];allTables=d.filter(x=>!x.type||x.type==='boardgame');allChess=d.filter(x=>x.type==='chess');allHosts=h.status==='fulfilled'&&Array.isArray(h.value)?h.value:[];allCafes=c.status==='fulfilled'&&Array.isArray(c.value)?c.value:[];document.getElementById('stat-tables').textContent=allTables.length;document.getElementById('stat-chess').textContent=allChess.length;document.getElementById('stat-hosts').textContent=allHosts.length;document.getElementById('stat-cafes').textContent=allCafes.length;renderTables();renderChess()}catch(e){console.error(e)}}
+function applySearch(){searchQ=document.getElementById('searchInput').value.toLowerCase();renderTables();renderChess()}
+function filterTab(f,btn){activeFilter=f;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderTables();renderChess()}
+function filterItems(items){return items.filter(i=>{if(searchQ){const txt=[i.game||'',i.venue||'',i.description||''].join(' ').toLowerCase();if(!txt.includes(searchQ))return false}if(activeFilter==='free'){const p=i.price||'';if(p&&p!=='Бесплатно'&&p!=='0')return false}if(activeFilter==='seats'){const tk=i.seats_taken||0;const tt=parseInt(i.seats)||99;if(tk>=tt)return false}return true})}
+function renderTables(){const f=filterItems(allTables);document.getElementById('tables-count').textContent=f.length;if(!f.length){document.getElementById('tables-grid').innerHTML='<div class="empty"><div class="empty-icon">🎲</div><h3>Игр не найдено</h3><p>Попробуй другой фильтр или добавь игру!</p></div>';return}document.getElementById('tables-grid').innerHTML='<div class="cards-grid">'+f.map(createTableCard).join('')+'</div>'}
+function renderChess(){const f=filterItems(allChess);document.getElementById('chess-count').textContent=f.length;if(!f.length){document.getElementById('chess-grid').innerHTML='<div class="empty"><div class="empty-icon">♟️</div><h3>Партий пока нет</h3><p>Добавь первую партию!</p></div>';return}document.getElementById('chess-grid').innerHTML='<div class="cards-grid">'+f.map(createChessCard).join('')+'</div>'}
+function createTableCard(t){const tk=t.seats_taken||0;const tt=parseInt(t.seats)||0;const fr=tt?tt-tk:null;const full=tt&&tk>=tt;const p=!t.price||t.price==='0'||t.price.toLowerCase()==='бесплатно'?'Бесплатно':t.price;return`<div class="card"><div class="card-badge-row"><span class="badge badge-game">🎮 ${esc(t.game||'Игра')}</span>${fr!==null?(full?'<span class="badge badge-full">Мест нет</span>':`<span class="badge badge-seats">${fr} мест</span>`):''}${p==='Бесплатно'?'<span class="badge badge-free">Бесплатно</span>':''}</div><div class="card-body"><div class="card-title">${esc(t.game||'Игра')}</div><div class="card-meta">${t.date?`<div class="card-meta-row">📅 ${esc(t.date)}${t.time?' в '+esc(t.time):''}</div>`:''}${t.venue?`<div class="card-meta-row">📍 ${esc(t.venue)}</div>`:''}<div class="card-meta-row">👤 Контакт после одобрения</div></div></div><div class="card-footer"><span class="card-price ${p==='Бесплатно'?'card-price-free':''}">${esc(p)}</span><button class="book-btn"${full?' disabled':''}>Записаться</button></div></div>`}
+function createChessCard(t){const p=!t.price||t.price==='0'||t.price.toLowerCase()==='бесплатно'?'Бесплатно':t.price;const ic=t.game==='Шахматы'?'♟️':t.game==='Нарды'?'🎲':t.game==='Шашки'?'⚪':'⚫';return`<div class="card"><div class="card-badge-row"><span class="badge badge-chess">${ic} ${esc(t.game||'Партия')}</span>${t.level?`<span class="badge badge-game">${esc(t.level)}</span>`:''}${p==='Бесплатно'?'<span class="badge badge-free">Бесплатно</span>':''}</div><div class="card-body"><div class="card-title">${ic} ${esc(t.game||'Партия')}</div><div class="card-meta">${t.date?`<div class="card-meta-row">📅 ${esc(t.date)}${t.time?' в '+esc(t.time):''}</div>`:''}${t.venue?`<div class="card-meta-row">📍 ${esc(t.venue)}</div>`:''}<div class="card-meta-row">👤 Контакт после одобрения</div></div></div><div class="card-footer"><span class="card-price ${p==='Бесплатно'?'card-price-free':''}">${esc(p)}</span><button class="book-btn">Играть</button></div></div>`}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;')}
+function openModal(t){const m=document.getElementById('modal-'+t);if(m){m.classList.add('show');document.body.style.overflow='hidden'}}
+function closeModal(id){const m=document.getElementById(id);if(m){m.classList.remove('show');document.body.style.overflow=''}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.show').forEach(m=>{m.classList.remove('show');document.body.style.overflow=''})});
+async function submitFeedback(e){e.preventDefault();const formData=new FormData(e.target);const data=Object.fromEntries(formData);try{await fetch(API+'/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});e.target.style.display='none';document.getElementById('feedbackSuccess').style.display='flex';setTimeout(()=>closeModal('modal-feedback'),3000)}catch(err){e.target.style.display='none';document.getElementById('feedbackSuccess').style.display='flex';setTimeout(()=>closeModal('modal-feedback'),3000)}}
 loadData();
 </script>
 </body>

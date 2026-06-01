@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+index_html = '''<!DOCTYPE html>
 <html lang="ru" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -19,8 +19,6 @@ a{color:inherit;text-decoration:none;transition:color var(--tr)}
 a:focus-visible,button:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:var(--r-sm)}
 p,li{text-wrap:pretty;max-width:72ch}
 h1,h2,h3{text-wrap:balance}
-
-/* NAV */
 .nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .nav-inner{max-width:1200px;margin:0 auto;padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem}
 .logo{display:flex;align-items:center;gap:.5rem;font-family:var(--fd);font-weight:800;font-size:1rem}
@@ -36,8 +34,6 @@ h1,h2,h3{text-wrap:balance}
 .btn-ghost:hover{background:var(--offset);color:var(--text);border-color:var(--text)}
 .theme-btn{padding:.4rem;border-radius:var(--r-md);color:var(--muted);display:flex;align-items:center}
 .theme-btn:hover{background:var(--offset);color:var(--text)}
-
-/* HERO */
 .hero{max-width:1200px;margin:0 auto;padding:4rem 1.5rem 3rem}
 .hero-tag{display:inline-flex;align-items:center;gap:.375rem;background:var(--pbg);color:var(--primary);padding:.25rem .75rem;border-radius:var(--r-full);font-size:.8125rem;font-weight:600;margin-bottom:1.25rem}
 .hero h1{font-family:var(--fd);font-size:clamp(2rem,.5rem + 5vw,4rem);font-weight:900;line-height:1.1;margin-bottom:1rem}
@@ -48,8 +44,6 @@ h1,h2,h3{text-wrap:balance}
 .stat{display:flex;flex-direction:column}
 .stat-n{font-family:var(--fd);font-size:1.75rem;font-weight:800;color:var(--primary)}
 .stat-l{font-size:.8125rem;color:var(--muted)}
-
-/* SEARCH */
 .search-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1rem 0}
 .search-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
 .search-box{flex:1;min-width:200px;position:relative}
@@ -60,15 +54,11 @@ h1,h2,h3{text-wrap:balance}
 .tab{padding:.4rem .875rem;border-radius:var(--r-full);font-size:.8125rem;font-weight:600;border:1.5px solid var(--border);color:var(--muted);background:var(--surface);cursor:pointer;transition:all var(--tr)}
 .tab:hover{background:var(--offset);color:var(--text)}
 .tab.active{background:var(--primary);color:var(--inv);border-color:var(--primary)}
-
-/* CATALOG */
 .catalog{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
 .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:1rem}
 .section-head h2{font-family:var(--fd);font-size:1.25rem;font-weight:800}
 .count-badge{background:var(--offset);color:var(--muted);font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:var(--r-full)}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:1rem}
-
-/* CARDS */
 .card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);overflow:hidden;box-shadow:var(--sh-sm);transition:all var(--tr);cursor:pointer}
 .card:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
 .card-badge-row{display:flex;gap:.375rem;flex-wrap:wrap;padding:.75rem .75rem 0}
@@ -87,8 +77,6 @@ h1,h2,h3{text-wrap:balance}
 .book-btn{padding:.4rem .875rem;background:var(--primary);color:var(--inv);border-radius:var(--r-lg);font-size:.8125rem;font-weight:600;border:none;cursor:pointer;transition:all var(--tr)}
 .book-btn:hover{background:var(--ph)}
 .book-btn:disabled{background:var(--offset);color:var(--muted);cursor:not-allowed}
-
-/* HOST CARD */
 .host-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);padding:1.25rem;box-shadow:var(--sh-sm);transition:all var(--tr)}
 .host-card:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
 .host-avatar{width:52px;height:52px;border-radius:var(--r-full);background:linear-gradient(135deg,var(--primary),var(--ph));display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.25rem;font-weight:800;color:var(--inv);flex-shrink:0;margin-bottom:.875rem}
@@ -98,27 +86,19 @@ h1,h2,h3{text-wrap:balance}
 .game-chip{background:var(--offset);color:var(--text);font-size:.6875rem;font-weight:500;padding:.2rem .5rem;border-radius:var(--r-full)}
 .host-link{display:flex;align-items:center;gap:.375rem;color:var(--primary);font-size:.8125rem;font-weight:600}
 .host-link:hover{text-decoration:underline}
-
-/* CAFE CARD */
 .cafe-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);padding:1.25rem;box-shadow:var(--sh-sm);transition:all var(--tr)}
 .cafe-card:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
 .cafe-name{font-family:var(--fd);font-size:1rem;font-weight:700;margin-bottom:.375rem}
 .cafe-meta{font-size:.8125rem;color:var(--muted);line-height:1.7;margin-bottom:.75rem}
 .cafe-tg{display:inline-flex;align-items:center;gap:.375rem;color:var(--primary);font-size:.8125rem;font-weight:600}
-
-/* EMPTY STATE */
 .empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
 .empty-icon{font-size:2.5rem;margin-bottom:.75rem}
 .empty h3{font-family:var(--fd);font-size:1rem;font-weight:700;margin-bottom:.5rem;color:var(--text)}
 .empty p{font-size:.875rem;max-width:30ch;margin:0 auto .75rem}
-
-/* LOADING */
 .loading-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:1rem}
 .skel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);padding:1.25rem;height:180px;overflow:hidden;position:relative}
 .skel::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 25%,var(--offset) 50%,transparent 75%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-
-/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:flex-end;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .3s}
 .modal-overlay.show{opacity:1;pointer-events:all}
 .modal{background:var(--surface2);border-radius:var(--r-2xl) var(--r-2xl) var(--r-xl) var(--r-xl);width:100%;max-width:500px;max-height:90vh;overflow-y:auto;transform:translateY(2rem);transition:transform .3s cubic-bezier(.16,1,.3,1);box-shadow:var(--sh-lg)}
@@ -138,13 +118,9 @@ h1,h2,h3{text-wrap:balance}
 .form-submit:hover{background:var(--ph)}
 .form-submit:disabled{opacity:.6;cursor:not-allowed}
 .form-success{background:var(--sbg);color:var(--success);border-radius:var(--r-xl);padding:1rem;text-align:center;font-size:.875rem;font-weight:600}
-
-/* TOAST */
 .toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;display:flex;flex-direction:column;gap:.5rem}
 .toast{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:.625rem 1rem;font-size:.8125rem;box-shadow:var(--sh-md);display:flex;align-items:center;gap:.5rem;animation:slideIn .25s ease;max-width:280px}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-
-/* CTA SECTION */
 .cta-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:2rem 0}
 .cta-inner{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem}
 .cta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
@@ -154,10 +130,7 @@ h1,h2,h3{text-wrap:balance}
 .cta-card p{font-size:.8125rem;color:var(--muted);margin-bottom:1rem;line-height:1.6}
 .cta-btn{padding:.5rem 1.125rem;background:var(--primary);color:var(--inv);border-radius:var(--r-lg);font-size:.875rem;font-weight:600;border:none;cursor:pointer;transition:all var(--tr);font-family:inherit}
 .cta-btn:hover{background:var(--ph)}
-
-/* FOOTER */
 footer{max-width:1200px;margin:0 auto;padding:1.5rem;text-align:center;font-size:.8125rem;color:var(--faint);border-top:1px solid var(--border)}
-
 @media(max-width:640px){
   .nav-links{display:none}
   .hero{padding:2rem 1rem 1.5rem}
@@ -219,18 +192,21 @@ footer{max-width:1200px;margin:0 auto;padding:1.5rem;text-align:center;font-size
   </div>
 </div>
 
-<!-- TABLES -->
 <section class="catalog" id="tables">
   <div class="section-head">
     <h2>🎲 Игровые столы <span class="count-badge" id="tables-count">0</span></h2>
     <button class="btn btn-primary" onclick="openModal('table')">+ Добавить стол</button>
   </div>
   <div id="tables-grid">
-    <div class="loading-grid">${Array(4).fill('<div class="skel"></div>').join('')}</div>
+    <div class="loading-grid">
+      <div class="skel"></div>
+      <div class="skel"></div>
+      <div class="skel"></div>
+      <div class="skel"></div>
+    </div>
   </div>
 </section>
 
-<!-- CTA -->
 <div class="cta-section">
   <div class="cta-inner">
     <div class="cta-grid">
@@ -250,23 +226,29 @@ footer{max-width:1200px;margin:0 auto;padding:1.5rem;text-align:center;font-size
   </div>
 </div>
 
-<!-- HOSTS -->
 <section class="catalog" id="hosts">
   <div class="section-head">
     <h2>🎭 Ведущие <span class="count-badge" id="hosts-count">0</span></h2>
   </div>
   <div id="hosts-grid" class="cards-grid">
-    <div class="loading-grid">${Array(3).fill('<div class="skel" style="height:220px"></div>').join('')}</div>
+    <div class="loading-grid">
+      <div class="skel" style="height:220px"></div>
+      <div class="skel" style="height:220px"></div>
+      <div class="skel" style="height:220px"></div>
+    </div>
   </div>
 </section>
 
-<!-- CAFES -->
 <section class="catalog" id="cafes">
   <div class="section-head">
     <h2>☕ Кафе с настолками <span class="count-badge" id="cafes-count">0</span></h2>
   </div>
   <div id="cafes-grid" class="cards-grid">
-    <div class="loading-grid">${Array(3).fill('<div class="skel" style="height:160px"></div>').join('')}</div>
+    <div class="loading-grid">
+      <div class="skel" style="height:160px"></div>
+      <div class="skel" style="height:160px"></div>
+      <div class="skel" style="height:160px"></div>
+    </div>
   </div>
 </section>
 
@@ -274,8 +256,6 @@ footer{max-width:1200px;margin:0 auto;padding:1.5rem;text-align:center;font-size
   <p>© 2024 Настолки Рядом · Сделано с ❤️ для настольщиков</p>
 </footer>
 
-<!-- MODALS -->
-<!-- Book table -->
 <div class="modal-overlay" id="modal-booking" onclick="closeModalByOverlay(event,'modal-booking')">
   <div class="modal">
     <div class="modal-header">
@@ -296,7 +276,6 @@ footer{max-width:1200px;margin:0 auto;padding:1.5rem;text-align:center;font-size
   </div>
 </div>
 
-<!-- Add table -->
 <div class="modal-overlay" id="modal-table" onclick="closeModalByOverlay(event,'modal-table')">
   <div class="modal">
     <div class="modal-header">
@@ -325,7 +304,6 @@ footer{max-width:1200px;margin:0 auto;padding:1.5rem;text-align:center;font-size
   </div>
 </div>
 
-<!-- Host registration -->
 <div class="modal-overlay" id="modal-host" onclick="closeModalByOverlay(event,'modal-host')">
   <div class="modal">
     <div class="modal-header">
@@ -347,7 +325,6 @@ footer{max-width:1200px;margin:0 auto;padding:1.5rem;text-align:center;font-size
   </div>
 </div>
 
-<!-- Cafe registration -->
 <div class="modal-overlay" id="modal-cafe" onclick="closeModalByOverlay(event,'modal-cafe')">
   <div class="modal">
     <div class="modal-header">
@@ -436,7 +413,7 @@ function renderTables() {
   const filtered = filterTables(allTables);
   document.getElementById('tables-count').textContent = filtered.length;
   if (!filtered.length) {
-    document.getElementById('tables-grid').innerHTML = '<div class="empty"><div class="empty-icon">🎲</div><h3>Столов не найдено</h3><p>Попробуй другой фильтр или добавь свой стол!</p><button class="btn btn-primary" onclick="openModal('table')">+ Добавить стол</button></div>';
+    document.getElementById('tables-grid').innerHTML = '<div class="empty"><div class="empty-icon">🎲</div><h3>Столов не найдено</h3><p>Попробуй другой фильтр или добавь свой стол!</p><button class="btn btn-primary" onclick="openModal(\'table\')">+ Добавить стол</button></div>';
     return;
   }
   document.getElementById('tables-grid').innerHTML = '<div class="cards-grid">'+filtered.map(t => {
@@ -444,58 +421,29 @@ function renderTables() {
     const free = total ? total - taken : null;
     const isFull = total && taken >= total;
     const price = !t.price || t.price==='0' || t.price.toLowerCase()==='бесплатно' ? 'Бесплатно' : t.price;
-    return `<div class="card" onclick="openBooking('${t.id}')">
-      <div class="card-badge-row">
-        <span class="badge badge-game">🎮 ${esc(t.game||'Игра')}</span>
-        ${free!==null ? isFull ? '<span class="badge badge-full">Мест нет</span>' : '<span class="badge badge-seats">'+free+' мест</span>' : ''}
-        ${price==='Бесплатно'?'<span class="badge badge-free">Бесплатно</span>':''}
-      </div>
-      <div class="card-body">
-        <div class="card-title">${esc(t.game||'Игровой стол')}</div>
-        <div class="card-meta">
-          ${t.date?'<div class="card-meta-row">📅 '+esc(t.date)+(t.time?' в '+esc(t.time):'')+'</div>':''}
-          ${t.venue?'<div class="card-meta-row">📍 '+esc(t.venue)+'</div>':''}
-          ${t.hostTelegram?'<div class="card-meta-row">👤 '+esc(t.hostTelegram)+'</div>':''}
-          ${t.description?'<div class="card-meta-row" style="color:var(--faint)">'+esc(t.description.substring(0,60))+(t.description.length>60?'...':'')+'</div>':''}
-        </div>
-      </div>
-      <div class="card-footer">
-        <span class="card-price ${price==='Бесплатно'?'card-price-free':''}">${esc(price)}</span>
-        <button class="book-btn" ${isFull?'disabled':''} onclick="event.stopPropagation();openBooking('${t.id}')">${isFull?'Нет мест':'Записаться'}</button>
-      </div>
-    </div>`;
+    return '<div class="card" onclick="openBooking(\''+t.id+'\')"><div class="card-badge-row"><span class="badge badge-game">🎮 '+esc(t.game||'Игра')+'</span>'+(free!==null ? isFull ? '<span class="badge badge-full">Мест нет</span>' : '<span class="badge badge-seats">'+free+' мест</span>' : '')+(price==='Бесплатно'?'<span class="badge badge-free">Бесплатно</span>':'')+'</div><div class="card-body"><div class="card-title">'+esc(t.game||'Игровой стол')+'</div><div class="card-meta">'+(t.date?'<div class="card-meta-row">📅 '+esc(t.date)+(t.time?' в '+esc(t.time):'')+'</div>':'')+(t.venue?'<div class="card-meta-row">📍 '+esc(t.venue)+'</div>':'')+(t.hostTelegram?'<div class="card-meta-row">👤 '+esc(t.hostTelegram)+'</div>':'')+(t.description?'<div class="card-meta-row" style="color:var(--faint)">'+esc(t.description.substring(0,60))+(t.description.length>60?'...':'')+'</div>':'')+'</div></div><div class="card-footer"><span class="card-price '+(price==='Бесплатно'?'card-price-free':'')+'">'+esc(price)+'</span><button class="book-btn" '+(isFull?'disabled':'')+' onclick="event.stopPropagation();openBooking(\''+t.id+'\')">'+(isFull?'Нет мест':'Записаться')+'</button></div></div>';
   }).join('')+'</div>';
 }
 
 function renderHosts() {
   document.getElementById('hosts-count').textContent = allHosts.length;
-  if (!allHosts.length) { document.getElementById('hosts-grid').innerHTML='<div class="empty"><div class="empty-icon">🎭</div><h3>Ведущих пока нет</h3><p>Стань первым ведущим!</p><button class="btn btn-primary" onclick="openModal('host')">Зарегистрироваться</button></div>'; return; }
+  if (!allHosts.length) { document.getElementById('hosts-grid').innerHTML='<div class="empty"><div class="empty-icon">🎭</div><h3>Ведущих пока нет</h3><p>Стань первым ведущим!</p><button class="btn btn-primary" onclick="openModal(\'host\')">Зарегистрироваться</button></div>'; return; }
   document.getElementById('hosts-grid').innerHTML = allHosts.map(h => {
     const initials = (h.name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
     const games = h.games ? h.games.split(',').map(g=>g.trim()).filter(Boolean) : [];
-    return `<div class="host-card">
-      <div class="host-avatar">${initials}</div>
-      <div class="host-name">${esc(h.name||'—')}</div>
-      <div class="host-meta">${h.city?'📍 '+esc(h.city)+'<br>':''}${h.about?esc(h.about.substring(0,80)):''}</div>
-      ${games.length?'<div class="host-games">'+games.slice(0,4).map(g=>'<span class="game-chip">'+esc(g)+'</span>').join('')+'</div>':''}
-      ${h.telegram?'<a class="host-link" href="https://t.me/'+esc(h.telegram.replace('@',''))+'" target="_blank" rel="noopener">✉️ Написать в Telegram</a>':''}
-    </div>`;
+    return '<div class="host-card"><div class="host-avatar">'+initials+'</div><div class="host-name">'+esc(h.name||'—')+'</div><div class="host-meta">'+(h.city?'📍 '+esc(h.city)+'<br>':'')+(h.about?esc(h.about.substring(0,80)):'')+'</div>'+(games.length?'<div class="host-games">'+games.slice(0,4).map(g=>'<span class="game-chip">'+esc(g)+'</span>').join('')+'</div>':'')+(h.telegram?'<a class="host-link" href="https://t.me/'+esc(h.telegram.replace('@',''))+'" target="_blank" rel="noopener">✉️ Написать в Telegram</a>':'')+'</div>';
   }).join('');
 }
 
 function renderCafes() {
   document.getElementById('cafes-count').textContent = allCafes.length;
-  if (!allCafes.length) { document.getElementById('cafes-grid').innerHTML='<div class="empty"><div class="empty-icon">☕</div><h3>Кафе пока нет</h3><p>Добавь своё кафе!</p><button class="btn btn-primary" onclick="openModal('cafe')">Добавить кафе</button></div>'; return; }
+  if (!allCafes.length) { document.getElementById('cafes-grid').innerHTML='<div class="empty"><div class="empty-icon">☕</div><h3>Кафе пока нет</h3><p>Добавь своё кафе!</p><button class="btn btn-primary" onclick="openModal(\'cafe\')">Добавить кафе</button></div>'; return; }
   document.getElementById('cafes-grid').innerHTML = allCafes.map(c => {
-    return `<div class="cafe-card">
-      <div class="cafe-name">☕ ${esc(c.name||'—')}</div>
-      <div class="cafe-meta">${c.address?'📍 '+esc(c.address)+'<br>':''}${c.description?esc(c.description.substring(0,100)):''}</div>
-      ${c.telegram?'<a class="cafe-tg" href="https://t.me/'+esc(c.telegram.replace('@',''))+'" target="_blank" rel="noopener">✉️ '+esc(c.telegram)+'</a>':''}
-    </div>`;
+    return '<div class="cafe-card"><div class="cafe-name">☕ '+esc(c.name||'—')+'</div><div class="cafe-meta">'+(c.address?'📍 '+esc(c.address)+'<br>':'')+(c.description?esc(c.description.substring(0,100)):'')+'</div>'+(c.telegram?'<a class="cafe-tg" href="https://t.me/'+esc(c.telegram.replace('@',''))+'" target="_blank" rel="noopener">✉️ '+esc(c.telegram)+'</a>':'')+'</div>';
   }).join('');
 }
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;'); }
 
 function openModal(type) {
   document.getElementById('modal-'+type).classList.add('show');
@@ -511,7 +459,7 @@ function openBooking(tableId) {
   const t = allTables.find(x=>x.id===tableId);
   if (!t) return;
   const info = document.getElementById('booking-info');
-  info.innerHTML = `<b>🎮 ${esc(t.game||'Игра')}</b>${t.date?' · 📅 '+esc(t.date)+(t.time?' в '+esc(t.time):''):''}${t.venue?'<br>📍 '+esc(t.venue):''}${t.price?'<br>💰 '+esc(t.price):''}`;
+  info.innerHTML = '<b>🎮 '+esc(t.game||'Игра')+'</b>'+(t.date?' · 📅 '+esc(t.date)+(t.time?' в '+esc(t.time):''):'')+(t.venue?'<br>📍 '+esc(t.venue):'')+(t.price?'<br>💰 '+esc(t.price):'');
   document.getElementById('bookingTableId').value = tableId;
   document.getElementById('bookingSuccess').style.display='none';
   document.getElementById('bookingForm').style.display='';
@@ -531,7 +479,7 @@ async function submitBooking(e) {
       e.target.style.display='none';
       document.getElementById('bookingSuccess').style.display='';
       toast('Заявка отправлена! Ведущий напишет тебе 🎉');
-      setTimeout(()=>closeModal('modal-booking'),2500);
+      setTimeout(function(){closeModal('modal-booking')},2500);
     } else { toast(json.error||'Ошибка','error'); btn.disabled=false; btn.textContent='Записаться'; }
   } catch { toast('Ошибка сети','error'); btn.disabled=false; btn.textContent='Записаться'; }
 }
@@ -578,16 +526,17 @@ async function submitCafe(e) {
   } catch { toast('Ошибка сети','error'); btn.disabled=false; btn.textContent='Добавить кафе →'; }
 }
 
-function toast(msg, type='success') {
+function toast(msg, type) {
+  type = type || 'success';
   const c=document.getElementById('toasts');
   const t=document.createElement('div'); t.className='toast';
   t.innerHTML=(type==='success'?'✅ ':'❌ ')+msg;
-  c.appendChild(t); setTimeout(()=>t.remove(),3500);
+  c.appendChild(t); setTimeout(function(){t.remove()},3500);
 }
 
-document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('.modal-overlay.show').forEach(m=>m.classList.remove('show')); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') document.querySelectorAll('.modal-overlay.show').forEach(function(m){m.classList.remove('show')}) });
 
 loadData();
 </script>
 </body>
-</html>
+</html>'''

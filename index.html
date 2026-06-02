@@ -1193,13 +1193,33 @@ async function submitBooking(e) {
 async function submitHost(e) {
   e.preventDefault();
   const form = e.target;
-  try { await fetch(API + '/api/hosts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))) }); } catch(_) {}
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  // гарантируем, что бэку уйдут name и telegram
+  if (!data.telegram && data.contact) {
+    data.telegram = data.contact;
+  }
+
+  try {
+    await fetch(API + '/api/hosts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch (_) {}
+
   form.style.display = 'none';
   document.getElementById('hostSuccess').style.display = 'flex';
   toast('🎉 Профиль ведущего отправлен на модерацию!');
-  setTimeout(() => { closeModal('modal-host'); form.reset(); form.style.display = ''; document.getElementById('hostSuccess').style.display = 'none'; loadData(); }, 3000);
+  setTimeout(() => {
+    closeModal('modal-host');
+    form.reset();
+    form.style.display = '';
+    document.getElementById('hostSuccess').style.display = 'none';
+    loadData();
+  }, 3000);
 }
-
 /* Кафе */
 async function submitCafe(e) {
   e.preventDefault();

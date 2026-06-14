@@ -377,7 +377,43 @@
     </div>
   </div>
 </div>
+  
+<section class="catalog" id="support">
+  <div class="section-head">
+    <h2>Есть вопросы или идеи?</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem">
+    <div style="background:var(--surface2);border-radius:var(--r-2xl);padding:1.5rem;box-shadow:var(--sh-md);border:1px solid var(--border)">
+      <h3 style="font-family:var(--fd);font-size:1rem;font-weight:800;margin-bottom:.75rem">Почта</h3>
+      <p style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">
+        Любые вопросы по сервису, идеям или ошибкам можно отправить на почту. Постараюсь ответить как можно быстрее.
+      </p>
+      <button
+        type="button"
+        class="btn btn-ghost"
+        onclick="openMailSupport()">
+        📧 Написать на почту
+      </button>
+      <p style="font-size:.8125rem;color:var(--muted);margin-top:.5rem">
+        Или напрямую: <a href="mailto:lesha.aleksandrov2014@yandex.ru">lesha.aleksandrov2014@yandex.ru</a>
+      </p>
+    </div>
 
+    <div style="background:var(--surface2);border-radius:var(--r-2xl);padding:1.5rem;box-shadow:var(--sh-md);border:1px solid var(--border)">
+      <h3 style="font-family:var(--fd);font-size:1rem;font-weight:800;margin-bottom:.75rem">Группа ВКонтакте</h3>
+      <p style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">
+        Удобнее общаться во ВКонтакте — можно задать любой вопрос про «Настолки рядом», предложить идею или рассказать об ошибке.
+      </p>
+      <a
+        href="https://vk.com/club236541309"
+        target="_blank"
+        rel="noopener"
+        class="btn btn-primary">
+        💬 Написать в группу ВК
+      </a>
+    </div>
+  </div>
+</section>
 <!-- НАСТОЛЬНЫЕ ИГРЫ -->
 <section class="catalog" id="board-games" aria-labelledby="bg-title">
   <div class="section-head">
@@ -1533,6 +1569,13 @@ async function submitCafe(e) {
     btn.disabled = false;
     btn.textContent = 'Отправить на модерацию';
   }
+}
+  function openMailSupport() {
+  const email = 'lesha.aleksandrov2014@yandex.ru';
+  const subject = encodeURIComponent('Настолки Рядом — вопрос/предложение');
+  const body = encodeURIComponent('Привет! Хочу рассказать/спросить вот что:\n\n');
+  const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
+  location.href = mailto;
 }
 
 /* ── Старт ── */

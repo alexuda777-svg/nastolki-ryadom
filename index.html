@@ -296,12 +296,7 @@ css
   .tab:hover{background:var(--offset);color:var(--text);transform:translateY(-2px);box-shadow:var(--sh-md)}
   .tab.active{background:linear-gradient(135deg,var(--primary),var(--ph));color:var(--inv);border-color:var(--primary);box-shadow:0 4px 16px rgba(200,75,15,.3)}
 
-  /* Каталоги */
-  .catalog{max-width:1200px;margin:0 auto;padding:3rem 1.5rem}
-  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;gap:1rem;flex-wrap:wrap}
-  .section-head h2{font-family:var(--fd);font-size:clamp(1.5rem,2vw,2rem);font-weight:900;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
-  .count-badge{background:linear-gradient(135deg,var(--offset),var(--divider));color:var(--text);font-size:.875rem;font-weight:800;padding:.375rem .875rem;border-radius:var(--r-full);box-shadow:var(--sh-sm)}
-  .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:1.5rem}
+
 /* Каталоги */
 .catalog{
   max-width:1200px;
@@ -338,40 +333,14 @@ css
   box-shadow:var(--sh-sm);
 }
 
-/* базовая сетка: мобилки/планшеты — как было */
+/* базовая сетка: мобилки/планшеты */
 .cards-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));
   gap:1.5rem;
 }
 
-/* Десктоп: 3 колонки + скролл внутри секции */
-@media (min-width:1024px){
-  .catalog{
-    max-height:900px;   /* ограничиваем высоту секции */
-    overflow-y:auto;    /* вертикальный скролл внутри */
-  }
-
-  .cards-grid{
-    grid-template-columns:repeat(3,minmax(0,1fr)); /* ровно 3 колонки */
-    gap:1.5rem;
-  }
-
-  .card{
-    padding:0.75rem 1rem;
-    border-radius:var(--r-lg);
-  }
-
-  .card-title{
-    font-size:1rem;
-  }
-
-  .card-meta{
-    font-size:.85rem;
-  }
-}
-    
-  /* Карточки */
+/* Карточки */
 .card{
   background:var(--surface2);
   border:1px solid var(--border);
@@ -385,7 +354,7 @@ css
   position:relative;
 }
 
-/* Аккуратнее hover, чтобы карточка не «вылазила» слишком сильно */
+/* Аккуратный hover */
 .card::before{
   content:'';
   position:absolute;
@@ -486,7 +455,6 @@ css
   color:var(--primary);
 }
 .card-price-free{color:var(--success)}
-
 .book-btn{
   padding:.625rem 1.25rem;
   background:linear-gradient(135deg,var(--primary),var(--ph));
@@ -527,6 +495,40 @@ css
   color:var(--text);
   border-color:var(--primary);
   transform:translateY(-2px);
+}
+
+/* Десктоп: 3 колонки + скролл внутри секции */
+@media (min-width:1024px){
+  .catalog{
+    max-height:900px;
+    overflow-y:auto;
+  }
+
+  .cards-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:1.5rem;
+  }
+
+  .card{
+    width:100%;
+    max-width:none;
+    height:auto;
+    border-radius:var(--r-lg);
+    padding:0.75rem 1rem;
+    box-sizing:border-box;
+  }
+
+  .card-body{
+    padding-block:0.25rem;
+  }
+
+  .card-title{
+    font-size:1rem;
+  }
+
+  .card-meta{
+    font-size:.85rem;
+  }
 }
   /* Скелетоны */
   .skel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);height:200px;position:relative;overflow:hidden}

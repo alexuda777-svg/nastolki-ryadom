@@ -886,6 +886,14 @@ function createTableCard(t) {
   const full = tt && tk >= tt;
   const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно') ? 'Бесплатно' : t.price;
   const inviteUrl = location.origin + location.pathname + '?table=' + encodeURIComponent(t.id || '');
+
+  // Безопасные JS-строки для inline-обработчиков
+  const safeId    = JSON.stringify(String(t.id || ''));
+  const safeGame  = JSON.stringify(t.game || 'Игра');
+  const safeDate  = JSON.stringify(t.date || '');
+  const safeVenue = JSON.stringify(t.venue || '');
+  const safeUrl   = JSON.stringify(inviteUrl);
+
   return `<article class="card" data-id="${esc(String(t.id||''))}">
     <div class="card-badge-row">
       <span class="badge badge-game">🎮 ${esc(t.game||'Игра')}</span>
@@ -904,24 +912,30 @@ function createTableCard(t) {
       <span class="card-price ${p === 'Бесплатно' ? 'card-price-free' : ''}">${esc(p)}</span>
       <div class="card-footer-actions">
         <button class="invite-btn"
-                onclick="event.stopPropagation(); copyText('${esc(inviteUrl)}','Ссылка скопирована!')"
+                onclick="event.stopPropagation(); copyText(${safeUrl}, 'Ссылка скопирована!')"
                 title="Скопировать ссылку-приглашение">
           🔗
         </button>
         <button class="book-btn"
                 ${full ? 'disabled' : ''}
-                onclick="event.stopPropagation(); openJoinModal('${esc(String(t.id||''))}','${esc(t.game||'Игра')}','${esc(t.date||'')}','${esc(t.venue||'')}')">
+                onclick="event.stopPropagation(); openJoinModal(${safeId}, ${safeGame}, ${safeDate}, ${safeVenue})">
           Записаться
         </button>
       </div>
     </div>
   </article>`;
 }
-
 function createChessCard(t) {
   const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно') ? 'Бесплатно' : t.price;
   const ic = t.game === 'Шахматы' ? '♟️' : t.game === 'Нарды' ? '🎲' : t.game === 'Шашки' ? '⚪' : '⚫';
   const inviteUrl = location.origin + location.pathname + '?table=' + encodeURIComponent(t.id || '');
+
+  const safeId    = JSON.stringify(String(t.id || ''));
+  const safeGame  = JSON.stringify(t.game || 'Партия');
+  const safeDate  = JSON.stringify(t.date || '');
+  const safeVenue = JSON.stringify(t.venue || '');
+  const safeUrl   = JSON.stringify(inviteUrl);
+
   return `<article class="card" data-id="${esc(String(t.id||''))}">
     <div class="card-badge-row">
       <span class="badge badge-chess">${ic} ${esc(t.game||'Партия')}</span>
@@ -940,19 +954,18 @@ function createChessCard(t) {
       <span class="card-price ${p === 'Бесплатно' ? 'card-price-free' : ''}">${esc(p)}</span>
       <div class="card-footer-actions">
         <button class="invite-btn"
-                onclick="event.stopPropagation(); copyText('${esc(inviteUrl)}','Ссылка скопирована!')"
+                onclick="event.stopPropagation(); copyText(${safeUrl}, 'Ссылка скопирована!')"
                 title="Скопировать ссылку-приглашение">
           🔗
         </button>
         <button class="book-btn"
-                onclick="event.stopPropagation(); openJoinModal('${esc(String(t.id||''))}','${esc(t.game||'Партия')}','${esc(t.date||'')}','${esc(t.venue||'')}')">
+                onclick="event.stopPropagation(); openJoinModal(${safeId}, ${safeGame}, ${safeDate}, ${safeVenue})">
           Играть
         </button>
       </div>
     </div>
   </article>`;
 }
-
 function createHostCard(h) {
   const p = (!h.price || h.price === '0') ? 'По договорённости' : h.price;
   return `<article class="card" data-id="${esc(String(h.id||''))}">

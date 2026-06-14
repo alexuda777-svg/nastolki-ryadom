@@ -621,9 +621,23 @@
           <label class="form-label">Комментарий</label>
           <textarea class="inp" name="comment" rows="2" placeholder="Уровень игры, пожелания..."></textarea>
         </div>
+
         <div style="background:var(--ibg);border-radius:var(--r-lg);padding:.875rem;margin-bottom:1rem;font-size:.8125rem;color:var(--info);line-height:1.5">
           🔒 <b>Контакт организатора</b> выдаётся только записавшимся игрокам после одобрения записи в модерации.
         </div>
+
+        <!-- Согласие на персональные данные -->
+        <div class="form-checkbox">
+          <input type="checkbox" id="joinConsent" name="consent" required>
+          <label for="joinConsent">
+            Я соглашаюсь на обработку моих персональных данных и понимаю, что:
+            <br>• моё имя и контакт будут видны только модератору сервиса для модерации записей;
+            <br>• мои данные не публикуются на сайте и не передаются другим участникам;
+            <br>• после одобрения записи мне будет показан только контакт организатора игры;
+            <br>• я могу запросить удаление своих данных, написав в поддержку проекта.
+          </label>
+        </div>
+
         <button type="submit" class="form-submit">Записаться</button>
       </form>
 
@@ -647,7 +661,6 @@
     </div>
   </div>
 </div>
-
 <!-- ДОБАВИТЬ ВЕДУЩЕГО -->
 <div class="modal-overlay" id="modal-host" onclick="if(event.target===this)closeModal('modal-host')" role="dialog" aria-modal="true" aria-labelledby="mh-host">
   <div class="modal">
@@ -1285,6 +1298,14 @@ async function submitBooking(e) {
   e.preventDefault();
   const form = e.target;
   const btn = form.querySelector('.form-submit');
+
+  // доп. защита: проверяем галочку согласия на персональные данные
+  const consent = form.querySelector('#joinConsent');
+  if (consent && !consent.checked) {
+    toast('Поставь галочку согласия на обработку данных.', true);
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = 'Записываемся...';
 
@@ -1293,6 +1314,7 @@ async function submitBooking(e) {
 
   let bookingId = null;
   let secret = null;
+  let errorMsg = null;
 
   try {
     const res = await fetch(API + '/api/bookings', {
@@ -1301,11 +1323,26 @@ async function submitBooking(e) {
       body: JSON.stringify(data)
     });
     const json = await res.json().catch(() => ({}));
+
     if (res.ok && json.success && json.id && json.secret) {
       bookingId = json.id;
       secret = json.secret;
+    } else if (json.error) {
+      // ошибки типа "Все поля обязательны", "Свободных мест нет" и т.п.
+      errorMsg = json.error;
+    } else {
+      errorMsg = 'Не удалось записаться. Попробуй позже.';
     }
-  } catch(_) {}
+  } catch(_) {
+    errorMsg = 'Ошибка сети при записи.';
+  }
+
+  if (errorMsg) {
+    toast(errorMsg, true);
+    btn.disabled = false;
+    btn.textContent = 'Записаться';
+    return;
+  }
 
   // Если получили id+secret — сохраняем в localStorage связку стол → заявка
   if (bookingId && secret && tableId) {
@@ -1333,7 +1370,6 @@ async function submitBooking(e) {
     succ.style.display = 'none';
   }, 5000);
 }
-
 /* Показать контакт организатора после одобрения (в модалке) */
 async function showOrganizerContact(tableId) {
   const key = 'nr_bookings';

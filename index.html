@@ -614,10 +614,22 @@ css
   <p>Выбери формат — настолки, шахматы, ведущие или кафе — и запишись за минуту.</p>
 
   <div class="hero-btns">
-    <button class="btn btn-primary" onclick="document.getElementById('board-games').scrollIntoView({behavior:'smooth'})">🎲 Настольные игры</button>
-    <button class="btn btn-chess" onclick="document.getElementById('chess-games').scrollIntoView({behavior:'smooth'})">♟️ Шахматы · Нарды · Шашки</button>
-    <button class="btn btn-ghost" onclick="document.getElementById('hosts').scrollIntoView({behavior:'smooth'})">🎭 Ведущие</button>
-    <button class="btn btn-ghost" onclick="document.getElementById('cafes').scrollIntoView({behavior:'smooth'})">☕ Кафе</button>
+    <button class="btn btn-primary"
+            onclick="document.getElementById('board-games').scrollIntoView({behavior:'smooth'})">
+      🎲 Настольные игры
+    </button>
+    <button class="btn btn-chess"
+            onclick="document.getElementById('chess-games').scrollIntoView({behavior:'smooth'})">
+      ♟️ Шахматы · Нарды · Шашки
+    </button>
+    <button class="btn btn-ghost"
+            onclick="document.getElementById('hosts').scrollIntoView({behavior:'smooth'})">
+      🎭 Ведущие
+    </button>
+    <button class="btn btn-ghost"
+            onclick="document.getElementById('cafes').scrollIntoView({behavior:'smooth'})">
+      ☕ Кафе
+    </button>
   </div>
 
   <div class="region-notice">
@@ -625,7 +637,24 @@ css
     <div><b>Только Москва</b> · Другие города появятся позже</div>
   </div>
 
-  <div class="hero-stats" role="list">…</div>
+  <div class="hero-stats" role="list">
+    <div class="stat" role="listitem">
+      <div class="stat-n" id="stat-tables">—</div>
+      <div class="stat-l">Настолок</div>
+    </div>
+    <div class="stat" role="listitem">
+      <div class="stat-n" id="stat-chess">—</div>
+      <div class="stat-l">Шахматы · Нарды</div>
+    </div>
+    <div class="stat" role="listitem">
+      <div class="stat-n" id="stat-hosts">—</div>
+      <div class="stat-l">Ведущих</div>
+    </div>
+    <div class="stat" role="listitem">
+      <div class="stat-n" id="stat-cafes">—</div>
+      <div class="stat-l">Кафе</div>
+    </div>
+  </div>
 </section>
 
 <!-- ПОИСК + ФИЛЬТРЫ -->

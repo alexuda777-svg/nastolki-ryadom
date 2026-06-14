@@ -205,6 +205,20 @@ css
   align-items:center;
   gap:.625rem;
 }
+    .support-toggle{
+  padding:.4rem .6rem;
+  border-radius:var(--r-lg);
+  border:1px solid var(--border);
+  background:var(--surface2);
+  font-size:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.support-toggle:hover{
+  background:var(--offset);
+}
 
   /* Кнопки */
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.625rem 1.25rem;border-radius:var(--r-lg);font-size:.875rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:all var(--tr);white-space:nowrap;position:relative;overflow:hidden}
@@ -623,6 +637,12 @@ css
     display:none;
   }
 }
+    @media(max-width:600px){
+  /* На мобилке скрываем секцию поддержки */
+  #support{
+    display:none;
+  }
+}
 </style>
 </head>
 <body>
@@ -653,6 +673,9 @@ css
       <a href="#cafes" class="nav-link">Кафе</a>
     </div>
     <div class="nav-right">
+  <button class="support-toggle" type="button" onclick="toggleSupportPanel()" aria-label="Открыть поддержку">
+    ☰
+  </button>
   <button class="theme-btn" data-theme-toggle aria-label="Переключить тему">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
          stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -1937,26 +1960,11 @@ function openMailSupport() {
   location.href = mailto;
 }
 
-function toggleSupportSheet() {
-  const sheet = document.getElementById('supportSheet');
-  if (!sheet) return;
-  sheet.hidden = !sheet.hidden;
+function toggleSupportPanel() {
+  // пока пусто
 }
 /* ── Старт ── */
 loadData();
 </script>
-  <!-- Плавающая кнопка поддержки и лист выбора -->
-<button class="fab-support" type="button" onclick="toggleSupportSheet()">
-  ✉️
-</button>
-
-<div class="support-sheet" id="supportSheet" hidden>
-  <button type="button" class="support-option" onclick="openVkSupport()">
-    VK · написать в группу
-  </button>
-  <button type="button" class="support-option" onclick="openMailSupport()">
-    ✉️ Написать на почту
-  </button>
-</div>
 </body>
 </html>

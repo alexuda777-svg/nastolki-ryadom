@@ -302,7 +302,74 @@ css
   .section-head h2{font-family:var(--fd);font-size:clamp(1.5rem,2vw,2rem);font-weight:900;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
   .count-badge{background:linear-gradient(135deg,var(--offset),var(--divider));color:var(--text);font-size:.875rem;font-weight:800;padding:.375rem .875rem;border-radius:var(--r-full);box-shadow:var(--sh-sm)}
   .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:1.5rem}
+/* Каталоги */
+.catalog{
+  max-width:1200px;
+  margin:0 auto;
+  padding:3rem 1.5rem;
+}
 
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:2rem;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+
+.section-head h2{
+  font-family:var(--fd);
+  font-size:clamp(1.5rem,2vw,2rem);
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  flex-wrap:wrap;
+}
+
+.count-badge{
+  background:linear-gradient(135deg,var(--offset),var(--divider));
+  color:var(--text);
+  font-size:.875rem;
+  font-weight:800;
+  padding:.375rem .875rem;
+  border-radius:var(--r-full);
+  box-shadow:var(--sh-sm);
+}
+
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));
+  gap:1.5rem;
+}
+
+/* Десктоп: компактные таблицы 3×3 с прокруткой внутри секции */
+@media(min-width:1024px){
+  .catalog{
+    max-height:900px;      /* ограничиваем высоту секции */
+    overflow-y:auto;       /* скролл внутри */
+  }
+
+  .cards-grid{
+    grid-template-columns:repeat(3, 1fr);  /* ровно 3 колонки [web:105][web:111] */
+    gap:1.25rem;
+  }
+
+  .card{
+    padding:0.75rem 0.9rem;
+    border-radius:var(--r-lg);
+  }
+
+  .card-title{
+    font-size:1rem;
+  }
+
+  .card-meta{
+    font-size:.85rem;
+  }
+}
+    
   /* Карточки */
   .card{
     background:var(--surface2);

@@ -803,6 +803,10 @@ async function loadData() {
     renderChess();
     renderHosts();
     renderCafes();
+
+    // 🔹 после рендера карточек — подтягиваем контакты для "моих" одобренных записей
+    initMyContactsOnCards();
+
     highlightFromQuery();
   } catch(e) { console.error(e); }
 }
@@ -841,6 +845,7 @@ function highlightFromQuery() {
 function applySearch() {
   searchQ = document.getElementById('searchInput').value.toLowerCase();
   renderTables(); renderChess(); renderHosts(); renderCafes();
+  initMyContactsOnCards();
 }
 
 function filterTab(f, btn) {
@@ -852,6 +857,7 @@ function filterTab(f, btn) {
   btn.classList.add('active');
   btn.setAttribute('aria-selected','true');
   renderTables(); renderChess(); renderHosts(); renderCafes();
+  initMyContactsOnCards();
 }
 
 function filterItems(items, type) {
@@ -1259,7 +1265,7 @@ async function submitTable(e) {
   }, 6000);
 }
 
-//* Записаться — с сохранением bookingId + secret (контакт после одобрения) */
+/* Записаться — с сохранением bookingId + secret (контакт после одобрения) */
 async function submitBooking(e) {
   e.preventDefault();
   const form = e.target;
@@ -1312,7 +1318,8 @@ async function submitBooking(e) {
     succ.style.display = 'none';
   }, 5000);
 }
-/* Показать контакт организатора после одобрения */
+
+/* Показать контакт организатора после одобрения (в модалке) */
 async function showOrganizerContact(tableId) {
   const key = 'nr_bookings';
   const all = JSON.parse(localStorage.getItem(key) || '{}');
@@ -1352,6 +1359,56 @@ async function showOrganizerContact(tableId) {
     toast('Ошибка сети при получении контакта.', true);
   }
 }
+
+/* Показ контакта прямо в карточке для "моих" одобренных записей */
+async function initMyContactsOnCards() {
+  const key = 'nr_bookings';
+  const all = JSON.parse(localStorage.getItem(key) || '{}');
+  const tableIds = Object.keys(all);
+  if (!tableIds.length) return;
+
+  for (const tableId of tableIds) {
+    const info = all[tableId];
+    if (!info || !info.bookingId || !info.secret) continue;
+
+    try {
+      const res = await fetch(API + '/api/booking-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bookingId: info.bookingId,
+          secret: info.secret
+        })
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.error || !json.contact) {
+        continue; // не одобрено или нет контакта
+      }
+
+      const contact = json.contact;
+
+      const card = document.querySelector(`.card[data-id="${CSS.escape(tableId)}"]`);
+      if (!card) continue;
+
+      if (card.querySelector('.card-my-contact')) continue;
+
+      const footer = card.querySelector('.card-footer');
+      if (!footer) continue;
+
+      const div = document.createElement('div');
+      div.className = 'card-my-contact';
+      div.style.fontSize = '.875rem';
+      div.style.color = 'var(--success)';
+      div.style.marginTop = '.25rem';
+      div.innerHTML = `📱 <strong>Контакт организатора:</strong> ${esc(contact)}`;
+
+      footer.appendChild(div);
+    } catch(_) {
+      // ignore
+    }
+  }
+}
+
 /* Ведущий */
 async function submitHost(e) {
   e.preventDefault();

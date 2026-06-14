@@ -149,8 +149,30 @@
   .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:1.5rem}
 
   /* Карточки */
-  .card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);overflow:hidden;box-shadow:var(--sh-md);transition:all var(--tr);cursor:pointer;display:flex;flex-direction:column;position:relative}
-  .card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,transparent 0%,rgba(200,75,15,.03) 100%);opacity:0;transition:opacity var(--tr)}
+  .card{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r-2xl);
+  overflow:hidden;
+  box-shadow:var(--sh-md);
+  transition:all var(--tr);
+  cursor:default; /* было cursor:pointer */
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:linear-gradient(135deg,transparent 0%,rgba(200,75,15,.03) 100%);
+  opacity:0;
+  transition:opacity var(--tr);
+  pointer-events:none; /* добавили */
+}
   .card:hover{box-shadow:var(--sh-xl);transform:translateY(-8px) scale(1.02);border-color:var(--primary)}
   .card:hover::before{opacity:1}
   .card.card-highlight{border-color:var(--primary);box-shadow:0 0 0 3px var(--pbg),var(--sh-xl);animation:highlightPulse 2s ease-out}

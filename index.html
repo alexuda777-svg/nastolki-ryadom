@@ -865,6 +865,53 @@ css
     display:none;
   }
 }
+    /* ==== Десктоп: убираем мобильные ограничения ширины карточек ==== */
+@media (min-width: 1024px) {
+  /* контейнер каталога */
+  .catalog {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    max-height: 900px;
+    overflow-y: auto;
+  }
+
+  /* сетка карточек */
+  .cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* ровно 3 колонки */
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  /* общий сброс ширин/флексов, заданных для мобилы */
+  .cards-grid .card,
+  #tables-grid .card,
+  #chess-grid .card,
+  #hosts-grid .card,
+  #cafes-grid .card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    flex: 1 1 auto !important;
+    height: auto !important;
+    box-sizing: border-box;
+    border-radius: var(--r-lg);
+    padding: 0.75rem 1rem;
+  }
+
+  .card-body {
+    padding-block: 0.25rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-meta {
+    font-size: 0.85rem;
+  }
+}
 </style>
 </head>
 <body>

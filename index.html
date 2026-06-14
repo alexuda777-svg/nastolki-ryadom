@@ -129,15 +129,82 @@
     padding: 0.4rem 0.75rem;       /* кнопка поменьше, ниже высота блока [web:29] */
   }
 }
-  /* Навигация */
-  .nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:var(--sh-sm)}
-  .nav-inner{max-width:1200px;margin:0 auto;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:2rem}
-  .logo{display:flex;align-items:center;gap:.625rem;font-family:var(--fd);font-weight:900;font-size:1.125rem;white-space:nowrap}
-  .nav-links{display:flex;gap:.375rem;justify-content:center;flex-wrap:wrap}
-  .nav-link{padding:.5rem 1rem;border-radius:var(--r-lg);font-size:.875rem;color:var(--muted);font-weight:600;transition:all var(--tr);white-space:nowrap}
-  .nav-link:hover{background:var(--offset);color:var(--text);transform:translateY(-1px)}
-  .nav-link.active{background:var(--pbg);color:var(--primary);box-shadow:var(--sh-sm)}
-  .nav-right{display:flex;align-items:center;gap:.625rem}
+  Вот обновлённый блок «Навигация» с поддержкой PNG-лого и мелкими аккуратными правками:
+
+css
+/* Навигация */
+.nav{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:var(--sh-sm);
+}
+
+.nav-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:1rem 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:2rem;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:.625rem;
+  font-family:var(--fd);
+  font-weight:900;
+  font-size:1.125rem;
+  white-space:nowrap;
+}
+
+/* Логотип-иконка PNG */
+.logo img{
+  width:28px;
+  height:28px;
+  display:block;
+}
+
+.nav-links{
+  display:flex;
+  gap:.375rem;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.nav-link{
+  padding:.5rem 1rem;
+  border-radius:var(--r-lg);
+  font-size:.875rem;
+  color:var(--muted);
+  font-weight:600;
+  transition:all var(--tr);
+  white-space:nowrap;
+}
+
+.nav-link:hover{
+  background:var(--offset);
+  color:var(--text);
+  transform:translateY(-1px);
+}
+
+.nav-link.active{
+  background:var(--pbg);
+  color:var(--primary);
+  box-shadow:var(--sh-sm);
+}
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:.625rem;
+}
 
   /* Кнопки */
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.625rem 1.25rem;border-radius:var(--r-lg);font-size:.875rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:all var(--tr);white-space:nowrap;position:relative;overflow:hidden}
@@ -520,25 +587,24 @@
 <nav class="nav" aria-label="Основная навигация">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="Настолки Рядом — главная">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-        <rect width="28" height="28" rx="8" fill="var(--primary)"/>
-        <rect x="6" y="6" width="7" height="7" rx="2" fill="white"/>
-        <rect x="15" y="6" width="7" height="7" rx="2" fill="white" opacity=".7"/>
-        <rect x="6" y="15" width="7" height="7" rx="2" fill="white" opacity=".7"/>
-        <circle cx="18.5" cy="18.5" r="3.5" fill="white"/>
-      </svg>
+      <img src="app_icon_nastolki.png" alt="" aria-hidden="true">
       Настолки Рядом
     </a>
     <div class="nav-links">
-      <a href="#board-games" class="nav-link active">Настолки</a>
+      <a href="#board-games" class="nav-link active" aria-current="page">Настолки</a>
       <a href="#chess-games" class="nav-link">Шахматы · Нарды</a>
       <a href="#hosts" class="nav-link">Ведущие</a>
       <a href="#cafes" class="nav-link">Кафе</a>
     </div>
     <div class="nav-right">
-      <button class="btn btn-primary btn-sm" onclick="openModal('table')">+ Игра</button>
+      <button class="btn btn-primary btn-sm"
+              onclick="openModal('table')"
+              aria-label="Добавить игру">
+        +
+      </button>
       <button class="theme-btn" data-theme-toggle aria-label="Переключить тему">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="12" cy="12" r="5"/>
           <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
         </svg>

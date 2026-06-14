@@ -622,12 +622,23 @@
           <textarea class="inp" name="comment" rows="2" placeholder="Уровень игры, пожелания..."></textarea>
         </div>
         <div style="background:var(--ibg);border-radius:var(--r-lg);padding:.875rem;margin-bottom:1rem;font-size:.8125rem;color:var(--info);line-height:1.5">
-          🔒 <b>Контакт организатора</b> будет показан тебе сразу после записи.
+          🔒 <b>Контакт организатора</b> выдаётся только записавшимся игрокам после одобрения записи в модерации.
         </div>
         <button type="submit" class="form-submit">Записаться</button>
       </form>
+
       <div id="joinSuccess" style="display:none">
         <div class="form-success">🎉 Готово! Ты записан на игру.</div>
+
+        <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
+          <button type="button"
+                  class="btn"
+                  style="background:var(--info);color:white;border-radius:var(--r-lg);padding:.6rem 1.2rem;font-size:.875rem;font-weight:700"
+                  onclick="showOrganizerContact(document.getElementById('joinTableId').value)">
+            📱 Показать контакт организатора
+          </button>
+        </div>
+
         <div id="joinContactBlock" style="display:none;margin-top:1rem;background:var(--sbg);border-radius:var(--r-xl);padding:1.25rem">
           <p style="font-size:.875rem;font-weight:700;color:var(--success);margin-bottom:.5rem">📱 Контакт организатора:</p>
           <p id="joinContactText" style="font-family:var(--fd);font-size:1.125rem;font-weight:800;color:var(--text)"></p>
@@ -1248,7 +1259,7 @@ async function submitTable(e) {
   }, 6000);
 }
 
-/* Записаться — без выдачи контакта */
+//* Записаться — с сохранением bookingId + secret (контакт после одобрения) */
 async function submitBooking(e) {
   e.preventDefault();
   const form = e.target;
@@ -1257,14 +1268,31 @@ async function submitBooking(e) {
   btn.textContent = 'Записываемся...';
 
   const data = Object.fromEntries(new FormData(form));
+  const tableId = data.tableId;
+
+  let bookingId = null;
+  let secret = null;
 
   try {
-    await fetch(API + '/api/bookings', {
+    const res = await fetch(API + '/api/bookings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
+    const json = await res.json().catch(() => ({}));
+    if (res.ok && json.success && json.id && json.secret) {
+      bookingId = json.id;
+      secret = json.secret;
+    }
   } catch(_) {}
+
+  // Если получили id+secret — сохраняем в localStorage связку стол → заявка
+  if (bookingId && secret && tableId) {
+    const key = 'nr_bookings';
+    const all = JSON.parse(localStorage.getItem(key) || '{}');
+    all[tableId] = { bookingId, secret };
+    localStorage.setItem(key, JSON.stringify(all));
+  }
 
   form.style.display = 'none';
   const succ = document.getElementById('joinSuccess');
@@ -1284,7 +1312,46 @@ async function submitBooking(e) {
     succ.style.display = 'none';
   }, 5000);
 }
+/* Показать контакт организатора после одобрения */
+async function showOrganizerContact(tableId) {
+  const key = 'nr_bookings';
+  const all = JSON.parse(localStorage.getItem(key) || '{}');
+  const info = all[tableId];
 
+  if (!info) {
+    toast('Сначала запишись на игру — контакт доступен только записавшимся.', true);
+    return;
+  }
+
+  try {
+    const res = await fetch(API + '/api/booking-contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        bookingId: info.bookingId,
+        secret: info.secret
+      })
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok || json.error) {
+      toast(json.error || 'Контакт пока недоступен (ожидает модерации).', true);
+      return;
+    }
+
+    const contact = json.contact;
+    const contactBlock = document.getElementById('joinContactBlock');
+    const contactText  = document.getElementById('joinContactText');
+
+    if (contactBlock && contactText) {
+      contactText.textContent = contact;
+      contactBlock.style.display = 'block';
+    }
+
+    toast('📱 Контакт организатора показан.');
+  } catch(_) {
+    toast('Ошибка сети при получении контакта.', true);
+  }
+}
 /* Ведущий */
 async function submitHost(e) {
   e.preventDefault();

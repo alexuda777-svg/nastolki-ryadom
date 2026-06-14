@@ -421,7 +421,7 @@
       <span>🎲 Настольные игры</span>
       <span class="count-badge" id="tables-count">0</span>
     </h2>
-    <button class="btn btn-primary btn-sm" onclick="openModal('table')">+ Добавить игру</button>
+    <button class="btn btn-primary btn-sm" onclick="openTableModalBoardgame()">+ Добавить игру</button>
   </div>
   <div id="tables-grid" class="loading-grid">
     <div class="skel"></div><div class="skel"></div><div class="skel"></div>
@@ -435,11 +435,12 @@
       <span>♟️ Шахматы · Нарды · Шашки</span>
       <span class="count-badge" id="chess-count">0</span>
     </h2>
-    <button class="btn btn-chess btn-sm" onclick="openModal('table')">+ Добавить партию</button>
+    <button class="btn btn-chess btn-sm" onclick="openTableModalChess()">+ Добавить партию</button>
   </div>
   <div id="chess-grid" class="loading-grid">
     <div class="skel"></div><div class="skel"></div><div class="skel"></div>
   </div>
+</section>
 </section>
 
 <!-- ВЕДУЩИЕ -->
@@ -537,13 +538,6 @@
     <div class="modal-body">
       <form id="tableForm" onsubmit="submitTable(event)">
         <div class="form-group">
-          <label class="form-label">Тип <span>*</span></label>
-          <select class="inp" name="type" required>
-            <option value="boardgame">🎲 Настольная игра</option>
-            <option value="chess">♟️ Шахматы / Нарды / Шашки</option>
-          </select>
-        </div>
-        <div class="form-group">
           <label class="form-label">Игра / формат <span>*</span></label>
           <input class="inp" name="game" placeholder="Например: Киклады, Магия, Шахматы рапид" required>
         </div>
@@ -551,7 +545,6 @@
           <label class="form-label">Место проведения <span>*</span></label>
           <input class="inp" name="venue" placeholder="Кафе, клуб или адрес" required>
         </div>
-
         <!-- Выбор кафе из списка -->
         <div class="form-group">
           <label class="form-label">Выбрать кафе из каталога</label>
@@ -811,6 +804,7 @@
 const API = 'https://nastolki-ryadom-production.up.railway.app';
 let allTables = [], allChess = [], allHosts = [], allCafes = [];
 let searchQ = '', activeFilter = 'all';
+let createMode = 'boardgame'; // 'boardgame' или 'chess'
 
 /* ── Тема ── */
 (function(){
@@ -853,9 +847,7 @@ async function loadData() {
     renderHosts();
     renderCafes();
 
-    // 🔹 после рендера карточек — подтягиваем контакты для "моих" одобренных записей
     initMyContactsOnCards();
-
     highlightFromQuery();
   } catch(e) { console.error(e); }
 }
@@ -965,11 +957,11 @@ function renderCafes() {
     : '<div class="empty"><div class="empty-icon">☕</div><h3>Кафе пока нет</h3><p>Добавь своё!</p></div>';
 }
 
-/* ── Карточки без onclick ── */
+/* ── Карточки ── */
 function createTableCard(t) {
-  const tk = t.seats_taken || 0;              // занято
-  const tt = parseInt(t.seats) || 0;          // всего
-  const fr = tt ? Math.max(tt - tk, 0) : null; // осталось
+  const tk = t.seats_taken || 0;
+  const tt = parseInt(t.seats) || 0;
+  const fr = tt ? Math.max(tt - tk, 0) : null;
   const full = tt && tk >= tt;
   const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно')
     ? 'Бесплатно'
@@ -998,11 +990,7 @@ function createTableCard(t) {
       <div class="card-meta">
         ${t.date ? `<div class="card-meta-row">📅 ${esc(t.date)}${t.time ? ' в ' + esc(t.time) : ''}</div>` : ''}
         ${t.venue ? `<div class="card-meta-row">📍 ${esc(t.venue)}</div>` : ''}
-        ${
-          tt
-            ? `<div class="card-meta-row">👥 Занято: ${tk} из ${tt}</div>`
-            : ''
-        }
+        ${tt ? `<div class="card-meta-row">👥 Занято: ${tk} из ${tt}</div>` : ''}
         <div class="card-meta-row">🔒 Контакт организатора выдаётся после модерации</div>
       </div>
     </div>
@@ -1015,7 +1003,10 @@ function createTableCard(t) {
     </div>
   </article>`;
 }
+
 function createChessCard(t) {
+  const tk = t.seats_taken || 0;
+  const tt = parseInt(t.seats) || 0;
   const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно') ? 'Бесплатно' : t.price;
   const ic = t.game === 'Шахматы' ? '♟️' : t.game === 'Нарды' ? '🎲' : t.game === 'Шашки' ? '⚪' : '⚫';
   const inviteUrl = location.origin + location.pathname + '?table=' + encodeURIComponent(t.id || '');
@@ -1034,13 +1025,11 @@ function createChessCard(t) {
     <div class="card-body">
       <div class="card-title">${ic} ${esc(t.game||'Партия')}</div>
       <div class="card-meta">
-  ${t.date ? `<div class="card-meta-row">📅 ${esc(t.date)}${t.time ? ' в ' + esc(t.time) : ''}</div>` : ''}
-  ${t.venue ? `<div class="card-meta-row">📍 ${esc(t.venue)}</div>` : ''}
-  ${tt
-    ? `<div class="card-meta-row">👥 Мест занято: ${tk} из ${tt}</div>`
-    : ''}
-  <div class="card-meta-row">🔒 Контакт организатора выдаётся после модерации</div>
-</div>
+        ${t.date ? `<div class="card-meta-row">📅 ${esc(t.date)}${t.time ? ' в ' + esc(t.time) : ''}</div>` : ''}
+        ${t.venue ? `<div class="card-meta-row">📍 ${esc(t.venue)}</div>` : ''}
+        ${tt ? `<div class="card-meta-row">👥 Мест занято: ${tk} из ${tt}</div>` : ''}
+        <div class="card-meta-row">🔒 Контакт организатора выдаётся после модерации</div>
+      </div>
     </div>
     <div class="card-footer">
       <span class="card-price ${p === 'Бесплатно' ? 'card-price-free' : ''}">${esc(p)}</span>
@@ -1123,6 +1112,20 @@ document.addEventListener('keydown', e => {
   });
 });
 
+/* Открытие модалки создания стола под нужный тип */
+function openTableModalBoardgame() {
+  createMode = 'boardgame';
+  const title = document.getElementById('mh-table');
+  if (title) title.textContent = '🎲 Добавить настольную игру';
+  openModal('table');
+}
+function openTableModalChess() {
+  createMode = 'chess';
+  const title = document.getElementById('mh-table');
+  if (title) title.textContent = '♟️ Добавить партию (шахматы/нарды/шашки)';
+  openModal('table');
+}
+
 /* ── Открыть форму записи ── */
 function openJoinModal(tableId, gameName, date, venue) {
   document.getElementById('joinTableId').value = tableId;
@@ -1139,7 +1142,7 @@ function openJoinModal(tableId, gameName, date, venue) {
   openModal('join');
 }
 
-/* ── Делегирование кликов по кнопкам карточек ── */
+/* ── Делегирование кликов по карточкам ── */
 document.addEventListener('click', e => {
   const inviteBtn = e.target.closest('.invite-btn');
   const bookBtn   = e.target.closest('.book-btn');
@@ -1165,7 +1168,6 @@ document.addEventListener('click', e => {
     const date  = card.getAttribute('data-date')  || '';
     const venue = card.getAttribute('data-venue') || '';
 
-    // Для ведущих: id начинается с host-
     if (game === 'Ведущий' || id.startsWith('host-')) {
       openJoinModal(id || ('host-' + game), game, '', '');
     } else {
@@ -1291,8 +1293,13 @@ async function submitTable(e) {
   delete data.date_raw;
   delete data.time_raw;
 
-  // бэкенд ждёт hostTelegram
   data.hostTelegram = data.hostTelegram || data.contact || '';
+
+  if (createMode === 'chess') {
+    data.type = 'chess';
+  } else {
+    data.type = 'boardgame';
+  }
 
   let createdId = null;
   try {
@@ -1335,7 +1342,6 @@ async function submitBooking(e) {
   const form = e.target;
   const btn = form.querySelector('.form-submit');
 
-  // доп. защита: проверяем галочку согласия на персональные данные
   const consent = form.querySelector('#joinConsent');
   if (consent && !consent.checked) {
     toast('Поставь галочку согласия на обработку данных.', true);
@@ -1364,7 +1370,6 @@ async function submitBooking(e) {
       bookingId = json.id;
       secret = json.secret;
     } else if (json.error) {
-      // ошибки типа "Все поля обязательны", "Свободных мест нет" и т.п.
       errorMsg = json.error;
     } else {
       errorMsg = 'Не удалось записаться. Попробуй позже.';
@@ -1380,7 +1385,6 @@ async function submitBooking(e) {
     return;
   }
 
-  // Если получили id+secret — сохраняем в localStorage связку стол → заявка
   if (bookingId && secret && tableId) {
     const key = 'nr_bookings';
     const all = JSON.parse(localStorage.getItem(key) || '{}');
@@ -1406,6 +1410,7 @@ async function submitBooking(e) {
     succ.style.display = 'none';
   }, 5000);
 }
+
 /* Показать контакт организатора после одобрения (в модалке) */
 async function showOrganizerContact(tableId) {
   const key = 'nr_bookings';
@@ -1469,14 +1474,12 @@ async function initMyContactsOnCards() {
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json.error || !json.contact) {
-        continue; // не одобрено или нет контакта
+        continue;
       }
 
       const contact = json.contact;
-
       const card = document.querySelector(`.card[data-id="${CSS.escape(tableId)}"]`);
       if (!card) continue;
-
       if (card.querySelector('.card-my-contact')) continue;
 
       const footer = card.querySelector('.card-footer');
@@ -1490,9 +1493,7 @@ async function initMyContactsOnCards() {
       div.innerHTML = `📱 <strong>Контакт организатора:</strong> ${esc(contact)}`;
 
       footer.appendChild(div);
-    } catch(_) {
-      // ignore
-    }
+    } catch(_) {}
   }
 }
 
@@ -1536,8 +1537,6 @@ async function submitCafe(e) {
   btn.textContent = 'Отправляем...';
 
   const data = Object.fromEntries(new FormData(form));
-
-  // Бэкенд ждёт name и telegram
   data.telegram = data.telegram || data.contact || '';
 
   let ok = false;
@@ -1570,7 +1569,9 @@ async function submitCafe(e) {
     btn.textContent = 'Отправить на модерацию';
   }
 }
-  function openMailSupport() {
+
+/* Поддержка: почта */
+function openMailSupport() {
   const email = 'lesha.aleksandrov2014@yandex.ru';
   const subject = encodeURIComponent('Настолки Рядом — вопрос/предложение');
   const body = encodeURIComponent('Привет! Хочу рассказать/спросить вот что:\n\n');

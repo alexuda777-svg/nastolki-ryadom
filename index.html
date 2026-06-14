@@ -877,8 +877,7 @@ function renderCafes() {
     : '<div class="empty"><div class="empty-icon">☕</div><h3>Кафе пока нет</h3><p>Добавь своё!</p></div>';
 }
 
-
-/* ── Шаблоны карточек ── */
+/* ── Карточки без onclick ── */
 function createTableCard(t) {
   const tk = t.seats_taken || 0;
   const tt = parseInt(t.seats) || 0;
@@ -887,14 +886,12 @@ function createTableCard(t) {
   const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно') ? 'Бесплатно' : t.price;
   const inviteUrl = location.origin + location.pathname + '?table=' + encodeURIComponent(t.id || '');
 
-  // Безопасные JS-строки для inline-обработчиков
-  const safeId    = JSON.stringify(String(t.id || ''));
-  const safeGame  = JSON.stringify(t.game || 'Игра');
-  const safeDate  = JSON.stringify(t.date || '');
-  const safeVenue = JSON.stringify(t.venue || '');
-  const safeUrl   = JSON.stringify(inviteUrl);
-
-  return `<article class="card" data-id="${esc(String(t.id||''))}">
+  return `<article class="card"
+                   data-id="${esc(String(t.id||''))}"
+                   data-game="${esc(t.game||'Игра')}"
+                   data-date="${esc(t.date||'')}"
+                   data-venue="${esc(t.venue||'')}"
+                   data-invite-url="${esc(inviteUrl)}">
     <div class="card-badge-row">
       <span class="badge badge-game">🎮 ${esc(t.game||'Игра')}</span>
       ${fr !== null ? (full ? '<span class="badge badge-full">Мест нет</span>' : `<span class="badge badge-seats">👥 ${fr} мест</span>`) : ''}
@@ -911,32 +908,24 @@ function createTableCard(t) {
     <div class="card-footer">
       <span class="card-price ${p === 'Бесплатно' ? 'card-price-free' : ''}">${esc(p)}</span>
       <div class="card-footer-actions">
-        <button class="invite-btn"
-                onclick="event.stopPropagation(); copyText(${safeUrl}, 'Ссылка скопирована!')"
-                title="Скопировать ссылку-приглашение">
-          🔗
-        </button>
-        <button class="book-btn"
-                ${full ? 'disabled' : ''}
-                onclick="event.stopPropagation(); openJoinModal(${safeId}, ${safeGame}, ${safeDate}, ${safeVenue})">
-          Записаться
-        </button>
+        <button class="invite-btn" title="Скопировать ссылку-приглашение">🔗</button>
+        <button class="book-btn" ${full ? 'disabled' : ''}>Записаться</button>
       </div>
     </div>
   </article>`;
 }
+
 function createChessCard(t) {
   const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно') ? 'Бесплатно' : t.price;
   const ic = t.game === 'Шахматы' ? '♟️' : t.game === 'Нарды' ? '🎲' : t.game === 'Шашки' ? '⚪' : '⚫';
   const inviteUrl = location.origin + location.pathname + '?table=' + encodeURIComponent(t.id || '');
 
-  const safeId    = JSON.stringify(String(t.id || ''));
-  const safeGame  = JSON.stringify(t.game || 'Партия');
-  const safeDate  = JSON.stringify(t.date || '');
-  const safeVenue = JSON.stringify(t.venue || '');
-  const safeUrl   = JSON.stringify(inviteUrl);
-
-  return `<article class="card" data-id="${esc(String(t.id||''))}">
+  return `<article class="card"
+                   data-id="${esc(String(t.id||''))}"
+                   data-game="${esc(t.game||'Партия')}"
+                   data-date="${esc(t.date||'')}"
+                   data-venue="${esc(t.venue||'')}"
+                   data-invite-url="${esc(inviteUrl)}">
     <div class="card-badge-row">
       <span class="badge badge-chess">${ic} ${esc(t.game||'Партия')}</span>
       ${t.level ? `<span class="badge badge-game">${esc(t.level)}</span>` : ''}
@@ -953,22 +942,20 @@ function createChessCard(t) {
     <div class="card-footer">
       <span class="card-price ${p === 'Бесплатно' ? 'card-price-free' : ''}">${esc(p)}</span>
       <div class="card-footer-actions">
-        <button class="invite-btn"
-                onclick="event.stopPropagation(); copyText(${safeUrl}, 'Ссылка скопирована!')"
-                title="Скопировать ссылку-приглашение">
-          🔗
-        </button>
-        <button class="book-btn"
-                onclick="event.stopPropagation(); openJoinModal(${safeId}, ${safeGame}, ${safeDate}, ${safeVenue})">
-          Играть
-        </button>
+        <button class="invite-btn" title="Скопировать ссылку-приглашение">🔗</button>
+        <button class="book-btn">Играть</button>
       </div>
     </div>
   </article>`;
 }
+
 function createHostCard(h) {
   const p = (!h.price || h.price === '0') ? 'По договорённости' : h.price;
-  return `<article class="card" data-id="${esc(String(h.id||''))}">
+  return `<article class="card"
+                   data-id="${esc(String(h.id||''))}"
+                   data-game="${esc(h.name||'Ведущий')}"
+                   data-date=""
+                   data-venue="">
     <div class="card-badge-row">
       <span class="badge badge-host">🎭 Ведущий</span>
       ${h.games ? `<span class="badge badge-free">${esc(h.games.substring(0,30))}</span>` : ''}
@@ -983,10 +970,7 @@ function createHostCard(h) {
     </div>
     <div class="card-footer">
       <span class="card-price">${esc(p)}</span>
-      <button class="book-btn"
-              onclick="event.stopPropagation(); openJoinModal('host-${esc(String(h.id||''))}','${esc(h.name||'Ведущий')}','','')">
-        Написать
-      </button>
+      <button class="book-btn">Написать</button>
     </div>
   </article>`;
 }
@@ -1020,6 +1004,7 @@ function esc(s) {
                       .replace(/'/g,'&#39;')
                       .replace(/"/g,'&quot;');
 }
+
 /* ── Модалки ── */
 function openModal(t) {
   const m = document.getElementById('modal-' + t);
@@ -1050,6 +1035,41 @@ function openJoinModal(tableId, gameName, date, venue) {
   document.getElementById('joinGameName').value = gameName;
   openModal('join');
 }
+
+/* ── Делегирование кликов по кнопкам карточек ── */
+document.addEventListener('click', e => {
+  const inviteBtn = e.target.closest('.invite-btn');
+  const bookBtn   = e.target.closest('.book-btn');
+
+  if (inviteBtn) {
+    e.stopPropagation();
+    const card = inviteBtn.closest('.card');
+    if (!card) return;
+    const url = card.getAttribute('data-invite-url');
+    if (url) {
+      copyText(url, 'Ссылка скопирована!');
+    }
+    return;
+  }
+
+  if (bookBtn) {
+    e.stopPropagation();
+    const card = bookBtn.closest('.card');
+    if (!card || bookBtn.disabled) return;
+
+    const id    = card.getAttribute('data-id') || '';
+    const game  = card.getAttribute('data-game')  || 'Игра';
+    const date  = card.getAttribute('data-date')  || '';
+    const venue = card.getAttribute('data-venue') || '';
+
+    // Для ведущих: id начинается с host-
+    if (game === 'Ведущий' || id.startsWith('host-')) {
+      openJoinModal(id || ('host-' + game), game, '', '');
+    } else {
+      openJoinModal(id, game, date, venue);
+    }
+  }
+});
 
 /* ── Копировать текст ── */
 function copyText(text, msg) {

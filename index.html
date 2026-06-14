@@ -497,25 +497,28 @@ css
   transform:translateY(-2px);
 }
 
-/* Десктоп: 3 колонки + скролл внутри секции */
+/* Десктоп: только нормальная ширина карточек, БЕЗ скролла внутри .catalog */
 @media (min-width:1024px){
-  .catalog{
-    max-height:900px;
-    overflow-y:auto;
-  }
-
   .cards-grid{
+    display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr));
     gap:1.5rem;
+    align-items:flex-start;
   }
 
-  .card{
-    width:100%;
-    max-width:none;
-    height:auto;
+  .cards-grid .card,
+  #tables-grid .card,
+  #chess-grid .card,
+  #hosts-grid .card,
+  #cafes-grid .card{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    flex:1 1 auto !important;
+    height:auto !important;
+    box-sizing:border-box;
     border-radius:var(--r-lg);
     padding:0.75rem 1rem;
-    box-sizing:border-box;
   }
 
   .card-body{
@@ -865,69 +868,29 @@ css
     display:none;
   }
 }
-    /* ==== Десктоп: нормальная сетка каталога ==== */
+    /* ==== Десктоп: только нормальная сетка карточек ==== */
 @media (min-width: 1024px) {
 
-  /* Контейнер каталога */
-  .catalog {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-    max-height: 900px;
-    overflow-y: auto;
-  }
-
-  /* На десктопе никаких горизонтальных лент */
-  #tables-grid,
-  #chess-grid,
-  #hosts-grid,
-  #cafes-grid{
-    overflow-x: visible !important;
-    overflow-y: visible !important;
-  }
-
-  #tables-grid .cards-grid,
-  #chess-grid .cards-grid,
-  #hosts-grid .cards-grid,
-  #cafes-grid .cards-grid{
-    display: grid !important;
-    grid-auto-flow: row !important;
-  }
-
-  /* Сетка карточек: 3 колонки */
+  /* сетка карточек: 3 колонки */
   .cards-grid{
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.5rem;
-    align-items: flex-start;
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:1.5rem;
+    align-items:flex-start;
   }
 
-  /* Сбрасываем все мобильные ограничения на ширину */
+  /* карточки занимают полную ширину своей колонки */
   .cards-grid .card,
   #tables-grid .card,
   #chess-grid .card,
   #hosts-grid .card,
-  #cafes-grid .card {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    flex: 1 1 auto !important;
-    height: auto !important;
-    box-sizing: border-box;
-    border-radius: var(--r-lg);
-    padding: 0.75rem 1rem;
-  }
-
-  .card-body {
-    padding-block: 0.25rem;
-  }
-
-  .card-title {
-    font-size: 1rem;
-  }
-
-  .card-meta {
-    font-size: 0.85rem;
+  #cafes-grid .card{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    flex:1 1 auto !important;
+    height:auto !important;
+    box-sizing:border-box;
   }
 }
 </style>

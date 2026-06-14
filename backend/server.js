@@ -232,30 +232,86 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Запись на игру
-  if (req.method === 'POST' && pathname === '/api/bookings') {
-    try {
-      const data = await parseBody(req);
-      if (!data.tableId || !data.name || !data.telegram) {
-        res.writeHead(400, h);
-        res.end(JSON.stringify({ error: 'Все поля обязательны' }));
-        return;
-      }
-      const item = saveItem('bookings', {
-        ...data,
-        status: 'pending'
-      });
-      sendTg(
-        `📋 <b>Запись на стол!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🎮 Стол: ${data.tableId}`
-      );
-      res.writeHead(201, h);
-      res.end(JSON.stringify({ success: true, id: item.id }));
-    } catch (e) {
+if (req.method === 'POST' && pathname === '/api/bookings') {
+  try {
+    const data = await parseBody(req);
+    if (!data.tableId || !data.name || !data.telegram) {
       res.writeHead(400, h);
-      res.end(JSON.stringify({ error: e.message }));
+      res.end(JSON.stringify({ error: 'Все поля обязательны' }));
+      return;
     }
-    return;
-  }
 
+    // Генерируем секрет для игрока
+    const secret = crypto.randomBytes(16).toString('hex');
+
+    const item = saveItem('bookings', {
+      ...data,
+      status: 'pending',
+      secret
+    });
+
+    sendTg(
+      `📋 <b>Запись на стол!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🎮 Стол: ${data.tableId}`
+    );
+
+    // ВАЖНО: вернуть и id, и secret
+    res.writeHead(201, h);
+    res.end(JSON.stringify({ success: true, id: item.id, secret }));
+  } catch (e) {
+    res.writeHead(400, h);
+    res.end(JSON.stringify({ error: e.message }));
+  }
+  return;
+}
+  // Публично: получить контакт организатора по записи
+if (req.method === 'POST' && pathname === '/api/booking-contact') {
+  try {
+    const data = await parseBody(req);
+    const { bookingId, secret } = data;
+
+    if (!bookingId || !secret) {
+      res.writeHead(400, h);
+      res.end(JSON.stringify({ error: 'bookingId и secret обязательны' }));
+      return;
+    }
+
+    // 1) Ищем запись
+    const bookings = readAll('bookings');
+    const booking = bookings.find(b => String(b.id || '') === String(bookingId));
+
+    if (!booking || booking.status !== 'approved' || booking.secret !== secret) {
+      res.writeHead(404, h);
+      res.end(JSON.stringify({ error: 'Запись не найдена или не одобрена' }));
+      return;
+    }
+
+    // 2) Ищем стол
+    const tables = readAll('tables');
+    const table = tables.find(t => String(t.id || '') === String(booking.tableId));
+
+    if (!table) {
+      res.writeHead(404, h);
+      res.end(JSON.stringify({ error: 'Стол не найден' }));
+      return;
+    }
+
+    // 3) Контакт создателя (ведущий или игрок)
+    const contact = table.hostTelegram || table.contact || table.telegram;
+
+    if (!contact) {
+      res.writeHead(404, h);
+      res.end(JSON.stringify({ error: 'Контакт не указан организатором' }));
+      return;
+    }
+
+    res.writeHead(200, h);
+    res.end(JSON.stringify({ contact }));
+  } catch (e) {
+    res.writeHead(400, h);
+    res.end(JSON.stringify({ error: e.message }));
+  }
+  return;
+}
   // Защита админ-API
   if (pathname.startsWith('/api/admin') && !isAdmin(req)) {
     res.writeHead(401, h);

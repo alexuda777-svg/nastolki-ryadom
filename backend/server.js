@@ -5,8 +5,9 @@ const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'nastolki2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'nastolki2026';
 
+// гарантируем наличие каталогов
 ['hosts', 'cafes', 'tables', 'bookings', 'feedback'].forEach(d => {
   const p = path.join(DATA_DIR, d);
   if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
@@ -116,26 +117,23 @@ function sendTg(message) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = url.pathname;
+  const h = corsHeaders();
+
+  // CORS preflight
   if (req.method === 'OPTIONS') {
-    res.writeHead(204, corsHeaders());
+    res.writeHead(204, h);
     res.end();
     return;
   }
-  const h = corsHeaders();
 
   // health-check
   if (req.method === 'GET' && pathname === '/health') {
     res.writeHead(200, h);
-    res.end(
-      JSON.stringify({
-        status: 'ok',
-        time: new Date().toISOString()
-      })
-    );
+    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString() }));
     return;
   }
 
-  // Публичные эндпоинты (только approved)
+  // Публичные списки (только approved)
   if (req.method === 'GET' && pathname === '/api/tables') {
     const all = readAll('tables').filter(t => t.status === 'approved');
     res.writeHead(200, h);
@@ -162,21 +160,19 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Публичное создание заявок
+
+  // Ведущий
   if (req.method === 'POST' && pathname === '/api/hosts') {
     try {
       const data = await parseBody(req);
       if (!data.name || !data.telegram) {
         res.writeHead(400, h);
-        res.end(
-          JSON.stringify({ error: 'Имя и Telegram обязательны' })
-        );
+        res.end(JSON.stringify({ error: 'Имя и Telegram обязательны' }));
         return;
       }
       const item = saveItem('hosts', { ...data, status: 'pending' });
       sendTg(
-        `🎭 <b>Новый ведущий!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🏙 ${
-          data.city || '—'
-        }\n🎮 ${data.games || '—'}`
+        `🎭 <b>Новый ведущий!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🏙 ${data.city || '—'}\n🎮 ${data.games || '—'}`
       );
       res.writeHead(201, h);
       res.end(JSON.stringify({ success: true, id: item.id }));
@@ -187,23 +183,18 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Кафе
   if (req.method === 'POST' && pathname === '/api/cafes') {
     try {
       const data = await parseBody(req);
       if (!data.name || !data.telegram) {
         res.writeHead(400, h);
-        res.end(
-          JSON.stringify({
-            error: 'Название и Telegram обязательны'
-          })
-        );
+        res.end(JSON.stringify({ error: 'Название и Telegram обязательны' }));
         return;
       }
       const item = saveItem('cafes', { ...data, status: 'pending' });
       sendTg(
-        `☕ <b>Новое кафе!</b>\n🏠 ${data.name}\n📱 ${data.telegram}\n📍 ${
-          data.address || '—'
-        }`
+        `☕ <b>Новое кафе!</b>\n🏠 ${data.name}\n📱 ${data.telegram}\n📍 ${data.address || '—'}`
       );
       res.writeHead(201, h);
       res.end(JSON.stringify({ success: true, id: item.id }));
@@ -214,16 +205,13 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Стол / игра
   if (req.method === 'POST' && pathname === '/api/tables') {
     try {
       const data = await parseBody(req);
       if (!data.game || !data.hostTelegram || !data.date) {
         res.writeHead(400, h);
-        res.end(
-          JSON.stringify({
-            error: 'Игра, Telegram и дата обязательны'
-          })
-        );
+        res.end(JSON.stringify({ error: 'Игра, Telegram и дата обязательны' }));
         return;
       }
       const item = saveItem('tables', {
@@ -232,11 +220,7 @@ const server = http.createServer(async (req, res) => {
         seats_taken: data.seats_taken || 0
       });
       sendTg(
-        `🎲 <b>Новый стол!</b>\n🎮 ${data.game}\n📱 ${
-          data.hostTelegram
-        }\n📅 ${data.date} ${data.time || ''}\n🏠 ${
-          data.venue || '—'
-        }`
+        `🎲 <b>Новый стол!</b>\n🎮 ${data.game}\n📱 ${data.hostTelegram}\n📅 ${data.date} ${data.time || ''}\n🏠 ${data.venue || '—'}`
       );
       res.writeHead(201, h);
       res.end(JSON.stringify({ success: true, id: item.id }));
@@ -247,14 +231,13 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Запись на игру
   if (req.method === 'POST' && pathname === '/api/bookings') {
     try {
       const data = await parseBody(req);
       if (!data.tableId || !data.name || !data.telegram) {
         res.writeHead(400, h);
-        res.end(
-          JSON.stringify({ error: 'Все поля обязательны' })
-        );
+        res.end(JSON.stringify({ error: 'Все поля обязательны' }));
         return;
       }
       const item = saveItem('bookings', {
@@ -262,9 +245,7 @@ const server = http.createServer(async (req, res) => {
         status: 'pending'
       });
       sendTg(
-        `📋 <b>Запись на стол!</b>\n👤 ${data.name}\n📱 ${
-          data.telegram
-        }\n🎮 Стол: ${data.tableId}`
+        `📋 <b>Запись на стол!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🎮 Стол: ${data.tableId}`
       );
       res.writeHead(201, h);
       res.end(JSON.stringify({ success: true, id: item.id }));
@@ -282,36 +263,34 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Админская статистика
+  // Админ: статистика
   if (req.method === 'GET' && pathname === '/api/admin/stats') {
     const hosts = readAll('hosts');
     const cafes = readAll('cafes');
     const tables = readAll('tables');
     const bookings = readAll('bookings');
     res.writeHead(200, h);
-    res.end(
-      JSON.stringify({
-        hosts: {
-          total: hosts.length,
-          pending: hosts.filter(x => x.status === 'pending').length,
-          approved: hosts.filter(x => x.status === 'approved').length
-        },
-        cafes: {
-          total: cafes.length,
-          pending: cafes.filter(x => x.status === 'pending').length,
-          approved: cafes.filter(x => x.status === 'approved').length
-        },
-        tables: {
-          total: tables.length,
-          pending: tables.filter(x => x.status === 'pending').length,
-          approved: tables.filter(x => x.status === 'approved').length
-        },
-        bookings: {
-          total: bookings.length,
-          pending: bookings.filter(x => x.status === 'pending').length
-        }
-      })
-    );
+    res.end(JSON.stringify({
+      hosts: {
+        total: hosts.length,
+        pending: hosts.filter(x => x.status === 'pending').length,
+        approved: hosts.filter(x => x.status === 'approved').length
+      },
+      cafes: {
+        total: cafes.length,
+        pending: cafes.filter(x => x.status === 'pending').length,
+        approved: cafes.filter(x => x.status === 'approved').length
+      },
+      tables: {
+        total: tables.length,
+        pending: tables.filter(x => x.status === 'pending').length,
+        approved: tables.filter(x => x.status === 'approved').length
+      },
+      bookings: {
+        total: bookings.length,
+        pending: bookings.filter(x => x.status === 'pending').length
+      }
+    }));
     return;
   }
 
@@ -374,6 +353,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // 404
   res.writeHead(404, h);
   res.end(JSON.stringify({ error: 'Not found' }));
 });

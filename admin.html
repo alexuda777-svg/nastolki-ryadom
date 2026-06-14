@@ -407,6 +407,7 @@
 
 <script>
 const API = 'https://nastolki-ryadom-production.up.railway.app';
+const ADMIN_TOKEN = 'nastolki2024'; // можешь потом вынести в ENV и подставлять при сборке
 
 let allTables = [], allChess = [], allHosts = [], allCafes = [], allBookings = [], allFeedback = [];
 let searches = { tables: '', chess: '', hosts: '', cafes: '', bookings: '' };
@@ -415,13 +416,16 @@ let activeTab = 'tables';
 /* ── Загрузка ── */
 async function loadAll() {
   try {
+    const headers = { 'Authorization': 'Bearer ' + ADMIN_TOKEN };
+
     const [tables, hosts, cafes, bookings, feedback] = await Promise.allSettled([
-      fetch(API + '/api/tables').then(r => r.json()),
-      fetch(API + '/api/hosts').then(r => r.json()),
-      fetch(API + '/api/cafes').then(r => r.json()),
-      fetch(API + '/api/bookings').then(r => r.json()),
-      fetch(API + '/api/feedback').then(r => r.json())
+      fetch(API + '/api/admin/tables',   { headers }).then(r => r.json()),
+      fetch(API + '/api/admin/hosts',    { headers }).then(r => r.json()),
+      fetch(API + '/api/admin/cafes',    { headers }).then(r => r.json()),
+      fetch(API + '/api/admin/bookings', { headers }).then(r => r.json()),
+      fetch(API + '/api/admin/feedback', { headers }).then(r => r.json()).catch(() => [])
     ]);
+
     const all = tables.status === 'fulfilled' && Array.isArray(tables.value) ? tables.value : [];
     allTables   = all.filter(t => !t.type || t.type === 'boardgame');
     allChess    = all.filter(t => t.type === 'chess');
@@ -432,12 +436,16 @@ async function loadAll() {
 
     updateStats();
     renderAll();
-    document.getElementById('lastUpdated').textContent = 'Обновлено: ' + new Date().toLocaleTimeString('ru');
-  } catch(e) { console.error(e); toast('Ошибка загрузки данных', 'error'); }
+    const el = document.getElementById('lastUpdated');
+    if (el) el.textContent = 'Обновлено: ' + new Date().toLocaleTimeString('ru');
+  } catch(e) {
+    console.error(e);
+    toast('Ошибка загрузки данных', 'error');
+  }
 }
 
 function updateStats() {
-  const all = [...allTables,...allChess,...allHosts,...allCafes];
+  const all = [...allTables, ...allChess, ...allHosts, ...allCafes];
   const pending  = all.filter(x => x.status === 'pending').length;
   const approved = all.filter(x => x.status === 'approved').length;
   document.getElementById('stat-pending').textContent  = pending;
@@ -446,10 +454,12 @@ function updateStats() {
   document.getElementById('stat-feedback').textContent = allFeedback.length;
   document.getElementById('stat-total').textContent    = all.length;
 
-  // Бейджи вкладок
   const setBadge = (id, val) => {
     const el = document.getElementById(id);
-    if (el) { el.textContent = val; el.style.display = val > 0 ? '' : 'none'; }
+    if (el) {
+      el.textContent = val;
+      el.style.display = val > 0 ? '' : 'none';
+    }
   };
   setBadge('tb-tables',   allTables.filter(x => x.status === 'pending').length);
   setBadge('tb-chess',    allChess.filter(x => x.status === 'pending').length);
@@ -460,26 +470,44 @@ function updateStats() {
 }
 
 function renderAll() {
-  renderTables(); renderChess(); renderHosts(); renderCafes(); renderBookings(); renderFeedback();
+  renderTables();
+  renderChess();
+  renderHosts();
+  renderCafes();
+  renderBookings();
+  renderFeedback();
 }
 
 /* ── Кол-во записей по столу ── */
 function bookingsForTable(id) {
-  return allBookings.filter(b => String(b.tableId||b.table_id||'') === String(id||''));
+  return allBookings.filter(b => String(b.tableId || b.table_id || '') === String(id || ''));
 }
 
 /* ── Найти кафе/хост по id ── */
-function cafeNameById(id) { if (!id) return '—'; const c = allCafes.find(x => String(x.id||x._id||'') === String(id)); return c ? c.name : '—'; }
-function hostNameById(id) { if (!id) return '—'; const h = allHosts.find(x => String(x.id||x._id||'') === String(id)); return h ? h.name : '—'; }
+function cafeNameById(id) {
+  if (!id) return '—';
+  const c = allCafes.find(x => String(x.id || x._id || '') === String(id));
+  return c ? c.name : '—';
+}
+function hostNameById(id) {
+  if (!id) return '—';
+  const h = allHosts.find(x => String(x.id || x._id || '') === String(id));
+  return h ? h.name : '—';
+}
 
 /* ── Фильтр поиска ── */
-function searchSection(type, val) { searches[type] = val.toLowerCase(); renderAll(); }
+function searchSection(type, val) {
+  searches[type] = (val || '').toLowerCase();
+  renderAll();
+}
 function matchSearch(item, q) {
   if (!q) return true;
   return JSON.stringify(item).toLowerCase().includes(q);
 }
 
 /* ── Рендер таблиц ── */
+// (далее оставляем твой renderTables / renderChess / renderHosts / renderCafes / renderBookings / renderFeedback БЕЗ ИЗМЕНЕНИЙ)
+
 function renderTables() {
   const list = allTables.filter(t => matchSearch(t, searches.tables));
   document.getElementById('count-tables').textContent = list.length;
@@ -584,7 +612,7 @@ function renderBookings() {
   const list = allBookings.filter(b => matchSearch(b, searches.bookings));
   document.getElementById('count-bookings').textContent = list.length;
   const html = list.length ? list.map(b => {
-    const tableInfo = [...allTables,...allChess].find(t => String(t.id||t._id||'') === String(b.tableId||b.table_id||''));
+    const tableInfo = [...allTables, ...allChess].find(t => String(t.id||t._id||'') === String(b.tableId||b.table_id||''));
     const gameName = tableInfo ? tableInfo.game : (b.gameName || '—');
     return `<tr>
       <td class="td-primary">${esc(b.name||'Аноним')}</td>
@@ -617,7 +645,11 @@ function renderFeedback() {
 
 /* ── Вспомогательные ── */
 function getStatusText(s) {
-  return s === 'approved' ? '✅ Одобрено' : s === 'rejected' ? '❌ Отклонено' : '⏳ На проверке';
+  return s === 'approved'
+    ? '✅ Одобрено'
+    : s === 'rejected'
+    ? '❌ Отклонено'
+    : '⏳ На проверке';
 }
 function getAnswerBadge(v) {
   if (v === 'yes')   return '<span class="status-badge status-approved">✅ Да</span>';
@@ -626,7 +658,12 @@ function getAnswerBadge(v) {
   return '—';
 }
 function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+  return String(s || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/'/g,'&#39;')
+    .replace(/"/g,'&quot;');
 }
 
 /* ── Вкладки ── */
@@ -642,25 +679,51 @@ function switchTab(tab, btn) {
 async function approve(type, id) {
   if (!confirm('Одобрить эту заявку? Она появится на сайте.')) return;
   try {
-    const res = await fetch(`${API}/api/${type}/${id}/approve`, { method: 'POST' });
+    const res = await fetch(`${API}/api/admin/${type}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + ADMIN_TOKEN
+      },
+      body: JSON.stringify({ status: 'approved' })
+    });
     const json = await res.json().catch(() => ({}));
-    if (json.success !== false) { toast('✅ Заявка одобрена и опубликована!'); loadAll(); }
-    else toast('Ошибка: ' + (json.error || 'Неизвестная ошибка'), 'error');
-  } catch(_) { toast('Ошибка сети', 'error'); }
+    if (!res.ok || json.error) {
+      toast('Ошибка: ' + (json.error || res.status), 'error');
+    } else {
+      toast('✅ Заявка одобрена и опубликована!');
+      loadAll();
+    }
+  } catch(_) {
+    toast('Ошибка сети', 'error');
+  }
 }
 
 /* ── Удалить ── */
 async function deleteItem(type, id) {
   if (!confirm('Удалить этот элемент? Действие необратимо.')) return;
   try {
-    const res = await fetch(`${API}/api/${type}/${id}`, { method: 'DELETE' });
+    const res = await fetch(`${API}/api/admin/${type}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Bearer ' + ADMIN_TOKEN
+      }
+    });
     const json = await res.json().catch(() => ({}));
-    if (json.success !== false) { toast('🗑️ Удалено!'); loadAll(); }
-    else toast('Ошибка: ' + (json.error || ''), 'error');
-  } catch(_) { toast('Ошибка сети', 'error'); }
+    if (!res.ok || json.success === false) {
+      toast('Ошибка: ' + (json.error || res.status), 'error');
+    } else {
+      toast('🗑️ Удалено!');
+      loadAll();
+    }
+  } catch(_) {
+    toast('Ошибка сети', 'error');
+  }
 }
 
-/* ── Показать игроков ── */
+/* ── Показать игроков / детали / модалки / toast ── */
+// здесь оставь твой текущий код showPlayers, showDetail, openModal, closeModal, toast, keydown, инициализацию
+
 function showPlayers(tableId, gameName) {
   const players = bookingsForTable(tableId);
   document.getElementById('playersModalTitle').textContent = `👥 Игроки · ${gameName}`;
@@ -683,10 +746,9 @@ function showPlayers(tableId, gameName) {
   openModal('players');
 }
 
-/* ── Показать детали заявки ── */
 function showDetail(type, id) {
   let item = null;
-  if (type === 'table') item = [...allTables,...allChess].find(x => String(x.id||x._id||'') === id);
+  if (type === 'table') item = [...allTables, ...allChess].find(x => String(x.id||x._id||'') === id);
   else if (type === 'host') item = allHosts.find(x => String(x.id||x._id||'') === id);
   else if (type === 'cafe') item = allCafes.find(x => String(x.id||x._id||'') === id);
   if (!item) { toast('Данные не найдены', 'error'); return; }
@@ -709,14 +771,20 @@ function showDetail(type, id) {
   openModal('detail');
 }
 
-/* ── Модалки ── */
-function openModal(t) { const m = document.getElementById('modal-' + t); if (m) m.classList.add('show'); }
-function closeModal(id) { const m = document.getElementById(id); if (m) m.classList.remove('show'); }
+function openModal(t) {
+  const m = document.getElementById('modal-' + t);
+  if (m) m.classList.add('show');
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.remove('show');
+}
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+  }
 });
 
-/* ── Toast ── */
 function toast(msg, type) {
   const wrap = document.getElementById('toastWrap');
   const el = document.createElement('div');

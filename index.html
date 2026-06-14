@@ -918,11 +918,13 @@ function renderCafes() {
 
 /* ── Карточки без onclick ── */
 function createTableCard(t) {
-  const tk = t.seats_taken || 0;
-  const tt = parseInt(t.seats) || 0;
-  const fr = tt ? tt - tk : null;
+  const tk = t.seats_taken || 0;              // занято
+  const tt = parseInt(t.seats) || 0;          // всего
+  const fr = tt ? Math.max(tt - tk, 0) : null; // осталось
   const full = tt && tk >= tt;
-  const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно') ? 'Бесплатно' : t.price;
+  const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно')
+    ? 'Бесплатно'
+    : t.price;
   const inviteUrl = location.origin + location.pathname + '?table=' + encodeURIComponent(t.id || '');
 
   return `<article class="card"
@@ -933,7 +935,13 @@ function createTableCard(t) {
                    data-invite-url="${esc(inviteUrl)}">
     <div class="card-badge-row">
       <span class="badge badge-game">🎮 ${esc(t.game||'Игра')}</span>
-      ${fr !== null ? (full ? '<span class="badge badge-full">Мест нет</span>' : `<span class="badge badge-seats">👥 ${fr} мест</span>`) : ''}
+      ${
+        fr !== null
+          ? (full
+              ? '<span class="badge badge-full">Мест нет</span>'
+              : `<span class="badge badge-seats">👥 ${fr} из ${tt} мест</span>`)
+          : ''
+      }
       ${p === 'Бесплатно' ? '<span class="badge badge-free">Бесплатно</span>' : ''}
     </div>
     <div class="card-body">
@@ -941,6 +949,11 @@ function createTableCard(t) {
       <div class="card-meta">
         ${t.date ? `<div class="card-meta-row">📅 ${esc(t.date)}${t.time ? ' в ' + esc(t.time) : ''}</div>` : ''}
         ${t.venue ? `<div class="card-meta-row">📍 ${esc(t.venue)}</div>` : ''}
+        ${
+          tt
+            ? `<div class="card-meta-row">👥 Занято: ${tk} из ${tt}</div>`
+            : ''
+        }
         <div class="card-meta-row">🔒 Контакт организатора выдаётся после модерации</div>
       </div>
     </div>
@@ -953,7 +966,6 @@ function createTableCard(t) {
     </div>
   </article>`;
 }
-
 function createChessCard(t) {
   const p = (!t.price || t.price === '0' || String(t.price).toLowerCase() === 'бесплатно') ? 'Бесплатно' : t.price;
   const ic = t.game === 'Шахматы' ? '♟️' : t.game === 'Нарды' ? '🎲' : t.game === 'Шашки' ? '⚪' : '⚫';
@@ -973,10 +985,13 @@ function createChessCard(t) {
     <div class="card-body">
       <div class="card-title">${ic} ${esc(t.game||'Партия')}</div>
       <div class="card-meta">
-        ${t.date ? `<div class="card-meta-row">📅 ${esc(t.date)}${t.time ? ' в ' + esc(t.time) : ''}</div>` : ''}
-        ${t.venue ? `<div class="card-meta-row">📍 ${esc(t.venue)}</div>` : ''}
-        <div class="card-meta-row">🔒 Контакт организатора выдаётся после модерации</div>
-      </div>
+  ${t.date ? `<div class="card-meta-row">📅 ${esc(t.date)}${t.time ? ' в ' + esc(t.time) : ''}</div>` : ''}
+  ${t.venue ? `<div class="card-meta-row">📍 ${esc(t.venue)}</div>` : ''}
+  ${tt
+    ? `<div class="card-meta-row">👥 Мест занято: ${tk} из ${tt}</div>`
+    : ''}
+  <div class="card-meta-row">🔒 Контакт организатора выдаётся после модерации</div>
+</div>
     </div>
     <div class="card-footer">
       <span class="card-price ${p === 'Бесплатно' ? 'card-price-free' : ''}">${esc(p)}</span>

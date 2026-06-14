@@ -865,9 +865,10 @@ css
     display:none;
   }
 }
-    /* ==== Десктоп: убираем мобильные ограничения ширины карточек ==== */
+    /* ==== Десктоп: нормальная сетка каталога ==== */
 @media (min-width: 1024px) {
-  /* контейнер каталога */
+
+  /* Контейнер каталога */
   .catalog {
     max-width: 1200px;
     margin: 0 auto;
@@ -876,15 +877,32 @@ css
     overflow-y: auto;
   }
 
-  /* сетка карточек */
-  .cards-grid {
+  /* На десктопе никаких горизонтальных лент */
+  #tables-grid,
+  #chess-grid,
+  #hosts-grid,
+  #cafes-grid{
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+  }
+
+  #tables-grid .cards-grid,
+  #chess-grid .cards-grid,
+  #hosts-grid .cards-grid,
+  #cafes-grid .cards-grid{
     display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)); /* ровно 3 колонки */
+    grid-auto-flow: row !important;
+  }
+
+  /* Сетка карточек: 3 колонки */
+  .cards-grid{
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.5rem;
     align-items: flex-start;
   }
 
-  /* общий сброс ширин/флексов, заданных для мобилы */
+  /* Сбрасываем все мобильные ограничения на ширину */
   .cards-grid .card,
   #tables-grid .card,
   #chess-grid .card,

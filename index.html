@@ -868,7 +868,7 @@ css
     display:none;
   }
 }
-    /* ==== Десктоп: только нормальная сетка карточек ==== */
+    /* ==== Десктоп: форсируем нормальную ширину карточек ==== */
 @media (min-width: 1024px) {
 
   /* сетка карточек: 3 колонки */
@@ -879,7 +879,16 @@ css
     align-items:flex-start;
   }
 
-  /* карточки занимают полную ширину своей колонки */
+  /* Сбрасываем любые min/max-width и flex, чтобы карта растягивалась по колонке */
+  .card{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    flex:0 0 auto !important;
+    box-sizing:border-box;
+  }
+
+  /* на всякий случай сброс именно в гриде */
   .cards-grid .card,
   #tables-grid .card,
   #chess-grid .card,
@@ -888,9 +897,8 @@ css
     width:100% !important;
     min-width:0 !important;
     max-width:none !important;
-    flex:1 1 auto !important;
+    flex:0 0 auto !important;
     height:auto !important;
-    box-sizing:border-box;
   }
 }
 </style>

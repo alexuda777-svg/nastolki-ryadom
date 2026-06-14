@@ -865,48 +865,6 @@ css
     display:none;
   }
 }
-    /* ==== Десктопное отображение каталогов (фикс батонов) ==== */
-@media (min-width: 1024px) {
-  /* Контейнер каталога */
-  .catalog {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-    max-height: 900px;      /* можно подправить */
-    overflow-y: auto;       /* скролл внутри секции */
-  }
-
-  /* Сетка карточек */
-  .cards-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)); /* ровно 3 колонки */
-    gap: 1.5rem;
-    align-items: start;
-  }
-
-  /* Карточка: убираем любые фикс/макс-ширины и растяжения */
-  .card {
-    width: 100% !important;
-    max-width: none !important;
-    height: auto !important;
-    border-radius: var(--r-lg);
-    padding: 0.75rem 1rem;
-    box-sizing: border-box;
-  }
-
-  /* Чуть компактнее контент */
-  .card-body {
-    padding-block: 0.25rem;
-  }
-
-  .card-title {
-    font-size: 1rem;
-  }
-
-  .card-meta {
-    font-size: 0.85rem;
-  }
-}
 </style>
 </head>
 <body>

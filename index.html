@@ -567,6 +567,62 @@ css
     justify-content:center;
   }
 }
+    /* Плавающая кнопка поддержки (FAB) */
+.fab-support{
+  position:fixed;
+  right:1rem;
+  bottom:1.25rem;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--ph));
+  color:var(--inv);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.4rem;
+  box-shadow:var(--sh-lg);
+  z-index:1100;
+}
+
+/* Лист выбора канала поддержки */
+.support-sheet{
+  position:fixed;
+  left:1rem;
+  right:1rem;
+  bottom:4.2rem;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r-xl);
+  box-shadow:var(--sh-xl);
+  padding:.75rem;
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+  z-index:1099;
+}
+
+/* Опции внутри листа */
+.support-option{
+  width:100%;
+  padding:.6rem .9rem;
+  border-radius:.9rem;
+  border:1px solid var(--border);
+  background:var(--surface);
+  font-size:.9rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4rem;
+}
+
+/* Показываем FAB/лист только на мобилке */
+@media(min-width:601px){
+  .fab-support,
+  .support-sheet{
+    display:none;
+  }
+}
 </style>
 </head>
 <body>
@@ -1866,6 +1922,12 @@ async function submitCafe(e) {
   }
 }
 
+/* Поддержка: VK */
+function openVkSupport() {
+  const vkUrl = 'https://vk.com/club236541309';
+  window.open(vkUrl, '_blank');
+}
+
 /* Поддержка: почта */
 function openMailSupport() {
   const email = 'lesha.aleksandrov2014@yandex.ru';
@@ -1875,8 +1937,26 @@ function openMailSupport() {
   location.href = mailto;
 }
 
+function toggleSupportSheet() {
+  const sheet = document.getElementById('supportSheet');
+  if (!sheet) return;
+  sheet.hidden = !sheet.hidden;
+}
 /* ── Старт ── */
 loadData();
 </script>
+  <!-- Плавающая кнопка поддержки и лист выбора -->
+<button class="fab-support" type="button" onclick="toggleSupportSheet()">
+  ✉️
+</button>
+
+<div class="support-sheet" id="supportSheet" hidden>
+  <button type="button" class="support-option" onclick="openVkSupport()">
+    VK · написать в группу
+  </button>
+  <button type="button" class="support-option" onclick="openMailSupport()">
+    ✉️ Написать на почту
+  </button>
+</div>
 </body>
 </html>

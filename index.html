@@ -410,13 +410,76 @@
 }
 
 @media(max-width:480px){
-  .hero-btns{flex-direction:column;width:100%}
-  .hero-btns .btn{width:100%;justify-content:center}
-  .hero-stats{grid-template-columns:1fr;gap:.75rem}
-  .filter-tabs{width:100%}
-  .tab{flex:1;text-align:center;padding:.45rem .6rem;font-size:.8rem}
-  .search-box{min-width:100%}
+  /* hero: чуть компактнее текст */
+  .hero{
+    padding:2rem 1rem 1.75rem;
+  }
+  .hero-tag{
+    font-size:.8rem;
+    margin-bottom:.35rem;
+  }
+  .hero h1{
+    font-size:1.9rem;
+    line-height:1.1;
+    margin-bottom:.5rem;
+  }
+  .hero p{
+    font-size:.9rem;
+    line-height:1.4;
+    margin-bottom:.85rem;
+  }
 
+  /* hero-кнопки: сетка 2×2 с хорошими тап-таргетами */
+  .hero-btns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.5rem;
+    width:100%;
+  }
+  .hero-btns .btn{
+    width:100%;
+    padding:.65rem .8rem;
+    font-size:.85rem;
+    border-radius:.9rem;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    gap:.4rem;
+  }
+  .hero-btns .btn-primary{
+    font-weight:600;
+  }
+
+  /* hero-статистика: одна колонка, компактнее */
+  .hero-stats{
+    grid-template-columns:1fr;
+    gap:.75rem;
+  }
+  .stat{
+    padding:1rem;
+  }
+  .stat-n{
+    font-size:2rem;
+  }
+  .stat-l{
+    font-size:.8rem;
+  }
+
+  /* фильтры и поиск */
+  .filter-tabs{
+    width:100%;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:.45rem .6rem;
+    font-size:.8rem;
+  }
+  .search-box{
+    min-width:100%;
+  }
+
+  /* каталоги чуть плотнее */
   .catalog{
     padding:1.1rem .6rem;
     margin-bottom:1rem;
@@ -484,27 +547,24 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero" aria-labelledby="hero-title">
-  <div class="hero-tag">🎲 Настольные игры · Шахматы · Нарды · Ведущие · Кафе</div>
+  <div class="hero-tag">🎲 Настолки, шахматы и люди в Москве</div>
   <h1 id="hero-title">Найди игру<br>рядом с собой</h1>
-  <p>Каталог настольных игр, шахмат, нард, шашек, ведущих и кафе в Москве. Запишись за минуту — бесплатно.</p>
+  <p>Выбери формат — настолки, шахматы, ведущие или кафе — и запишись за минуту.</p>
+
   <div class="hero-btns">
     <button class="btn btn-primary" onclick="document.getElementById('board-games').scrollIntoView({behavior:'smooth'})">🎲 Настольные игры</button>
     <button class="btn btn-chess" onclick="document.getElementById('chess-games').scrollIntoView({behavior:'smooth'})">♟️ Шахматы · Нарды · Шашки</button>
     <button class="btn btn-ghost" onclick="document.getElementById('hosts').scrollIntoView({behavior:'smooth'})">🎭 Ведущие</button>
     <button class="btn btn-ghost" onclick="document.getElementById('cafes').scrollIntoView({behavior:'smooth'})">☕ Кафе</button>
   </div>
+
   <div class="region-notice">
     <span style="font-size:1.5rem" aria-hidden="true">📍</span>
     <div><b>Только Москва</b> · Другие города появятся позже</div>
   </div>
-  <div class="hero-stats" role="list">
-    <div class="stat" role="listitem"><div class="stat-n" id="stat-tables">—</div><div class="stat-l">Настолок</div></div>
-    <div class="stat" role="listitem"><div class="stat-n" id="stat-chess">—</div><div class="stat-l">Шахматы · Нарды</div></div>
-    <div class="stat" role="listitem"><div class="stat-n" id="stat-hosts">—</div><div class="stat-l">Ведущих</div></div>
-    <div class="stat" role="listitem"><div class="stat-n" id="stat-cafes">—</div><div class="stat-l">Кафе</div></div>
-  </div>
+
+  <div class="hero-stats" role="list">…</div>
 </section>
 
 <!-- ПОИСК + ФИЛЬТРЫ -->

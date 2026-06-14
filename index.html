@@ -338,26 +338,27 @@ css
   box-shadow:var(--sh-sm);
 }
 
+/* базовая сетка: мобилки/планшеты — как было */
 .cards-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));
   gap:1.5rem;
 }
 
-/* Десктоп: компактные таблицы 3×3 с прокруткой внутри секции */
-@media(min-width:1024px){
+/* Десктоп: 3 колонки + скролл внутри секции */
+@media (min-width:1024px){
   .catalog{
-    max-height:900px;      /* ограничиваем высоту секции */
-    overflow-y:auto;       /* скролл внутри */
+    max-height:900px;   /* ограничиваем высоту секции */
+    overflow-y:auto;    /* вертикальный скролл внутри */
   }
 
   .cards-grid{
-    grid-template-columns:repeat(3, 1fr);  /* ровно 3 колонки [web:105][web:111] */
-    gap:1.25rem;
+    grid-template-columns:repeat(3,minmax(0,1fr)); /* ровно 3 колонки */
+    gap:1.5rem;
   }
 
   .card{
-    padding:0.75rem 0.9rem;
+    padding:0.75rem 1rem;
     border-radius:var(--r-lg);
   }
 

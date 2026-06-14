@@ -1286,7 +1286,52 @@ css
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- СКРИПТ -->
 <!-- ═══════════════════════════════════════════════════════ -->
+const TEST_MODE = true;
 
+const mockTables = Array.from({ length: 9 }, (_, i) => ({
+  id: 'mock-table-' + (i + 1),
+  type: 'boardgame',
+  game: 'Тестовая настолка ' + (i + 1),
+  date: '12.07.2026',
+  time: '19:00',
+  venue: 'Кафе «Тест ' + (i + 1) + '»',
+  seats: 4,
+  seats_taken: i % 4,
+  price: i % 2 === 0 ? 'Бесплатно' : '500 ₽'
+}));
+
+const mockChess = Array.from({ length: 9 }, (_, i) => ({
+  id: 'mock-chess-' + (i + 1),
+  type: 'chess',
+  game: i % 3 === 0 ? 'Шахматы' : i % 3 === 1 ? 'Нарды' : 'Шашки',
+  level: 'Тест уровень ' + (i + 1),
+  date: '13.07.2026',
+  time: '18:30',
+  venue: 'Шахматный клуб №' + (i + 1),
+  seats: 2,
+  seats_taken: i % 2,
+  price: 'Бесплатно'
+}));
+
+const mockHosts = Array.from({ length: 10 }, (_, i) => ({
+  id: 'mock-host-' + (i + 1),
+  name: 'Тестовый ведущий ' + (i + 1),
+  city: 'Москва',
+  games: 'Настолки, квизы, шахматы',
+  experience: 'Опыт ' + (i + 1) + ' лет',
+  price: 'Договорная',
+  telegram: '@test_host_' + (i + 1)
+}));
+
+const mockCafes = Array.from({ length: 9 }, (_, i) => ({
+  id: 'mock-cafe-' + (i + 1),
+  name: 'Тестовое кафе ' + (i + 1),
+  city: 'Москва',
+  address: 'Улица Тестовая, дом ' + (i + 10),
+  games: 'Настолки, шахматы',
+  price: 'По договорённости',
+  telegram: '@test_cafe_' + (i + 1)
+}));
 <script>
 const API = 'https://nastolki-ryadom-production.up.railway.app';
 let allTables = [], allChess = [], allHosts = [], allCafes = [];
@@ -1308,25 +1353,54 @@ let createMode = 'boardgame'; // 'boardgame' или 'chess'
     });
   });
 })();
-
+function safeSetText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+/* ── Загрузка данных ── */
 /* ── Загрузка данных ── */
 async function loadData() {
   try {
+    if (TEST_MODE) {
+      // тестовый режим: используем мок-данные
+      allTables = mockTables.slice();
+      allChess  = mockChess.slice();
+      allHosts  = mockHosts.slice();
+      allCafes  = mockCafes.slice();
+
+      safeSetText('stat-tables', allTables.length);
+      safeSetText('stat-chess',  allChess.length);
+      safeSetText('stat-hosts',  allHosts.length);
+      safeSetText('stat-cafes',  allCafes.length);
+
+      fillSelects();
+      renderTables();
+      renderChess();
+      renderHosts();
+      renderCafes();
+
+      initMyContactsOnCards();
+      highlightFromQuery();
+
+      return;
+    }
+
     const [t, h, c] = await Promise.allSettled([
       fetch(API + '/api/tables').then(r => r.json()),
       fetch(API + '/api/hosts').then(r => r.json()),
       fetch(API + '/api/cafes').then(r => r.json())
     ]);
+
     const tables = t.status === 'fulfilled' && Array.isArray(t.value) ? t.value : [];
     allTables = tables.filter(x => !x.type || x.type === 'boardgame');
     allChess  = tables.filter(x => x.type === 'chess');
     allHosts  = h.status === 'fulfilled' && Array.isArray(h.value) ? h.value : [];
     allCafes  = c.status === 'fulfilled' && Array.isArray(c.value) ? c.value : [];
 
-    document.getElementById('stat-tables').textContent = allTables.length;
-    document.getElementById('stat-chess').textContent  = allChess.length;
-    document.getElementById('stat-hosts').textContent  = allHosts.length;
-    document.getElementById('stat-cafes').textContent  = allCafes.length;
+    safeSetText('stat-tables', allTables.length);
+    safeSetText('stat-chess',  allChess.length);
+    safeSetText('stat-hosts',  allHosts.length);
+    safeSetText('stat-cafes',  allCafes.length);
 
     fillSelects();
     renderTables();

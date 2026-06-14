@@ -877,6 +877,11 @@ function renderCafes() {
     : '<div class="empty"><div class="empty-icon">☕</div><h3>Кафе пока нет</h3><p>Добавь своё!</p></div>';
 }
 
+Чтобы кнопки «Записаться» и «🔗» работали как отдельные элементы, нужно остановить всплытие события клика внутри них. Сейчас всё ок по логике, не хватало только event.stopPropagation() в onclick.
+
+Вот полностью исправленный блок шаблонов карточек — просто заменяй им свой:
+
+js
 /* ── Шаблоны карточек ── */
 function createTableCard(t) {
   const tk = t.seats_taken || 0;
@@ -902,8 +907,16 @@ function createTableCard(t) {
     <div class="card-footer">
       <span class="card-price ${p === 'Бесплатно' ? 'card-price-free' : ''}">${esc(p)}</span>
       <div class="card-footer-actions">
-        <button class="invite-btn" onclick="copyText('${esc(inviteUrl)}','Ссылка скопирована!')" title="Скопировать ссылку-приглашение">🔗</button>
-        <button class="book-btn" ${full ? 'disabled' : ''} onclick="openJoinModal('${esc(String(t.id||''))}','${esc(t.game||'Игра')}','${esc(t.date||'')}','${esc(t.venue||'')}')">Записаться</button>
+        <button class="invite-btn"
+                onclick="event.stopPropagation(); copyText('${esc(inviteUrl)}','Ссылка скопирована!')"
+                title="Скопировать ссылку-приглашение">
+          🔗
+        </button>
+        <button class="book-btn"
+                ${full ? 'disabled' : ''}
+                onclick="event.stopPropagation(); openJoinModal('${esc(String(t.id||''))}','${esc(t.game||'Игра')}','${esc(t.date||'')}','${esc(t.venue||'')}')">
+          Записаться
+        </button>
       </div>
     </div>
   </article>`;
@@ -930,8 +943,15 @@ function createChessCard(t) {
     <div class="card-footer">
       <span class="card-price ${p === 'Бесплатно' ? 'card-price-free' : ''}">${esc(p)}</span>
       <div class="card-footer-actions">
-        <button class="invite-btn" onclick="copyText('${esc(inviteUrl)}','Ссылка скопирована!')" title="Скопировать ссылку-приглашение">🔗</button>
-        <button class="book-btn" onclick="openJoinModal('${esc(String(t.id||''))}','${esc(t.game||'Партия')}','${esc(t.date||'')}','${esc(t.venue||'')}')">Играть</button>
+        <button class="invite-btn"
+                onclick="event.stopPropagation(); copyText('${esc(inviteUrl)}','Ссылка скопирована!')"
+                title="Скопировать ссылку-приглашение">
+          🔗
+        </button>
+        <button class="book-btn"
+                onclick="event.stopPropagation(); openJoinModal('${esc(String(t.id||''))}','${esc(t.game||'Партия')}','${esc(t.date||'')}','${esc(t.venue||'')}')">
+          Играть
+        </button>
       </div>
     </div>
   </article>`;
@@ -954,7 +974,10 @@ function createHostCard(h) {
     </div>
     <div class="card-footer">
       <span class="card-price">${esc(p)}</span>
-      <button class="book-btn" onclick="openJoinModal('host-${esc(String(h.id||''))}','${esc(h.name||'Ведущий')}','','')">Написать</button>
+      <button class="book-btn"
+              onclick="event.stopPropagation(); openJoinModal('host-${esc(String(h.id||''))}','${esc(h.name||'Ведущий')}','','')">
+        Написать
+      </button>
     </div>
   </article>`;
 }
@@ -982,9 +1005,12 @@ function createCafeCard(c) {
 }
 
 function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+  return String(s||'').replace(/&/g,'&amp;')
+                      .replace(/</g,'&lt;')
+                      .replace(/>/g,'&gt;')
+                      .replace(/'/g,'&#39;')
+                      .replace(/"/g,'&quot;');
 }
-
 /* ── Модалки ── */
 function openModal(t) {
   const m = document.getElementById('modal-' + t);

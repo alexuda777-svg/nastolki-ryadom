@@ -724,6 +724,13 @@
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- СКРИПТ -->
 <!-- ═══════════════════════════════════════════════════════ -->
+Да, вот тут чётко видно, почему столы и кафе не попадали в модерацию.
+
+Исправляю твой скрипт целиком, чтобы всё соответствовало бэкенду.
+
+Ниже готовый блок <script>...</script>. Просто замени им твой текущий скрипт в конце index.html.
+
+xml
 <script>
 const API = 'https://nastolki-ryadom-production.up.railway.app';
 let allTables = [], allChess = [], allHosts = [], allCafes = [];
@@ -789,7 +796,7 @@ function fillSelects() {
     approvedHosts.map(h => `<option value="${esc(String(h.id||''))}">${esc(h.name||'Ведущий')}${h.city ? ' · ' + esc(h.city) : ''}</option>`).join('');
 }
 
-/* ── Подсветить стол из URL ─────── */
+/* ── Подсветить стол из URL ── */
 function highlightFromQuery() {
   const params  = new URLSearchParams(location.search);
   const tableId = params.get('table');
@@ -1101,7 +1108,11 @@ async function submitFeedback(e) {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(e.target));
   try {
-    await fetch(API + '/api/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    await fetch(API + '/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
   } catch(_) {}
   e.target.style.display = 'none';
   document.getElementById('feedbackSuccess').style.display = 'flex';
@@ -1113,7 +1124,8 @@ async function submitTable(e) {
   e.preventDefault();
   const form = e.target;
   const btn = form.querySelector('.form-submit');
-  btn.disabled = true; btn.textContent = 'Отправляем...';
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
   const data = Object.fromEntries(new FormData(form));
 
   if (data.date_raw) {
@@ -1124,11 +1136,19 @@ async function submitTable(e) {
     const [h, m] = data.time_raw.trim().split(':');
     data.time = `${String(parseInt(h)||0).padStart(2,'0')}:${String(parseInt(m)||0).padStart(2,'0')}`;
   }
-  delete data.date_raw; delete data.time_raw;
+  delete data.date_raw;
+  delete data.time_raw;
+
+  // ВАЖНО: бэкенд ждёт hostTelegram
+  data.hostTelegram = data.hostTelegram || data.contact || '';
 
   let createdId = null;
   try {
-    const res = await fetch(API + '/api/tables', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const res = await fetch(API + '/api/tables', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
     const json = await res.json().catch(() => ({}));
     createdId = json.id || json._id || null;
   } catch(_) {}
@@ -1147,7 +1167,10 @@ async function submitTable(e) {
   toast('🎉 Игра отправлена на модерацию!');
   setTimeout(() => {
     closeModal('modal-table');
-    form.reset(); form.style.display = ''; btn.disabled = false; btn.textContent = 'Отправить на модерацию';
+    form.reset();
+    form.style.display = '';
+    btn.disabled = false;
+    btn.textContent = 'Отправить на модерацию';
     document.getElementById('tableSuccess').style.display = 'none';
     inviteBox.style.display = 'none';
     loadData();
@@ -1159,12 +1182,17 @@ async function submitBooking(e) {
   e.preventDefault();
   const form = e.target;
   const btn = form.querySelector('.form-submit');
-  btn.disabled = true; btn.textContent = 'Записываемся...';
+  btn.disabled = true;
+  btn.textContent = 'Записываемся...';
   const data = Object.fromEntries(new FormData(form));
 
   let contact = null;
   try {
-    const res = await fetch(API + '/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    const res = await fetch(API + '/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
     const json = await res.json().catch(() => ({}));
     contact = json.contact || json.organizer_contact || null;
   } catch(_) {}
@@ -1183,8 +1211,12 @@ async function submitBooking(e) {
   toast('🎉 Ты записан на игру!');
   setTimeout(() => {
     closeModal('modal-join');
-    form.reset(); form.style.display = ''; btn.disabled = false; btn.textContent = 'Записаться';
-    succ.style.display = 'none'; contactBlock.style.display = 'none';
+    form.reset();
+    form.style.display = '';
+    btn.disabled = false;
+    btn.textContent = 'Записаться';
+    succ.style.display = 'none';
+    contactBlock.style.display = 'none';
     loadData();
   }, 5000);
 }
@@ -1196,7 +1228,6 @@ async function submitHost(e) {
   const formData = new FormData(form);
   const data = Object.fromEntries(formData);
 
-  // гарантируем, что бэку уйдут name и telegram
   if (!data.telegram && data.contact) {
     data.telegram = data.contact;
   }
@@ -1220,15 +1251,49 @@ async function submitHost(e) {
     loadData();
   }, 3000);
 }
+
 /* Кафе */
 async function submitCafe(e) {
   e.preventDefault();
   const form = e.target;
-  try { await fetch(API + '/api/cafes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))) }); } catch(_) {}
-  form.style.display = 'none';
-  document.getElementById('cafeSuccess').style.display = 'flex';
-  toast('🎉 Кафе отправлено на модерацию!');
-  setTimeout(() => { closeModal('modal-cafe'); form.reset(); form.style.display = ''; document.getElementById('cafeSuccess').style.display = 'none'; loadData(); }, 3000);
+  const btn = form.querySelector('.form-submit');
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
+
+  const data = Object.fromEntries(new FormData(form));
+
+  // Бэкенд ждёт name и telegram
+  data.telegram = data.telegram || data.contact || '';
+
+  let ok = false;
+  try {
+    const res = await fetch(API + '/api/cafes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json().catch(() => ({}));
+    ok = res.ok && !json.error;
+  } catch(_) {}
+
+  if (ok) {
+    form.style.display = 'none';
+    document.getElementById('cafeSuccess').style.display = 'flex';
+    toast('🎉 Кафе отправлено на модерацию!');
+    setTimeout(() => {
+      closeModal('modal-cafe');
+      form.reset();
+      form.style.display = '';
+      btn.disabled = false;
+      btn.textContent = 'Отправить на модерацию';
+      document.getElementById('cafeSuccess').style.display = 'none';
+      loadData();
+    }, 3000);
+  } else {
+    toast('Ошибка при отправке кафе. Проверь контакт.', true);
+    btn.disabled = false;
+    btn.textContent = 'Отправить на модерацию';
+  }
 }
 
 /* ── Старт ── */

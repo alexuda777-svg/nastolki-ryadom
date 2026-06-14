@@ -1283,9 +1283,24 @@ css
   </div>
 </div>
 
+Сейчас у тебя главная проблема в том, что ты вставил JS до тега <script> и в HTML‑комментарий, плюс два раза открыл <script>. Это ломает разметку, и код не выполняется как нужно.
+
+Ниже дам аккуратный, уже собранный вариант:
+
+один <script> (всё внутри него);
+
+TEST_MODE, моки и safeSetText стоят внутри script;
+
+всё остальное — как у тебя, только приведено в рабочий вид.
+
+Как должно быть в index.html в конце
+Часть выше </body></html> сделай так:
+
+xml
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- СКРИПТ -->
 <!-- ═══════════════════════════════════════════════════════ -->
+<script>
 const TEST_MODE = true;
 
 const mockTables = Array.from({ length: 9 }, (_, i) => ({
@@ -1332,7 +1347,7 @@ const mockCafes = Array.from({ length: 9 }, (_, i) => ({
   price: 'По договорённости',
   telegram: '@test_cafe_' + (i + 1)
 }));
-<script>
+
 const API = 'https://nastolki-ryadom-production.up.railway.app';
 let allTables = [], allChess = [], allHosts = [], allCafes = [];
 let searchQ = '', activeFilter = 'all';
@@ -1353,11 +1368,13 @@ let createMode = 'boardgame'; // 'boardgame' или 'chess'
     });
   });
 })();
+
+/* безопасная установка текста для статов */
 function safeSetText(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
 }
-/* ── Загрузка данных ── */
+
 /* ── Загрузка данных ── */
 async function loadData() {
   try {
@@ -2151,6 +2168,7 @@ function toggleSupportPanel() {
   if (!panel) return;
   panel.hidden = !panel.hidden;
 }
+
 /* ── Старт ── */
 loadData();
 </script>

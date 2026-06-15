@@ -830,10 +830,9 @@ css
     display:none;
   }
 }
-   /* ==== Десктоп: нормальная сетка 3xN и широкие карточки ==== */
+   /* ==== Десктоп: отключаем мобильные ленты, делаем 3 колонки везде ==== */
 @media (min-width: 1024px) {
 
-  /* отключаем мобильные ленты и скролл на десктопе */
   #tables-grid,
   #chess-grid,
   #hosts-grid,
@@ -850,17 +849,14 @@ css
     grid-auto-flow:row !important;
   }
 
-  /* общая сетка: ровно 3 колонки на всю ширину каталога */
+  /* меняем только это место: 2 колонки вместо 3 */
   .cards-grid{
     display:grid !important;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(2,minmax(0,1fr));
     gap:1.5rem;
     align-items:flex-start;
   }
 
-  /* карточки без мобильных min/max-width и flex */
-  .card,
-  .cards-grid .card,
   #tables-grid .card,
   #chess-grid .card,
   #hosts-grid .card,

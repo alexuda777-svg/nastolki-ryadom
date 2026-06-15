@@ -926,6 +926,24 @@ css
     font-size:1rem;
   }
 }
+    /* Десктоп: нормализуем внутренние строки карточки */
+@media (min-width: 1024px) {
+
+  /* строки мета-инфы — обычные блочные, на всю ширину */
+  .card-meta-row{
+    display:block;
+    width:auto;
+    text-align:left;
+    column-gap:0;
+    row-gap:0;
+  }
+
+  /* на всякий случай для любых внутренних flex-строк */
+  .card-body,
+  .card-meta{
+    text-align:left;
+  }
+}
 </style>
 </head>
 <body>

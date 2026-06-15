@@ -353,7 +353,6 @@ css
   flex-direction:column;
   position:relative;
 }
-
 /* Аккуратный hover */
 .card::before{
   content:'';
@@ -854,7 +853,7 @@ css
   /* общая сетка: ровно 3 колонки на всю ширину каталога */
   .cards-grid{
     display:grid !important;
-    grid-template-columns:repeat(3,minmax(0,1fr)); /* тут убиваем auto-fill */
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:1.5rem;
     align-items:flex-start;
   }

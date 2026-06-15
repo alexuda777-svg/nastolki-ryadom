@@ -869,6 +869,36 @@ css
     box-sizing:border-box;
   }
 }
+    /* ==== Десктоп: делаем карточку визуально шире и ниже ==== */
+@media (min-width: 1024px) {
+
+  /* чуть меньший радиус, чтобы не казалась «батоном» */
+  .card{
+    border-radius:var(--r-lg);
+  }
+
+  /* уменьшаем вертикальные паддинги внутри карточки */
+  .card-badge-row{
+    padding:0.75rem 0.9rem 0.35rem;
+  }
+
+  .card-body{
+    padding:0.6rem 0.9rem 0.9rem;
+  }
+
+  .card-footer{
+    padding:0.6rem 0.9rem;
+  }
+
+  /* немного уменьшаем шрифт, чтобы блок не вытягивался по высоте */
+  .card-title{
+    font-size:1rem;
+  }
+
+  .card-meta{
+    font-size:0.85rem;
+  }
+}
 </style>
 </head>
 <body>

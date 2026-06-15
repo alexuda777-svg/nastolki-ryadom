@@ -830,7 +830,7 @@ css
     display:none;
   }
 }
-   /* ==== Десктоп: сетка + компактные карточки ==== */
+ /* ==== Десктоп: сетка + компактные карточки ==== */
 @media (min-width: 1024px) {
 
   /* отключаем мобильные ленты */
@@ -847,14 +847,14 @@ css
   #hosts-grid .cards-grid,
   #cafes-grid .cards-grid{
     display:grid !important;
-    grid-auto-flow:row !important;
+    grid-auto-flow:row !имportant;
   }
 
-  /* ВАЖНО: одна колонка на десктопе, без разделений */
+  /* 3 колонки на десктопе */
   .cards-grid{
     display:grid !important;
-    grid-template-columns:1fr;   /* было repeat(2,...) */
-    gap:1rem;                     /* небольшой отступ между карточками */
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:1.5rem;
     align-items:flex-start;
   }
 
@@ -869,8 +869,6 @@ css
     height:auto !important;
     box-sizing:border-box;
   }
-
-  /* остальной код про .card, .card-body, .card-meta оставь как есть */
 }
 </style>
 </head>

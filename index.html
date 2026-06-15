@@ -881,6 +881,35 @@ css
     box-sizing:border-box;
   }
 }
+    /* ==== Десктоп: жёстко задаём сетку 3xN в каталогах ==== */
+@media (min-width: 1024px) {
+
+  /* только гриды внутри наших каталогов */
+  section.catalog #tables-grid .cards-grid,
+  section.catalog #chess-grid .cards-grid,
+  section.catalog #hosts-grid .cards-grid,
+  section.catalog #cafes-grid .cards-grid{
+    display:grid !important;
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important; /* 3 равные колонки */
+    gap:1.5rem !important;
+    align-items:flex-start;
+  }
+
+  /* на всякий случай — перебиваем базовую сетку для cards-grid внутри каталогов */
+  section.catalog .cards-grid{
+    display:grid !important;
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+    gap:1.5rem !important;
+  }
+
+  /* карточки заполняют свою колонку полностью */
+  section.catalog .card{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    box-sizing:border-box;
+  }
+}
 </style>
 </head>
 <body>

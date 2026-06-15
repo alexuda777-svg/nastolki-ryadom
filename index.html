@@ -881,25 +881,6 @@ css
   }
 
   .card-body{
-    padding:0.6rem 0.9rem 0.9rem;
-  }
-
-  .card-footer{
-    padding:0.6rem 0.9rem;
-  }
-
-  .card-title{
-    font-size:1rem;
-  }
-
-  .card-meta{
-    font-size:0.85rem;
-  }
-}
-    /* Десктоп: упрощаем внутреннюю компоновку карточки */
-@media (min-width: 1024px) {
-
-  .card-body{
     display:block;              /* вместо flex-колонки */
     padding:0.75rem 0.9rem 0.9rem;
   }
@@ -907,10 +888,15 @@ css
   .card-meta{
     display:block;              /* обычные блоки подряд */
     font-size:0.85rem;
+    text-align:left;
   }
 
   .card-meta-row{
     display:block;              /* убираем flex-ряд и лишний gap */
+    width:auto;
+    text-align:left;
+    column-gap:0;
+    row-gap:0;
     margin-bottom:0.25rem;
   }
 
@@ -922,47 +908,12 @@ css
     gap:0.75rem;
   }
 
-  .card-price{
+  .card-title{
     font-size:1rem;
   }
-}
-    /* Десктоп: нормализуем внутренние строки карточки */
-@media (min-width: 1024px) {
 
-  /* строки мета-инфы — обычные блочные, на всю ширину */
-  .card-meta-row{
-    display:block;
-    width:auto;
-    text-align:left;
-    column-gap:0;
-    row-gap:0;
-  }
-
-  /* на всякий случай для любых внутренних flex-строк */
-  .card-body,
-  .card-meta{
-    text-align:left;
-  }
-}
-    /* Десктоп: расширяем контейнер каталогов */
-@media (min-width: 1200px) {
-
-  /* сам каталог шире, ближе к краям экрана */
-  .catalog{
-    max-width:1400px;         /* было 1200px */
-    padding:3rem 2rem;        /* чуть больше отступы слева/справа */
-  }
-
-  /* внутренние гриды растягиваются на всю ширину каталога */
-  #tables-grid,
-  #chess-grid,
-  #hosts-grid,
-  #cafes-grid{
-    width:100%;
-  }
-
-  .cards-grid{
-    width:100%;
+  .card-price{
+    font-size:1rem;
   }
 }
 </style>

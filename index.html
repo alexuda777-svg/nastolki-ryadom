@@ -830,84 +830,44 @@ css
     display:none;
   }
 }
- /* ==== Десктоп: сетка 3xN + скролл в каталоге ==== */
+ /* ==== Десктоп: 2 широкие карточки в ряд + скролл в каталоге ==== */
 @media (min-width: 1024px) {
 
-  /* сам каталог: фикс высоты + вертикальный скролл */
-  .catalog{
-    max-width:1200px;
-    margin:0 auto;
-    padding:3rem 1.5rem;
-    max-height:900px;      /* при желании меняется */
-    overflow-y:auto;       /* скролл внутри секции */
-    overflow-x:hidden;
+  /* каталог: фикс высоты + вертикальный скролл */
+  section.catalog{
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    max-height: 900px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
-  /* отключаем мобильные ленты */
-  #tables-grid,
-  #chess-grid,
-  #hosts-grid,
-  #cafes-grid{
-    overflow-x:visible !important;
-    overflow-y:visible !important;
+  /* грид-контейнеры внутри каталогов — без своих скроллов, на всю ширину */
+  section.catalog #tables-grid,
+  section.catalog #chess-grid,
+  section.catalog #hosts-grid,
+  section.catalog #cafes-grid{
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
   }
 
-  #tables-grid .cards-grid,
-  #chess-grid .cards-grid,
-  #hosts-grid .cards-grid,
-  #cafes-grid .cards-grid{
-    display:grid !important;
-    grid-auto-flow:row !important;
-  }
-
-  /* 3 колонки на десктопе */
-  .cards-grid{
-    display:grid !important;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:1.5rem;
-    align-items:flex-start;
-  }
-
-  /* карточки занимают всю ширину своей колонки */
-  #tables-grid .card,
-  #chess-grid .card,
-  #hosts-grid .card,
-  #cafes-grid .card{
-    width:100% !important;
-    min-width:0 !important;
-    max-width:none !important;
-    flex:1 1 auto !important;
-    height:auto !important;
-    box-sizing:border-box;
-  }
-}
-    /* ==== Десктоп: жёстко задаём сетку 3xN в каталогах ==== */
-@media (min-width: 1024px) {
-
-  /* только гриды внутри наших каталогов */
-  section.catalog #tables-grid .cards-grid,
-  section.catalog #chess-grid .cards-grid,
-  section.catalog #hosts-grid .cards-grid,
-  section.catalog #cafes-grid .cards-grid{
-    display:grid !important;
-    grid-template-columns:repeat(3, minmax(0, 1fr)) !important; /* 3 равные колонки */
-    gap:1.5rem !important;
-    align-items:flex-start;
-  }
-
-  /* на всякий случай — перебиваем базовую сетку для cards-grid внутри каталогов */
+  /* cards-grid внутри каталогов: ДВЕ широкие колонки */
   section.catalog .cards-grid{
-    display:grid !important;
-    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
-    gap:1.5rem !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.5rem !important;
+    align-items: flex-start;
   }
 
-  /* карточки заполняют свою колонку полностью */
+  /* сами карточки занимают всю ширину своей ячейки */
   section.catalog .card{
-    width:100% !important;
-    min-width:0 !important;
-    max-width:none !important;
-    box-sizing:border-box;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    box-sizing: border-box;
   }
 }
 </style>

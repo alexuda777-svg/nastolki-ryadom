@@ -1,24 +1,98 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(__dirname, 'data');
+const ROOT_DIR = __dirname;
+const DATA_DIR = path.join(ROOT_DIR, 'data');
+const PUBLIC_DIR = ROOT_DIR;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'nastolki2026';
 
-// гарантируем наличие каталогов
-['hosts', 'cafes', 'tables', 'bookings', 'feedback'].forEach(d => {
+['hosts', 'cafes', 'tables', 'bookings', 'feedback'].forEach((d) => {
   const p = path.join(DATA_DIR, d);
   if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
 });
 
+function corsHeaders(contentType = 'application/json; charset=utf-8') {
+  return {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Content-Type': contentType
+  };
+}
+
+function sendJson(res, code, data) {
+  res.writeHead(code, corsHeaders());
+  res.end(JSON.stringify(data));
+}
+
+function parseBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', (c) => (body += c));
+    req.on('end', () => {
+      try {
+        resolve(body ? JSON.parse(body) : {});
+      } catch {
+        reject(new Error('Invalid JSON'));
+      }
+    });
+    req.on('error', reject);
+  });
+}
+
+function isAdmin(req) {
+  const auth = req.headers.authorization || '';
+  return auth === `Bearer ${ADMIN_PASSWORD}`;
+}
+
+function normalizeHost(data = {}) {
+  return {
+    ...data,
+    telegram: data.telegram || data.contact || '',
+    contact: data.contact || data.telegram || ''
+  };
+}
+
+function normalizeCafe(data = {}) {
+  return {
+    ...data,
+    telegram: data.telegram || data.contact || '',
+    contact: data.contact || data.telegram || ''
+  };
+}
+
+function normalizeTable(data = {}) {
+  const seatsTaken =
+    Number(data.seatsTaken ?? data.seats_taken ?? data.seatstaken ?? 0) || 0;
+
+  return {
+    ...data,
+    hostTelegram: data.hostTelegram || data.contact || data.telegram || '',
+    contact: data.contact || data.hostTelegram || data.telegram || '',
+    seatsTaken,
+    seats_taken: seatsTaken
+  };
+}
+
+function normalizeBooking(data = {}) {
+  return {
+    ...data,
+    telegram: data.telegram || data.contact || '',
+    contact: data.contact || data.telegram || ''
+  };
+}
+
 function readAll(type) {
   const dir = path.join(DATA_DIR, type);
   try {
-    return fs.readdirSync(dir)
-      .filter(f => f.endsWith('.json'))
-      .map(f => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
+    return fs
+      .readdirSync(dir)
+      .filter((f) => f.endsWith('.json'))
+      .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
   } catch {
     return [];
   }
@@ -42,46 +116,21 @@ function updateItem(type, id, updates) {
   const file = path.join(DATA_DIR, type, `${id}.json`);
   if (!fs.existsSync(file)) return null;
   const item = JSON.parse(fs.readFileSync(file, 'utf8'));
-  const updated = { ...item, ...updates, id };
+  const updated = {
+    ...item,
+    ...updates,
+    id,
+    updatedAt: new Date().toISOString()
+  };
   fs.writeFileSync(file, JSON.stringify(updated, null, 2));
   return updated;
 }
 
 function deleteItem(type, id) {
   const file = path.join(DATA_DIR, type, `${id}.json`);
-  if (fs.existsSync(file)) {
-    fs.unlinkSync(file);
-    return true;
-  }
-  return false;
-}
-
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Content-Type': 'application/json'
-  };
-}
-
-function parseBody(req) {
-  return new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', c => (body += c));
-    req.on('end', () => {
-      try {
-        resolve(body ? JSON.parse(body) : {});
-      } catch {
-        reject(new Error('Invalid JSON'));
-      }
-    });
-  });
-}
-
-function isAdmin(req) {
-  const auth = req.headers['authorization'] || '';
-  return auth === `Bearer ${ADMIN_PASSWORD}`;
+  if (!fs.existsSync(file)) return false;
+  fs.unlinkSync(file);
+  return true;
 }
 
 function sendTg(message) {
@@ -95,153 +144,182 @@ function sendTg(message) {
     parse_mode: 'HTML'
   });
 
-  const options = {
-    hostname: 'api.telegram.org',
-    path: `/bot${token}/sendMessage`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(body)
+  const req = https.request(
+    {
+      hostname: 'api.telegram.org',
+      path: `/bot${token}/sendMessage`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body)
+      }
+    },
+    (r) => {
+      r.on('data', () => {});
     }
-  };
+  );
 
-  try {
-    const r = http.request(options);
-    r.write(body);
-    r.end();
-  } catch {
-    // игнорируем ошибки телеги
+  req.on('error', () => {});
+  req.write(body);
+  req.end();
+}
+
+function mimeType(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  const map = {
+    '.html': 'text/html; charset=utf-8',
+    '.css': 'text/css; charset=utf-8',
+    '.js': 'application/javascript; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.svg': 'image/svg+xml',
+    '.webp': 'image/webp',
+    '.ico': 'image/x-icon',
+    '.txt': 'text/plain; charset=utf-8'
+  };
+  return map[ext] || 'application/octet-stream';
+}
+
+function serveStatic(req, res, pathname) {
+  let filePath = path.join(PUBLIC_DIR, pathname === '/' ? 'index.html' : pathname);
+
+  if (!filePath.startsWith(PUBLIC_DIR)) {
+    sendJson(res, 403, { error: 'Forbidden' });
+    return true;
   }
+
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    res.writeHead(200, corsHeaders(mimeType(filePath)));
+    fs.createReadStream(filePath).pipe(res);
+    return true;
+  }
+
+  return false;
 }
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = url.pathname;
-  const h = corsHeaders();
 
-  // CORS preflight
   if (req.method === 'OPTIONS') {
-    res.writeHead(204, h);
+    res.writeHead(204, corsHeaders());
     res.end();
     return;
   }
 
-  // health-check
   if (req.method === 'GET' && pathname === '/health') {
-    res.writeHead(200, h);
-    res.end(JSON.stringify({ status: 'ok', time: new Date().toISOString() }));
+    sendJson(res, 200, { status: 'ok', time: new Date().toISOString() });
     return;
   }
 
-  // Публичные списки (только approved)
   if (req.method === 'GET' && pathname === '/api/tables') {
-    const all = readAll('tables').filter(t => t.status === 'approved');
-    res.writeHead(200, h);
-    res.end(JSON.stringify(all));
+    const all = readAll('tables')
+      .map(normalizeTable)
+      .filter((t) => t.status === 'approved');
+    sendJson(res, 200, all);
     return;
   }
 
   if (req.method === 'GET' && pathname === '/api/hosts') {
     const all = readAll('hosts')
-      .filter(x => x.status === 'approved')
-      .map(x => ({ ...x, email: undefined }));
-    res.writeHead(200, h);
-    res.end(JSON.stringify(all));
+      .map(normalizeHost)
+      .filter((x) => x.status === 'approved')
+      .map(({ email, ...x }) => x);
+    sendJson(res, 200, all);
     return;
   }
 
   if (req.method === 'GET' && pathname === '/api/cafes') {
     const all = readAll('cafes')
-      .filter(x => x.status === 'approved')
-      .map(x => ({ ...x, email: undefined, phone: undefined }));
-    res.writeHead(200, h);
-    res.end(JSON.stringify(all));
+      .map(normalizeCafe)
+      .filter((x) => x.status === 'approved')
+      .map(({ email, phone, ...x }) => x);
+    sendJson(res, 200, all);
     return;
   }
 
-  // Публичное создание заявок
-
-  // Ведущий
   if (req.method === 'POST' && pathname === '/api/hosts') {
     try {
-      const data = await parseBody(req);
+      const data = normalizeHost(await parseBody(req));
       if (!data.name || !data.telegram) {
-        res.writeHead(400, h);
-        res.end(JSON.stringify({ error: 'Имя и Telegram обязательны' }));
+        sendJson(res, 400, { error: 'Имя и Telegram обязательны' });
         return;
       }
       const item = saveItem('hosts', { ...data, status: 'pending' });
-      sendTg(
-        `🎭 <b>Новый ведущий!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🏙 ${data.city || '—'}\n🎮 ${data.games || '—'}`
-      );
-      res.writeHead(201, h);
-      res.end(JSON.stringify({ success: true, id: item.id }));
+      sendTg(`🎭 <b>Новый ведущий!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🏙 ${data.city || '—'}\n🎮 ${data.games || '—'}`);
+      sendJson(res, 201, { success: true, id: item.id });
     } catch (e) {
-      res.writeHead(400, h);
-      res.end(JSON.stringify({ error: e.message }));
+      sendJson(res, 400, { error: e.message });
     }
     return;
   }
 
-  // Кафе
   if (req.method === 'POST' && pathname === '/api/cafes') {
     try {
-      const data = await parseBody(req);
+      const data = normalizeCafe(await parseBody(req));
       if (!data.name || !data.telegram) {
-        res.writeHead(400, h);
-        res.end(JSON.stringify({ error: 'Название и Telegram обязательны' }));
+        sendJson(res, 400, { error: 'Название и Telegram обязательны' });
         return;
       }
       const item = saveItem('cafes', { ...data, status: 'pending' });
-      sendTg(
-        `☕ <b>Новое кафе!</b>\n🏠 ${data.name}\n📱 ${data.telegram}\n📍 ${data.address || '—'}`
-      );
-      res.writeHead(201, h);
-      res.end(JSON.stringify({ success: true, id: item.id }));
+      sendTg(`☕ <b>Новое кафе!</b>\n🏠 ${data.name}\n📱 ${data.telegram}\n📍 ${data.address || '—'}`);
+      sendJson(res, 201, { success: true, id: item.id });
     } catch (e) {
-      res.writeHead(400, h);
-      res.end(JSON.stringify({ error: e.message }));
+      sendJson(res, 400, { error: e.message });
     }
     return;
   }
 
-  // Стол / игра
   if (req.method === 'POST' && pathname === '/api/tables') {
     try {
-      const data = await parseBody(req);
+      const raw = await parseBody(req);
+      const data = normalizeTable(raw);
+
       if (!data.game || !data.hostTelegram || !data.date) {
-        res.writeHead(400, h);
-        res.end(JSON.stringify({ error: 'Игра, Telegram и дата обязательны' }));
+        sendJson(res, 400, { error: 'Игра, Telegram и дата обязательны' });
         return;
       }
+
       const item = saveItem('tables', {
         ...data,
-        status: 'pending',
-        seats_taken: data.seats_taken || 0
+        status: 'pending'
       });
-      sendTg(
-        `🎲 <b>Новый стол!</b>\n🎮 ${data.game}\n📱 ${data.hostTelegram}\n📅 ${data.date} ${data.time || ''}\n🏠 ${data.venue || '—'}`
-      );
-      res.writeHead(201, h);
-      res.end(JSON.stringify({ success: true, id: item.id }));
+
+      sendTg(`🎲 <b>Новый стол!</b>\n🎮 ${data.game}\n📱 ${data.hostTelegram}\n📅 ${data.date} ${data.time || ''}\n🏠 ${data.venue || '—'}`);
+      sendJson(res, 201, { success: true, id: item.id });
     } catch (e) {
-      res.writeHead(400, h);
-      res.end(JSON.stringify({ error: e.message }));
+      sendJson(res, 400, { error: e.message });
     }
     return;
   }
 
-  // Запись на игру
   if (req.method === 'POST' && pathname === '/api/bookings') {
     try {
-      const data = await parseBody(req);
+      const data = normalizeBooking(await parseBody(req));
+
       if (!data.tableId || !data.name || !data.telegram) {
-        res.writeHead(400, h);
-        res.end(JSON.stringify({ error: 'Все поля обязательны' }));
+        sendJson(res, 400, { error: 'tableId, name и telegram обязательны' });
         return;
       }
 
-      // Генерируем секрет для игрока
+      const tables = readAll('tables').map(normalizeTable);
+      const table = tables.find((t) => String(t.id) === String(data.tableId));
+
+      if (!table) {
+        sendJson(res, 404, { error: 'Стол не найден' });
+        return;
+      }
+
+      const totalSeats = Number(table.seats || 0) || 0;
+      const takenSeats = Number(table.seatsTaken || 0) || 0;
+
+      if (totalSeats > 0 && takenSeats >= totalSeats) {
+        sendJson(res, 400, { error: 'Свободных мест больше нет' });
+        return;
+      }
+
       const secret = crypto.randomBytes(16).toString('hex');
 
       const item = saveItem('bookings', {
@@ -250,183 +328,155 @@ const server = http.createServer(async (req, res) => {
         secret
       });
 
-      // Увеличиваем seats_taken у соответствующего стола
-      const tables = readAll('tables');
-      const table = tables.find(t => String(t.id || '') === String(data.tableId));
-      if (table) {
-        const currentTaken = table.seats_taken || 0;
-        const updatedTaken = currentTaken + 1;
-        updateItem('tables', table.id, { seats_taken: updatedTaken });
-      }
+      updateItem('tables', table.id, {
+        seatsTaken: takenSeats + 1,
+        seats_taken: takenSeats + 1
+      });
 
-      sendTg(
-        `📋 <b>Запись на стол!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🎮 Стол: ${data.tableId}`
-      );
-
-      // вернуть и id, и secret
-      res.writeHead(201, h);
-      res.end(JSON.stringify({ success: true, id: item.id, secret }));
+      sendTg(`📋 <b>Запись на стол!</b>\n👤 ${data.name}\n📱 ${data.telegram}\n🎮 Стол: ${data.tableId}`);
+      sendJson(res, 201, { success: true, id: item.id, secret });
     } catch (e) {
-      res.writeHead(400, h);
-      res.end(JSON.stringify({ error: e.message }));
+      sendJson(res, 400, { error: e.message });
     }
     return;
   }
 
-  // Публично: получить контакт организатора по записи
   if (req.method === 'POST' && pathname === '/api/booking-contact') {
     try {
       const data = await parseBody(req);
       const { bookingId, secret } = data;
 
       if (!bookingId || !secret) {
-        res.writeHead(400, h);
-        res.end(JSON.stringify({ error: 'bookingId и secret обязательны' }));
+        sendJson(res, 400, { error: 'bookingId и secret обязательны' });
         return;
       }
 
-      // 1) Ищем запись
-      const bookings = readAll('bookings');
-      const booking = bookings.find(b => String(b.id || '') === String(bookingId));
-
-      if (!booking || booking.status !== 'approved' || booking.secret !== secret) {
-        res.writeHead(404, h);
-        res.end(JSON.stringify({ error: 'Запись не найдена или не одобрена' }));
+      const booking = readAll('bookings').find((b) => String(b.id) === String(bookingId));
+      if (!booking || booking.secret !== secret) {
+        sendJson(res, 404, { error: 'Запись не найдена' });
         return;
       }
 
-      // 2) Ищем стол
-      const tables = readAll('tables');
-      const table = tables.find(t => String(t.id || '') === String(booking.tableId));
-
+      const table = readAll('tables').map(normalizeTable).find((t) => String(t.id) === String(booking.tableId));
       if (!table) {
-        res.writeHead(404, h);
-        res.end(JSON.stringify({ error: 'Стол не найден' }));
+        sendJson(res, 404, { error: 'Стол не найден' });
         return;
       }
 
-      // 3) Контакт создателя (ведущий или игрок)
       const contact = table.hostTelegram || table.contact || table.telegram;
-
       if (!contact) {
-        res.writeHead(404, h);
-        res.end(JSON.stringify({ error: 'Контакт не указан организатором' }));
+        sendJson(res, 404, { error: 'Контакт не указан организатором' });
         return;
       }
 
-      res.writeHead(200, h);
-      res.end(JSON.stringify({ contact }));
+      sendJson(res, 200, { contact });
     } catch (e) {
-      res.writeHead(400, h);
-      res.end(JSON.stringify({ error: e.message }));
+      sendJson(res, 400, { error: e.message });
     }
     return;
   }
 
-  // Защита админ-API
   if (pathname.startsWith('/api/admin') && !isAdmin(req)) {
-    res.writeHead(401, h);
-    res.end(JSON.stringify({ error: 'Unauthorized' }));
+    sendJson(res, 401, { error: 'Unauthorized' });
     return;
   }
 
-  // Админ: статистика
   if (req.method === 'GET' && pathname === '/api/admin/stats') {
     const hosts = readAll('hosts');
     const cafes = readAll('cafes');
     const tables = readAll('tables');
     const bookings = readAll('bookings');
-    res.writeHead(200, h);
-    res.end(JSON.stringify({
+
+    sendJson(res, 200, {
       hosts: {
         total: hosts.length,
-        pending: hosts.filter(x => x.status === 'pending').length,
-        approved: hosts.filter(x => x.status === 'approved').length
+        pending: hosts.filter((x) => x.status === 'pending').length,
+        approved: hosts.filter((x) => x.status === 'approved').length
       },
       cafes: {
         total: cafes.length,
-        pending: cafes.filter(x => x.status === 'pending').length,
-        approved: cafes.filter(x => x.status === 'approved').length
+        pending: cafes.filter((x) => x.status === 'pending').length,
+        approved: cafes.filter((x) => x.status === 'approved').length
       },
       tables: {
         total: tables.length,
-        pending: tables.filter(x => x.status === 'pending').length,
-        approved: tables.filter(x => x.status === 'approved').length
+        pending: tables.filter((x) => x.status === 'pending').length,
+        approved: tables.filter((x) => x.status === 'approved').length
       },
       bookings: {
         total: bookings.length,
-        pending: bookings.filter(x => x.status === 'pending').length
+        pending: bookings.filter((x) => x.status === 'pending').length,
+        approved: bookings.filter((x) => x.status === 'approved').length
       }
-    }));
+    });
     return;
   }
 
-  // Админ: списки
   if (req.method === 'GET' && pathname.startsWith('/api/admin/')) {
     const parts = pathname.split('/');
     const type = parts[3];
+
     if (!['hosts', 'cafes', 'tables', 'bookings', 'feedback'].includes(type)) {
-      res.writeHead(404, h);
-      res.end(JSON.stringify({ error: 'Not found' }));
+      sendJson(res, 404, { error: 'Not found' });
       return;
     }
-    const items = readAll(type);
+
     const sf = url.searchParams.get('status');
-    const filtered = sf ? items.filter(i => i.status === sf) : items;
-    filtered.sort(
-      (a, b) =>
-        new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-    );
-    res.writeHead(200, h);
-    res.end(JSON.stringify(filtered));
+    const items = readAll(type);
+    const filtered = sf ? items.filter((i) => i.status === sf) : items;
+
+    filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    sendJson(res, 200, filtered);
     return;
   }
 
-  // Админ: обновление (одобрение и т.п.)
   if (req.method === 'PUT' && pathname.startsWith('/api/admin/')) {
     const parts = pathname.split('/');
     const type = parts[3];
     const id = parts[4];
-    if (!['hosts', 'cafes', 'tables', 'bookings'].includes(type)) {
-      res.writeHead(404, h);
-      res.end(JSON.stringify({ error: 'Not found' }));
+
+    if (!['hosts', 'cafes', 'tables', 'bookings', 'feedback'].includes(type)) {
+      sendJson(res, 404, { error: 'Not found' });
       return;
     }
+
     try {
       const data = await parseBody(req);
       const updated = updateItem(type, id, data);
       if (!updated) {
-        res.writeHead(404, h);
-        res.end(JSON.stringify({ error: 'Not found' }));
+        sendJson(res, 404, { error: 'Not found' });
         return;
       }
-      res.writeHead(200, h);
-      res.end(JSON.stringify(updated));
+      sendJson(res, 200, updated);
     } catch (e) {
-      res.writeHead(400, h);
-      res.end(JSON.stringify({ error: e.message }));
+      sendJson(res, 400, { error: e.message });
     }
     return;
   }
 
-  // Админ: удаление
   if (req.method === 'DELETE' && pathname.startsWith('/api/admin/')) {
     const parts = pathname.split('/');
     const type = parts[3];
     const id = parts[4];
+
+    if (!['hosts', 'cafes', 'tables', 'bookings', 'feedback'].includes(type)) {
+      sendJson(res, 404, { error: 'Not found' });
+      return;
+    }
+
     const ok = deleteItem(type, id);
-    res.writeHead(ok ? 200 : 404, h);
-    res.end(JSON.stringify({ success: ok }));
+    sendJson(res, ok ? 200 : 404, { success: ok });
     return;
   }
 
-  // 404
-  res.writeHead(404, h);
-  res.end(JSON.stringify({ error: 'Not found' }));
+  if (req.method === 'GET' && serveStatic(req, res, pathname)) {
+    return;
+  }
+
+  sendJson(res, 404, { error: 'Not found' });
 });
 
 server.listen(PORT, () => {
   console.log(`✅ Сервер запущен на порту ${PORT}`);
   console.log(`📂 Данные: ${DATA_DIR}`);
-  console.log(`🔐 Пароль админки: ${ADMIN_PASSWORD}`);
 });

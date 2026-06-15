@@ -496,43 +496,6 @@ css
   border-color:var(--primary);
   transform:translateY(-2px);
 }
-
-/* Десктоп: только нормальная ширина карточек, БЕЗ скролла внутри .catalog */
-@media (min-width:1024px){
-  .cards-grid{
-    display:grid !important;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:1.5rem;
-    align-items:flex-start;
-  }
-
-  .cards-grid .card,
-  #tables-grid .card,
-  #chess-grid .card,
-  #hosts-grid .card,
-  #cafes-grid .card{
-    width:100% !important;
-    min-width:0 !important;
-    max-width:none !important;
-    flex:1 1 auto !important;
-    height:auto !important;
-    box-sizing:border-box;
-    border-radius:var(--r-lg);
-    padding:0.75rem 1rem;
-  }
-
-  .card-body{
-    padding-block:0.25rem;
-  }
-
-  .card-title{
-    font-size:1rem;
-  }
-
-  .card-meta{
-    font-size:.85rem;
-  }
-}
   /* Скелетоны */
   .skel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-2xl);height:200px;position:relative;overflow:hidden}
   .skel::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 25%,var(--offset) 50%,transparent 75%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite}

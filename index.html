@@ -830,7 +830,7 @@ css
     display:none;
   }
 }
- /* ==== Десктоп: 2 широкие карточки в ряд + скролл в каталоге ==== */
+ /* ==== Десктоп: 3 карточки в ряд + скролл в каталоге ==== */
 @media (min-width: 1024px) {
 
   /* каталог: фикс высоты + вертикальный скролл */
@@ -854,10 +854,10 @@ css
     overflow: visible !important;
   }
 
-  /* cards-grid внутри каталогов: ДВЕ широкие колонки */
+  /* cards-grid внутри каталогов: ТРИ колонки */
   section.catalog .cards-grid{
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 1.5rem !important;
     align-items: flex-start;
   }

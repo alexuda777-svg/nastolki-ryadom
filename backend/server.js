@@ -376,6 +376,35 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // новый маршрут для отзывов
+  if (req.method === 'POST' && pathname === '/api/feedback') {
+    try {
+      const data = await parseBody(req);
+
+      if (!data.message) {
+        sendJson(res, 400, { error: 'Текст отзыва обязателен' });
+        return;
+      }
+
+      const item = saveItem('feedback', {
+        ...data,
+        status: 'new'
+      });
+
+      sendTg(
+        `💬 <b>Новый отзыв!</b>\n` +
+        `👤 ${data.name || '—'}\n` +
+        `📱 ${data.telegram || '—'}\n` +
+        `💭 ${data.message}`
+      );
+
+      sendJson(res, 201, { success: true, id: item.id });
+    } catch (e) {
+      sendJson(res, 400, { error: e.message });
+    }
+    return;
+  }
+
   if (pathname.startsWith('/api/admin') && !isAdmin(req)) {
     sendJson(res, 401, { error: 'Unauthorized' });
     return;

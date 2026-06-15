@@ -850,15 +850,14 @@ css
     grid-auto-flow:row !important;
   }
 
-  /* 2 колонки на десктопе */
+  /* ВАЖНО: одна колонка на десктопе, без разделений */
   .cards-grid{
     display:grid !important;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:1.5rem;
+    grid-template-columns:1fr;   /* было repeat(2,...) */
+    gap:1rem;                     /* небольшой отступ между карточками */
     align-items:flex-start;
   }
 
-  /* карточки занимают всю ширину своей колонки */
   #tables-grid .card,
   #chess-grid .card,
   #hosts-grid .card,
@@ -871,50 +870,7 @@ css
     box-sizing:border-box;
   }
 
-  /* делаем карточку визуально ниже и шире */
-  .card{
-    border-radius:var(--r-lg);
-  }
-
-  .card-badge-row{
-    padding:0.75rem 0.9rem 0.35rem;
-  }
-
-  .card-body{
-    display:block;              /* вместо flex-колонки */
-    padding:0.75rem 0.9rem 0.9rem;
-  }
-
-  .card-meta{
-    display:block;              /* обычные блоки подряд */
-    font-size:0.85rem;
-    text-align:left;
-  }
-
-  .card-meta-row{
-    display:block;              /* убираем flex-ряд и лишний gap */
-    width:auto;
-    text-align:left;
-    column-gap:0;
-    row-gap:0;
-    margin-bottom:0.25rem;
-  }
-
-  .card-footer{
-    padding:0.6rem 0.9rem;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start; /* убираем space-between */
-    gap:0.75rem;
-  }
-
-  .card-title{
-    font-size:1rem;
-  }
-
-  .card-price{
-    font-size:1rem;
-  }
+  /* остальной код про .card, .card-body, .card-meta оставь как есть */
 }
 </style>
 </head>

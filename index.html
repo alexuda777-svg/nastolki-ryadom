@@ -830,9 +830,10 @@ css
     display:none;
   }
 }
-   /* ==== Десктоп: отключаем мобильные ленты, делаем 3 колонки везде ==== */
+   /* ==== Десктоп: сетка + компактные карточки ==== */
 @media (min-width: 1024px) {
 
+  /* отключаем мобильные ленты */
   #tables-grid,
   #chess-grid,
   #hosts-grid,
@@ -849,7 +850,7 @@ css
     grid-auto-flow:row !important;
   }
 
-  /* меняем только это место: 2 колонки вместо 3 */
+  /* 2 колонки на десктопе */
   .cards-grid{
     display:grid !important;
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -857,6 +858,7 @@ css
     align-items:flex-start;
   }
 
+  /* карточки занимают всю ширину своей колонки */
   #tables-grid .card,
   #chess-grid .card,
   #hosts-grid .card,
@@ -868,16 +870,12 @@ css
     height:auto !important;
     box-sizing:border-box;
   }
-}
-    /* ==== Десктоп: делаем карточку визуально шире и ниже ==== */
-@media (min-width: 1024px) {
 
-  /* чуть меньший радиус, чтобы не казалась «батоном» */
+  /* делаем карточку визуально ниже и шире */
   .card{
     border-radius:var(--r-lg);
   }
 
-  /* уменьшаем вертикальные паддинги внутри карточки */
   .card-badge-row{
     padding:0.75rem 0.9rem 0.35rem;
   }
@@ -890,7 +888,6 @@ css
     padding:0.6rem 0.9rem;
   }
 
-  /* немного уменьшаем шрифт, чтобы блок не вытягивался по высоте */
   .card-title{
     font-size:1rem;
   }

@@ -830,8 +830,18 @@ css
     display:none;
   }
 }
- /* ==== Десктоп: сетка + компактные карточки ==== */
+ /* ==== Десктоп: сетка 3xN + скролл в каталоге ==== */
 @media (min-width: 1024px) {
+
+  /* сам каталог: фикс высоты + вертикальный скролл */
+  .catalog{
+    max-width:1200px;
+    margin:0 auto;
+    padding:3rem 1.5rem;
+    max-height:900px;      /* при желании меняется */
+    overflow-y:auto;       /* скролл внутри секции */
+    overflow-x:hidden;
+  }
 
   /* отключаем мобильные ленты */
   #tables-grid,
@@ -847,7 +857,7 @@ css
   #hosts-grid .cards-grid,
   #cafes-grid .cards-grid{
     display:grid !important;
-    grid-auto-flow:row !имportant;
+    grid-auto-flow:row !important;
   }
 
   /* 3 колонки на десктопе */
@@ -858,6 +868,7 @@ css
     align-items:flex-start;
   }
 
+  /* карточки занимают всю ширину своей колонки */
   #tables-grid .card,
   #chess-grid .card,
   #hosts-grid .card,

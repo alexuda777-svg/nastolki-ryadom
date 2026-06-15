@@ -944,6 +944,27 @@ css
     text-align:left;
   }
 }
+    /* Десктоп: расширяем контейнер каталогов */
+@media (min-width: 1200px) {
+
+  /* сам каталог шире, ближе к краям экрана */
+  .catalog{
+    max-width:1400px;         /* было 1200px */
+    padding:3rem 2rem;        /* чуть больше отступы слева/справа */
+  }
+
+  /* внутренние гриды растягиваются на всю ширину каталога */
+  #tables-grid,
+  #chess-grid,
+  #hosts-grid,
+  #cafes-grid{
+    width:100%;
+  }
+
+  .cards-grid{
+    width:100%;
+  }
+}
 </style>
 </head>
 <body>

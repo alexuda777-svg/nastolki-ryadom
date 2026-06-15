@@ -406,39 +406,42 @@
 </div>
 
 <script>
-const API = 'https://nastolki-ryadom-production.up.railway.app';
-const ADMIN_TOKEN = 'nastolki2026'; // можешь потом вынести в ENV и подставлять при сборке
+const API = '';
+const ADMIN_TOKEN = 'nastolki2026';
 
 let allTables = [], allChess = [], allHosts = [], allCafes = [], allBookings = [], allFeedback = [];
 let searches = { tables: '', chess: '', hosts: '', cafes: '', bookings: '' };
 let activeTab = 'tables';
 
-/* ── Загрузка ── */
+function getCreatedAt(x) {
+  return x?.createdAt || x?.created_at || x?.date || '';
+}
+
 async function loadAll() {
   try {
     const headers = { 'Authorization': 'Bearer ' + ADMIN_TOKEN };
 
     const [tables, hosts, cafes, bookings, feedback] = await Promise.allSettled([
-      fetch(API + '/api/admin/tables',   { headers }).then(r => r.json()),
-      fetch(API + '/api/admin/hosts',    { headers }).then(r => r.json()),
-      fetch(API + '/api/admin/cafes',    { headers }).then(r => r.json()),
+      fetch(API + '/api/admin/tables', { headers }).then(r => r.json()),
+      fetch(API + '/api/admin/hosts', { headers }).then(r => r.json()),
+      fetch(API + '/api/admin/cafes', { headers }).then(r => r.json()),
       fetch(API + '/api/admin/bookings', { headers }).then(r => r.json()),
       fetch(API + '/api/admin/feedback', { headers }).then(r => r.json()).catch(() => [])
     ]);
 
     const all = tables.status === 'fulfilled' && Array.isArray(tables.value) ? tables.value : [];
-    allTables   = all.filter(t => !t.type || t.type === 'boardgame');
-    allChess    = all.filter(t => t.type === 'chess');
-    allHosts    = hosts.status === 'fulfilled' && Array.isArray(hosts.value) ? hosts.value : [];
-    allCafes    = cafes.status === 'fulfilled' && Array.isArray(cafes.value) ? cafes.value : [];
+    allTables = all.filter(t => !t.type || t.type === 'boardgame');
+    allChess = all.filter(t => t.type === 'chess');
+    allHosts = hosts.status === 'fulfilled' && Array.isArray(hosts.value) ? hosts.value : [];
+    allCafes = cafes.status === 'fulfilled' && Array.isArray(cafes.value) ? cafes.value : [];
     allBookings = bookings.status === 'fulfilled' && Array.isArray(bookings.value) ? bookings.value : [];
     allFeedback = feedback.status === 'fulfilled' && Array.isArray(feedback.value) ? feedback.value : [];
 
     updateStats();
     renderAll();
     const el = document.getElementById('lastUpdated');
-    if (el) el.textContent = 'Обновлено: ' + new Date().toLocaleTimeString('ru');
-  } catch(e) {
+    if (el) el.textContent = 'Обновлено: ' + new Date().toLocaleTimeString('ru-RU');
+  } catch (e) {
     console.error(e);
     toast('Ошибка загрузки данных', 'error');
   }
@@ -446,13 +449,14 @@ async function loadAll() {
 
 function updateStats() {
   const all = [...allTables, ...allChess, ...allHosts, ...allCafes];
-  const pending  = all.filter(x => x.status === 'pending').length;
+  const pending = all.filter(x => x.status === 'pending').length;
   const approved = all.filter(x => x.status === 'approved').length;
-  document.getElementById('stat-pending').textContent  = pending;
+
+  document.getElementById('stat-pending').textContent = pending;
   document.getElementById('stat-approved').textContent = approved;
   document.getElementById('stat-bookings').textContent = allBookings.length;
   document.getElementById('stat-feedback').textContent = allFeedback.length;
-  document.getElementById('stat-total').textContent    = all.length;
+  document.getElementById('stat-total').textContent = all.length;
 
   const setBadge = (id, val) => {
     const el = document.getElementById(id);
@@ -461,10 +465,11 @@ function updateStats() {
       el.style.display = val > 0 ? '' : 'none';
     }
   };
-  setBadge('tb-tables',   allTables.filter(x => x.status === 'pending').length);
-  setBadge('tb-chess',    allChess.filter(x => x.status === 'pending').length);
-  setBadge('tb-hosts',    allHosts.filter(x => x.status === 'pending').length);
-  setBadge('tb-cafes',    allCafes.filter(x => x.status === 'pending').length);
+
+  setBadge('tb-tables', allTables.filter(x => x.status === 'pending').length);
+  setBadge('tb-chess', allChess.filter(x => x.status === 'pending').length);
+  setBadge('tb-hosts', allHosts.filter(x => x.status === 'pending').length);
+  setBadge('tb-cafes', allCafes.filter(x => x.status === 'pending').length);
   setBadge('tb-bookings', allBookings.length);
   setBadge('tb-feedback', allFeedback.length);
 }
@@ -478,35 +483,31 @@ function renderAll() {
   renderFeedback();
 }
 
-/* ── Кол-во записей по столу ── */
 function bookingsForTable(id) {
   return allBookings.filter(b => String(b.tableId || b.table_id || '') === String(id || ''));
 }
 
-/* ── Найти кафе/хост по id ── */
 function cafeNameById(id) {
   if (!id) return '—';
   const c = allCafes.find(x => String(x.id || x._id || '') === String(id));
   return c ? c.name : '—';
 }
+
 function hostNameById(id) {
   if (!id) return '—';
   const h = allHosts.find(x => String(x.id || x._id || '') === String(id));
   return h ? h.name : '—';
 }
 
-/* ── Фильтр поиска ── */
 function searchSection(type, val) {
   searches[type] = (val || '').toLowerCase();
   renderAll();
 }
+
 function matchSearch(item, q) {
   if (!q) return true;
   return JSON.stringify(item).toLowerCase().includes(q);
 }
-
-/* ── Рендер таблиц ── */
-// (далее оставляем твой renderTables / renderChess / renderHosts / renderCafes / renderBookings / renderFeedback БЕЗ ИЗМЕНЕНИЙ)
 
 function renderTables() {
   const list = allTables.filter(t => matchSearch(t, searches.tables));
@@ -516,24 +517,18 @@ function renderTables() {
     const cafeName = t.cafe_id ? cafeNameById(t.cafe_id) : (t.cafe_name || '—');
     const hostName = t.host_id ? hostNameById(t.host_id) : (t.host_name || '—');
     return `<tr>
-      <td><div class="td-primary">${esc(t.game||'—')}</div><div class="td-muted">${esc(t.description||'').substring(0,40)}${(t.description||'').length>40?'...':''}</div></td>
-      <td><div>${esc(t.date||'—')}</div><div class="td-muted">${esc(t.time||'')}</div></td>
-      <td class="td-clamp">${esc(t.venue||'—')}</td>
+      <td><div class="td-primary">${esc(t.game || '—')}</div><div class="td-muted">${esc(t.description || '').substring(0,40)}${(t.description || '').length > 40 ? '...' : ''}</div></td>
+      <td><div>${esc(t.date || '—')}</div><div class="td-muted">${esc(t.time || '')}</div></td>
+      <td class="td-clamp">${esc(t.venue || '—')}</td>
       <td class="td-muted">${esc(cafeName)}</td>
       <td class="td-muted">${esc(hostName)}</td>
-      <td>
-        <span class="bookings-badge ${bkgs.length===0?'none':''}" onclick="${bkgs.length>0?`showPlayers('${esc(String(t.id||t._id||''))}','${esc(t.game||'Игра')}')`:''}" title="${bkgs.length>0?'Посмотреть записавшихся':''}">
-          👥 ${bkgs.length}
-        </span>
-      </td>
-      <td><span class="status-badge status-${t.status||'pending'}">${getStatusText(t.status)}</span></td>
-      <td>
-        <div class="btn-group">
-          <button class="btn btn-info" onclick="showDetail('table','${esc(String(t.id||t._id||''))}')">🔍</button>
-          ${t.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('tables','${esc(String(t.id||t._id||''))}')">✅</button>` : ''}
-          <button class="btn btn-danger" onclick="deleteItem('tables','${esc(String(t.id||t._id||''))}')">🗑️</button>
-        </div>
-      </td>
+      <td><span class="bookings-badge ${bkgs.length === 0 ? 'none' : ''}" onclick="${bkgs.length > 0 ? `showPlayers('${esc(String(t.id || t._id || ''))}','${esc(t.game || 'Игра')}')` : ''}" title="${bkgs.length > 0 ? 'Посмотреть записавшихся' : ''}">👥 ${bkgs.length}</span></td>
+      <td><span class="status-badge status-${t.status || 'pending'}">${getStatusText(t.status)}</span></td>
+      <td><div class="btn-group">
+        <button class="btn btn-info" onclick="showDetail('table','${esc(String(t.id || t._id || ''))}')">🔍</button>
+        ${t.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('tables','${esc(String(t.id || t._id || ''))}')">✅</button>` : ''}
+        <button class="btn btn-danger" onclick="deleteItem('tables','${esc(String(t.id || t._id || ''))}')">🗑️</button>
+      </div></td>
     </tr>`;
   }).join('') : '<tr><td colspan="8" class="empty"><div class="empty-icon">🎲</div>Нет данных</td></tr>';
   document.getElementById('tables-list').innerHTML = html;
@@ -545,23 +540,17 @@ function renderChess() {
   const html = list.length ? list.map(t => {
     const bkgs = bookingsForTable(t.id || t._id);
     return `<tr>
-      <td class="td-primary">${esc(t.game||'—')}</td>
-      <td><span class="status-badge status-${t.status||'pending'}" style="font-size:.75rem">${esc(t.level||'—')}</span></td>
-      <td><div>${esc(t.date||'—')}</div><div class="td-muted">${esc(t.time||'')}</div></td>
-      <td class="td-clamp">${esc(t.venue||'—')}</td>
-      <td class="td-muted">${esc(t.contact||t.telegram||'—')}</td>
-      <td>
-        <span class="bookings-badge ${bkgs.length===0?'none':''}" onclick="${bkgs.length>0?`showPlayers('${esc(String(t.id||t._id||''))}','${esc(t.game||'Партия')}')`:''}" title="${bkgs.length>0?'Посмотреть записавшихся':''}">
-          👥 ${bkgs.length}
-        </span>
-      </td>
-      <td><span class="status-badge status-${t.status||'pending'}">${getStatusText(t.status)}</span></td>
-      <td>
-        <div class="btn-group">
-          ${t.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('tables','${esc(String(t.id||t._id||''))}')">✅</button>` : ''}
-          <button class="btn btn-danger" onclick="deleteItem('tables','${esc(String(t.id||t._id||''))}')">🗑️</button>
-        </div>
-      </td>
+      <td class="td-primary">${esc(t.game || '—')}</td>
+      <td><span class="status-badge status-${t.status || 'pending'}" style="font-size:.75rem">${esc(t.level || '—')}</span></td>
+      <td><div>${esc(t.date || '—')}</div><div class="td-muted">${esc(t.time || '')}</div></td>
+      <td class="td-clamp">${esc(t.venue || '—')}</td>
+      <td class="td-muted">${esc(t.contact || t.telegram || t.hostTelegram || '—')}</td>
+      <td><span class="bookings-badge ${bkgs.length === 0 ? 'none' : ''}" onclick="${bkgs.length > 0 ? `showPlayers('${esc(String(t.id || t._id || ''))}','${esc(t.game || 'Партия')}')` : ''}" title="${bkgs.length > 0 ? 'Посмотреть записавшихся' : ''}">👥 ${bkgs.length}</span></td>
+      <td><span class="status-badge status-${t.status || 'pending'}">${getStatusText(t.status)}</span></td>
+      <td><div class="btn-group">
+        ${t.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('tables','${esc(String(t.id || t._id || ''))}')">✅</button>` : ''}
+        <button class="btn btn-danger" onclick="deleteItem('tables','${esc(String(t.id || t._id || ''))}')">🗑️</button>
+      </div></td>
     </tr>`;
   }).join('') : '<tr><td colspan="8" class="empty"><div class="empty-icon">♟️</div>Нет данных</td></tr>';
   document.getElementById('chess-list').innerHTML = html;
@@ -571,19 +560,17 @@ function renderHosts() {
   const list = allHosts.filter(h => matchSearch(h, searches.hosts));
   document.getElementById('count-hosts').textContent = list.length;
   const html = list.length ? list.map(h => `<tr>
-    <td class="td-primary">${esc(h.name||'—')}</td>
-    <td class="td-muted">${esc(h.city||'—')}</td>
-    <td style="color:var(--info);font-weight:600">${esc(h.telegram||h.contact||'—')}</td>
-    <td class="td-clamp td-muted">${esc((h.games||'—').substring(0,40))}</td>
-    <td class="td-clamp td-muted">${esc((h.about||'—').substring(0,50))}</td>
-    <td><span class="status-badge status-${h.status||'pending'}">${getStatusText(h.status)}</span></td>
-    <td>
-      <div class="btn-group">
-        <button class="btn btn-info" onclick="showDetail('host','${esc(String(h.id||h._id||''))}')">🔍</button>
-        ${h.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('hosts','${esc(String(h.id||h._id||''))}')">✅</button>` : ''}
-        <button class="btn btn-danger" onclick="deleteItem('hosts','${esc(String(h.id||h._id||''))}')">🗑️</button>
-      </div>
-    </td>
+    <td class="td-primary">${esc(h.name || '—')}</td>
+    <td class="td-muted">${esc(h.city || '—')}</td>
+    <td style="color:var(--info);font-weight:600">${esc(h.telegram || h.contact || '—')}</td>
+    <td class="td-clamp td-muted">${esc((h.games || '—').substring(0,40))}</td>
+    <td class="td-clamp td-muted">${esc((h.about || '—').substring(0,50))}</td>
+    <td><span class="status-badge status-${h.status || 'pending'}">${getStatusText(h.status)}</span></td>
+    <td><div class="btn-group">
+      <button class="btn btn-info" onclick="showDetail('host','${esc(String(h.id || h._id || ''))}')">🔍</button>
+      ${h.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('hosts','${esc(String(h.id || h._id || ''))}')">✅</button>` : ''}
+      <button class="btn btn-danger" onclick="deleteItem('hosts','${esc(String(h.id || h._id || ''))}')">🗑️</button>
+    </div></td>
   </tr>`).join('') : '<tr><td colspan="7" class="empty"><div class="empty-icon">🎭</div>Нет данных</td></tr>';
   document.getElementById('hosts-list').innerHTML = html;
 }
@@ -592,18 +579,16 @@ function renderCafes() {
   const list = allCafes.filter(c => matchSearch(c, searches.cafes));
   document.getElementById('count-cafes').textContent = list.length;
   const html = list.length ? list.map(c => `<tr>
-    <td class="td-primary">${esc(c.name||'—')}</td>
-    <td class="td-muted">${esc(c.address||'—')}</td>
-    <td style="color:var(--info);font-weight:600">${esc(c.telegram||c.contact||'—')}</td>
-    <td class="td-clamp td-muted">${esc((c.description||c.games||'—').substring(0,50))}</td>
-    <td><span class="status-badge status-${c.status||'pending'}">${getStatusText(c.status)}</span></td>
-    <td>
-      <div class="btn-group">
-        <button class="btn btn-info" onclick="showDetail('cafe','${esc(String(c.id||c._id||''))}')">🔍</button>
-        ${c.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('cafes','${esc(String(c.id||c._id||''))}')">✅</button>` : ''}
-        <button class="btn btn-danger" onclick="deleteItem('cafes','${esc(String(c.id||c._id||''))}')">🗑️</button>
-      </div>
-    </td>
+    <td class="td-primary">${esc(c.name || '—')}</td>
+    <td class="td-muted">${esc(c.address || '—')}</td>
+    <td style="color:var(--info);font-weight:600">${esc(c.telegram || c.contact || '—')}</td>
+    <td class="td-clamp td-muted">${esc((c.description || c.games || '—').substring(0,50))}</td>
+    <td><span class="status-badge status-${c.status || 'pending'}">${getStatusText(c.status)}</span></td>
+    <td><div class="btn-group">
+      <button class="btn btn-info" onclick="showDetail('cafe','${esc(String(c.id || c._id || ''))}')">🔍</button>
+      ${c.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('cafes','${esc(String(c.id || c._id || ''))}')">✅</button>` : ''}
+      <button class="btn btn-danger" onclick="deleteItem('cafes','${esc(String(c.id || c._id || ''))}')">🗑️</button>
+    </div></td>
   </tr>`).join('') : '<tr><td colspan="6" class="empty"><div class="empty-icon">☕</div>Нет данных</td></tr>';
   document.getElementById('cafes-list').innerHTML = html;
 }
@@ -612,65 +597,58 @@ function renderBookings() {
   const list = allBookings.filter(b => matchSearch(b, searches.bookings));
   document.getElementById('count-bookings').textContent = list.length;
   const html = list.length ? list.map(b => {
-    const tableInfo = [...allTables, ...allChess].find(t => String(t.id||t._id||'') === String(b.tableId||b.table_id||''));
+    const tableInfo = [...allTables, ...allChess].find(t => String(t.id || t._id || '') === String(b.tableId || b.table_id || ''));
     const gameName = tableInfo ? tableInfo.game : (b.gameName || '—');
     return `<tr>
-      <td class="td-primary">${esc(b.name||'Аноним')}</td>
-      <td style="color:var(--info);font-weight:600">${esc(b.telegram||'—')}</td>
-      <td class="td-muted" style="font-family:monospace;font-size:.75rem">${esc(String(b.tableId||b.table_id||'—').substring(0,12))}...</td>
+      <td class="td-primary">${esc(b.name || 'Аноним')}</td>
+      <td style="color:var(--info);font-weight:600">${esc(b.telegram || b.contact || '—')}</td>
+      <td class="td-muted" style="font-family:monospace;font-size:.75rem">${esc(String(b.tableId || b.table_id || '—').substring(0,12))}...</td>
       <td class="td-primary">${esc(gameName)}</td>
-      <td class="td-clamp td-muted">${esc((b.comment||'—').substring(0,40))}</td>
-      <td class="td-muted">${esc(b.created_at ? new Date(b.created_at).toLocaleDateString('ru') : '—')}</td>
-      <td>
-        <div class="btn-group">
-          ${b.status !== 'approved'
-            ? `<button class="btn btn-success" onclick="approve('bookings','${esc(String(b.id||b._id||''))}')">✅</button>`
-            : ''}
-          <button class="btn btn-danger" onclick="deleteItem('bookings','${esc(String(b.id||b._id||''))}')">🗑️</button>
-        </div>
-      </td>
+      <td class="td-clamp td-muted">${esc((b.comment || '—').substring(0,40))}</td>
+      <td class="td-muted">${esc(getCreatedAt(b) ? new Date(getCreatedAt(b)).toLocaleDateString('ru-RU') : '—')}</td>
+      <td><div class="btn-group">
+        ${b.status !== 'approved' ? `<button class="btn btn-success" onclick="approve('bookings','${esc(String(b.id || b._id || ''))}')">✅</button>` : ''}
+        <button class="btn btn-danger" onclick="deleteItem('bookings','${esc(String(b.id || b._id || ''))}')">🗑️</button>
+      </div></td>
     </tr>`;
   }).join('') : '<tr><td colspan="7" class="empty"><div class="empty-icon">📋</div>Нет записей</td></tr>';
   document.getElementById('bookings-list').innerHTML = html;
 }
+
 function renderFeedback() {
   document.getElementById('count-feedback').textContent = allFeedback.length;
   const html = allFeedback.length ? allFeedback.map(f => `<tr>
-    <td class="td-primary">${esc(f.name||'Аноним')}</td>
-    <td style="color:var(--info);font-weight:600">${esc(f.telegram||'—')}</td>
+    <td class="td-primary">${esc(f.name || 'Аноним')}</td>
+    <td style="color:var(--info);font-weight:600">${esc(f.telegram || '—')}</td>
     <td>${getAnswerBadge(f.needed)}</td>
     <td>${getAnswerBadge(f.continue)}</td>
-    <td class="td-clamp td-muted">${esc((f.comment||'—').substring(0,60))}${(f.comment||'').length>60?'...':''}</td>
-    <td class="td-clamp td-muted">${esc((f.features||'—').substring(0,40))}${(f.features||'').length>40?'...':''}</td>
-    <td class="td-muted">${esc(f.created_at ? new Date(f.created_at).toLocaleDateString('ru') : '—')}</td>
+    <td class="td-clamp td-muted">${esc((f.comment || '—').substring(0,60))}${(f.comment || '').length > 60 ? '...' : ''}</td>
+    <td class="td-clamp td-muted">${esc((f.features || '—').substring(0,40))}${(f.features || '').length > 40 ? '...' : ''}</td>
+    <td class="td-muted">${esc(getCreatedAt(f) ? new Date(getCreatedAt(f)).toLocaleDateString('ru-RU') : '—')}</td>
   </tr>`).join('') : '<tr><td colspan="7" class="empty"><div class="empty-icon">💬</div>Нет отзывов</td></tr>';
   document.getElementById('feedback-list').innerHTML = html;
 }
 
-/* ── Вспомогательные ── */
 function getStatusText(s) {
-  return s === 'approved'
-    ? '✅ Одобрено'
-    : s === 'rejected'
-    ? '❌ Отклонено'
-    : '⏳ На проверке';
-}
-function getAnswerBadge(v) {
-  if (v === 'yes')   return '<span class="status-badge status-approved">✅ Да</span>';
-  if (v === 'maybe') return '<span class="status-badge status-pending">🤔 Возможно</span>';
-  if (v === 'no')    return '<span class="status-badge status-rejected">❌ Нет</span>';
-  return '—';
-}
-function esc(s) {
-  return String(s || '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/'/g,'&#39;')
-    .replace(/"/g,'&quot;');
+  return s === 'approved' ? '✅ Одобрено' : s === 'rejected' ? '❌ Отклонено' : '⏳ На проверке';
 }
 
-/* ── Вкладки ── */
+function getAnswerBadge(v) {
+  if (v === 'yes') return '<span class="status-badge status-approved">✅ Да</span>';
+  if (v === 'maybe') return '<span class="status-badge status-pending">🤔 Возможно</span>';
+  if (v === 'no') return '<span class="status-badge status-rejected">❌ Нет</span>';
+  return '—';
+}
+
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/'/g, '&#39;')
+    .replace(/"/g, '&quot;');
+}
+
 function switchTab(tab, btn) {
   activeTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -679,7 +657,6 @@ function switchTab(tab, btn) {
   document.getElementById('section-' + tab).classList.add('active');
 }
 
-/* ── Одобрить ── */
 async function approve(type, id) {
   if (!confirm('Одобрить эту заявку? Она появится на сайте.')) return;
   try {
@@ -698,12 +675,11 @@ async function approve(type, id) {
       toast('✅ Заявка одобрена и опубликована!');
       loadAll();
     }
-  } catch(_) {
+  } catch (_) {
     toast('Ошибка сети', 'error');
   }
 }
 
-/* ── Удалить ── */
 async function deleteItem(type, id) {
   if (!confirm('Удалить этот элемент? Действие необратимо.')) return;
   try {
@@ -720,55 +696,61 @@ async function deleteItem(type, id) {
       toast('🗑️ Удалено!');
       loadAll();
     }
-  } catch(_) {
+  } catch (_) {
     toast('Ошибка сети', 'error');
   }
 }
-
-/* ── Показать игроков / детали / модалки / toast ── */
-// здесь оставь твой текущий код showPlayers, showDetail, openModal, closeModal, toast, keydown, инициализацию
 
 function showPlayers(tableId, gameName) {
   const players = bookingsForTable(tableId);
   document.getElementById('playersModalTitle').textContent = `👥 Игроки · ${gameName}`;
   const body = document.getElementById('playersModalBody');
+
   if (!players.length) {
     body.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><p>Записей пока нет</p></div>';
   } else {
-    body.innerHTML = `<p style="color:var(--muted);font-size:.875rem;margin-bottom:1rem">Записано игроков: <b style="color:var(--text)">${players.length}</b></p>` +
+    body.innerHTML =
+      `<p style="color:var(--muted);font-size:.875rem;margin-bottom:1rem">Записано игроков: <b style="color:var(--text)">${players.length}</b></p>` +
       players.map((p, i) => `
         <div class="player-row">
-          <div class="player-avatar">${i+1}</div>
+          <div class="player-avatar">${i + 1}</div>
           <div class="player-info">
-            <div class="player-name">${esc(p.name||'Аноним')}</div>
+            <div class="player-name">${esc(p.name || 'Аноним')}</div>
             ${p.telegram ? `<div class="player-tg">📱 ${esc(p.telegram)}</div>` : ''}
             ${p.comment ? `<div class="player-comment">💬 ${esc(p.comment)}</div>` : ''}
-            ${p.created_at ? `<div class="player-date">🕐 ${new Date(p.created_at).toLocaleString('ru')}</div>` : ''}
+            ${getCreatedAt(p) ? `<div class="player-date">🕐 ${new Date(getCreatedAt(p)).toLocaleString('ru-RU')}</div>` : ''}
           </div>
-        </div>`).join('');
+        </div>
+      `).join('');
   }
+
   openModal('players');
 }
 
 function showDetail(type, id) {
   let item = null;
-  if (type === 'table') item = [...allTables, ...allChess].find(x => String(x.id||x._id||'') === id);
-  else if (type === 'host') item = allHosts.find(x => String(x.id||x._id||'') === id);
-  else if (type === 'cafe') item = allCafes.find(x => String(x.id||x._id||'') === id);
-  if (!item) { toast('Данные не найдены', 'error'); return; }
+  if (type === 'table') item = [...allTables, ...allChess].find(x => String(x.id || x._id || '') === id);
+  else if (type === 'host') item = allHosts.find(x => String(x.id || x._id || '') === id);
+  else if (type === 'cafe') item = allCafes.find(x => String(x.id || x._id || '') === id);
 
-  const icons = { table:'🎲', host:'🎭', cafe:'☕' };
-  document.getElementById('detailModalTitle').textContent = `${icons[type]||'📋'} Детали · ${esc(item.name||item.game||'—')}`;
+  if (!item) {
+    toast('Данные не найдены', 'error');
+    return;
+  }
+
+  const icons = { table: '🎲', host: '🎭', cafe: '☕' };
+  document.getElementById('detailModalTitle').textContent = `${icons[type] || '📋'} Детали · ${esc(item.name || item.game || '—')}`;
 
   const rows = Object.entries(item)
-    .filter(([k]) => !['id','_id','__v'].includes(k))
-    .map(([k, v]) => `<div class="detail-row"><span class="detail-label">${esc(k)}</span><span class="detail-val">${esc(String(v||'—'))}</span></div>`).join('');
+    .filter(([k]) => !['id', '_id', '__v'].includes(k))
+    .map(([k, v]) => `<div class="detail-row"><span class="detail-label">${esc(k)}</span><span class="detail-val">${esc(String(v || '—'))}</span></div>`)
+    .join('');
 
   const bkgs = type === 'table' ? bookingsForTable(id) : [];
   const bkgBlock = type === 'table' ? `
     <div style="margin-top:1.5rem;padding-top:1rem;border-top:2px solid var(--border)">
       <p style="font-weight:700;margin-bottom:.75rem;font-family:var(--fd)">👥 Записавшихся: ${bkgs.length}</p>
-      ${bkgs.length ? `<button class="btn btn-info" onclick="closeModal('modal-detail');showPlayers('${esc(id)}','${esc(item.game||'')}')">Смотреть список</button>` : ''}
+      ${bkgs.length ? `<button class="btn btn-info" onclick="closeModal('modal-detail');showPlayers('${esc(id)}','${esc(item.game || '')}')">Смотреть список</button>` : ''}
     </div>` : '';
 
   document.getElementById('detailModalBody').innerHTML = rows + bkgBlock;
@@ -779,10 +761,12 @@ function openModal(t) {
   const m = document.getElementById('modal-' + t);
   if (m) m.classList.add('show');
 }
+
 function closeModal(id) {
   const m = document.getElementById(id);
   if (m) m.classList.remove('show');
 }
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
@@ -798,7 +782,6 @@ function toast(msg, type) {
   setTimeout(() => el.remove(), 3500);
 }
 
-/* ── Старт ── */
 loadAll();
 setInterval(loadAll, 30000);
 </script>
